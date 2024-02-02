@@ -48,8 +48,17 @@ struct InfoResp {
     2: User user,
 }
 
-service UserService {
+struct AvatarReq{
+    1:binary avatar_file,
+    2:string token,
+}
+struct AvatarResp{
+    1: BaseResp base,
+    2: User user,
+}
+service UserHandler {
     RegisterResp Register(1: RegisterReq req)(api.post="/bibi/user/register/"),
     LoginResp Login(1: LoginReq req)(api.post="/bibi/user/login/"),
     InfoResp Info(1: InfoReq req)(api.get="/bibi/user/"),
+    AvatarResp Avatar(1:AvatarReq req)(api.put="/bibi/user/avatar/upload")
 }

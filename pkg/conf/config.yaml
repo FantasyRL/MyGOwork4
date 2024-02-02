@@ -9,3 +9,11 @@ redis:
 service:
   mode: debug
   port: :8888
+oss:
+  endpoint: https://oss-cn-beijing.aliyuncs.com
+  accesskeyid: LTAI5tLxvgGfKqWqUc7t9mLe
+  accesskeysecret: 4h6MoIFctgbciZW19qwnup7IYUqxwz
+  bucketname: bibi-demo
+  main-directory: bibi
+page:
+  page-size: 15

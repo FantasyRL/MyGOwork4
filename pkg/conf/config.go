@@ -22,6 +22,15 @@ type Service struct {
 	AppMode  string
 	HttpPort string
 }
+type OSS struct {
+	EndPoint        string
+	AccessKeyId     string
+	AccessKeySecret string
+	BucketName      string
+	MainDirectory   string
+}
+
+var OSSConf OSS
 
 func Init() {
 	viper.SetConfigName("config")
@@ -35,8 +44,8 @@ func Init() {
 		}
 	}
 	sql := LoadMysql(viper.GetStringMapString("mysql"))
+	OSSConf = LoadOSS(viper.GetStringMapString("oss"))
 	path := strings.Join([]string{sql.user, ":", sql.password, "@tcp(", sql.host, ":", sql.port, ")/", sql.dbname, "?charset=utf8mb4&parseTime=True"}, "")
-	fmt.Println(path)
 	dao.Init(path)
 }
 
@@ -47,5 +56,14 @@ func LoadMysql(myConf map[string]string) Mysql {
 		user:     myConf["user"],
 		password: myConf["password"],
 		dbname:   myConf["dbname"],
+	}
+}
+func LoadOSS(myConf map[string]string) OSS {
+	return OSS{
+		EndPoint:        myConf["endpoint"],
+		AccessKeyId:     myConf["accesskeyid"],
+		AccessKeySecret: myConf["accesskeysecret"],
+		BucketName:      myConf["bucketname"],
+		MainDirectory:   myConf["main-directory"],
 	}
 }

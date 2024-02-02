@@ -1,0 +1,87 @@
+basePath: /bibi
+host: localhost:8000
+info:
+  contact: {}
+  description: video website
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: BibiBibi
+  version: "1.0"
+paths:
+  /bibi/user:
+    get:
+      consumes:
+      - json/form
+      description: show user's info
+      parameters:
+      - description: 用户id
+        in: query
+        name: user_id
+        required: true
+        type: string
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Information
+  /bibi/user/avatar/upload:
+    put:
+      consumes:
+      - json/form
+      description: revise user's avatar
+      parameters:
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: PUTAvatar
+  /bibi/user/login:
+    post:
+      consumes:
+      - json/form
+      description: userLogin
+      parameters:
+      - description: 用户名
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Login
+  /bibi/user/register:
+    post:
+      consumes:
+      - json/form
+      description: userRegister
+      parameters:
+      - description: 用户名
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Register
+swagger: "2.0"

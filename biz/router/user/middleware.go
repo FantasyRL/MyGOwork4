@@ -27,6 +27,7 @@ func _infoMw() []app.HandlerFunc {
 	return []app.HandlerFunc{
 		jwt.JwtMiddleware.MiddlewareFunc(),
 	}
+	//return nil
 }
 
 func _loginMw() []app.HandlerFunc {
@@ -59,4 +60,16 @@ func _login0Mw() []app.HandlerFunc {
 func _register0Mw() []app.HandlerFunc {
 	// your code...
 	return nil
+}
+
+func _avatarMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _avatar0Mw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
 }

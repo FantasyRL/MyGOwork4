@@ -30,5 +30,4 @@ func Init(DSN string) {
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetConnMaxLifetime(time.Second * 30)
 	DB = db
-	//migration()
 }

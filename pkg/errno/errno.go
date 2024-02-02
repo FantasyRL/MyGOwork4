@@ -20,8 +20,9 @@ const (
 	ServerErrMsg             = "Service is unable to start successfully"
 	ParamErrMsg              = "Wrong Parameter has been given"
 	UserAlreadyExistErrMsg   = "User existed"
-	UserIsNotExistErrMsg     = "user is not exist"
-	PasswordIsNotVerifiedMsg = "username or password not verified"
+	UserIsNotExistErrMsg     = "User is not exist"
+	PasswordIsNotVerifiedMsg = "Username or password not verified"
+	AuthErrMsg               = "It is not your account"
 	FavoriteActionErrMsg     = "favorite add failed"
 
 	MessageAddFailedErrMsg    = "message add failed"
@@ -56,9 +57,10 @@ var (
 	ServiceError = NewErrNo(ServiceErrCode, ServerErrMsg)
 	ParamError   = NewErrNo(ParamErrCode, ParamErrMsg)
 
-	ExistUserError    = NewErrNo(ExistUserErrCode, UserAlreadyExistErrMsg)
-	NotExistUserError = NewErrNo(NotExistUserErrCode, UserIsNotExistErrMsg)
-	PwdError          = NewErrNo(AuthFailedErrCode, PasswordIsNotVerifiedMsg)
+	ExistUserError     = NewErrNo(ExistUserErrCode, UserAlreadyExistErrMsg)
+	NotExistUserError  = NewErrNo(NotExistUserErrCode, UserIsNotExistErrMsg)
+	PwdError           = NewErrNo(AuthFailedErrCode, PasswordIsNotVerifiedMsg)
+	AuthorizationError = NewErrNo(AuthFailedErrCode, AuthErrMsg)
 )
 
 // ConvertErr convert error to ErrNo

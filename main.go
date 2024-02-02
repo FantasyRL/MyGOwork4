@@ -9,7 +9,17 @@ import (
 	"github.com/hertz-contrib/logger/accesslog"
 )
 
+// @title           BibiBibi
+// @version         1.0
+// @description     video website
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      localhost:8000
+// @BasePath  /bibi
 func main() {
+
 	conf.Init()
 	jwt.Init()
 

@@ -11,6 +11,14 @@ import (
 )
 
 // PutVideo .
+// @Summary PutVideo
+// @Description put video
+// @Accept json/form
+// @Produce json
+// @Body video_file form-data []byte true "视频文件"
+// @Param title query string true "标题"
+// @Body cover form-data []byte true "视频封面"
+// @Param token query string true "token"
 // @router /bibi/video/upload [POST]
 func PutVideo(ctx context.Context, c *app.RequestContext) {
 	var err error

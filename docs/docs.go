@@ -127,6 +127,50 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/bibi/video/hot": {
+            "get": {
+                "responses": {}
+            }
+        },
+        "/bibi/video/myvideo": {
+            "post": {
+                "responses": {}
+            }
+        },
+        "/bibi/video/search": {
+            "post": {
+                "responses": {}
+            }
+        },
+        "/bibi/video/upload": {
+            "post": {
+                "description": "put video",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "PutVideo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "标题",
+                        "name": "title",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
         }
     }
 }`

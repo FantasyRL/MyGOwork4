@@ -84,4 +84,33 @@ paths:
       - application/json
       responses: {}
       summary: Register
+  /bibi/video/hot:
+    get:
+      responses: {}
+  /bibi/video/myvideo:
+    post:
+      responses: {}
+  /bibi/video/search:
+    post:
+      responses: {}
+  /bibi/video/upload:
+    post:
+      consumes:
+      - json/form
+      description: put video
+      parameters:
+      - description: 标题
+        in: query
+        name: title
+        required: true
+        type: string
+      - description: token
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: PutVideo
 swagger: "2.0"

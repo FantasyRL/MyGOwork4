@@ -76,11 +76,11 @@ func Init() {
 		// Validation failed, build the message
 		Unauthorized: func(ctx context.Context, c *app.RequestContext, code int, message string) {
 			resp := new(user2.LoginResp)
-			resp.Base = errno.BuildBaseResp(errno.PwdError)
+			resp.Base = errno.BuildUserBaseResp(errno.PwdError)
 			c.JSON(consts.StatusOK, resp.Base)
 		},
 		HTTPStatusMessageFunc: func(e error, ctx context.Context, c *app.RequestContext) string {
-			resp := errno.BuildBaseResp(e)
+			resp := errno.BuildUserBaseResp(e)
 			return resp.Msg
 		},
 	})

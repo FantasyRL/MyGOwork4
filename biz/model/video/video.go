@@ -1127,7 +1127,7 @@ func (p *Video) String() string {
 type PutVideoReq struct {
 	VideoFile []byte `thrift:"video_file,1" form:"video_file" json:"video_file" query:"video_file"`
 	Title     string `thrift:"title,2" form:"title" json:"title" query:"title"`
-	Cover     string `thrift:"cover,3" form:"cover" json:"cover" query:"cover"`
+	Cover     []byte `thrift:"cover,3" form:"cover" json:"cover" query:"cover"`
 	Token     string `thrift:"token,4" form:"token" json:"token" query:"token"`
 }
 
@@ -1143,7 +1143,7 @@ func (p *PutVideoReq) GetTitle() (v string) {
 	return p.Title
 }
 
-func (p *PutVideoReq) GetCover() (v string) {
+func (p *PutVideoReq) GetCover() (v []byte) {
 	return p.Cover
 }
 
@@ -1258,10 +1258,10 @@ func (p *PutVideoReq) ReadField2(iprot thrift.TProtocol) error {
 }
 func (p *PutVideoReq) ReadField3(iprot thrift.TProtocol) error {
 
-	if v, err := iprot.ReadString(); err != nil {
+	if v, err := iprot.ReadBinary(); err != nil {
 		return err
 	} else {
-		p.Cover = v
+		p.Cover = []byte(v)
 	}
 	return nil
 }
@@ -1353,7 +1353,7 @@ func (p *PutVideoReq) writeField3(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("cover", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Cover); err != nil {
+	if err := oprot.WriteBinary([]byte(p.Cover)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

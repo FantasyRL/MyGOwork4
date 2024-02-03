@@ -31,7 +31,7 @@ struct Video{
 struct PutVideoReq{
     1:binary video_file,
     2:string title,
-    3:string cover,
+    3:binary cover,
     4:string token,
 }
 

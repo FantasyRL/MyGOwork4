@@ -35,6 +35,11 @@ paths:
       - json/form
       description: revise user's avatar
       parameters:
+      - description: 头像
+        in: formData
+        name: avatar_file
+        required: true
+        type: file
       - description: token
         in: query
         name: token
@@ -99,11 +104,21 @@ paths:
       - json/form
       description: put video
       parameters:
+      - description: 视频文件
+        in: formData
+        name: video_file
+        required: true
+        type: file
       - description: 标题
         in: query
         name: title
         required: true
         type: string
+      - description: 视频封面
+        in: formData
+        name: cover
+        required: true
+        type: file
       - description: token
         in: query
         name: token

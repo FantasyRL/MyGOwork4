@@ -5,6 +5,7 @@ package user
 
 import (
 	user "bibi/biz/model/user"
+	"bibi/biz/user/dal/db"
 	"bibi/biz/user/service"
 	"bibi/pkg/conf"
 	"bibi/pkg/errno"
@@ -12,7 +13,7 @@ import (
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"io"
+	"golang.org/x/sync/errgroup"
 	"path/filepath"
 )
 
@@ -36,7 +37,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 	resp := new(user.RegisterResp)
 
 	userResp, err := service.NewUserService(ctx).Register(&req)
-	resp.Base = errno.BuildBaseResp(err)
+	resp.Base = errno.BuildUserBaseResp(err)
 	if err != nil {
 		c.JSON(consts.StatusOK, resp)
 		return
@@ -56,7 +57,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 func Login(ctx context.Context, c *app.RequestContext) {
 	resp := new(user.LoginResp)
 
-	resp.Base = errno.BuildBaseResp(nil)
+	resp.Base = errno.BuildUserBaseResp(nil)
 	//hertz jwt(mw)
 	v1, _ := c.Get("user")
 	resp.User = service.BuildUserResp(v1)
@@ -94,7 +95,7 @@ func Info(ctx context.Context, c *app.RequestContext) {
 	if v != UserResp.ID {
 		err = errno.AuthorizationError
 	}
-	resp.Base = errno.BuildBaseResp(err)
+	resp.Base = errno.BuildUserBaseResp(err)
 	if err != nil {
 		c.JSON(consts.StatusOK, resp)
 		return
@@ -109,7 +110,7 @@ func Info(ctx context.Context, c *app.RequestContext) {
 // @Description revise user's avatar
 // @Accept json/form
 // @Produce json
-// @Body avatar_file form-data []byte true "头像"
+// @Param avatar_file formData file true "头像"
 // @Param token query string true "token"
 // @router /bibi/user/avatar/upload [PUT]
 func Avatar(ctx context.Context, c *app.RequestContext) {
@@ -136,33 +137,45 @@ func Avatar(ctx context.Context, c *app.RequestContext) {
 		".png":  true,
 		".jpeg": true,
 	}
-	if _, ok := allowExtMap[fileExt]; !ok {
-		resp.Base = errno.BuildBaseResp(errno.ParamError)
+	if !errno.IsAllowExt(fileExt, allowExtMap) {
+		resp.Base = errno.BuildUserBaseResp(errno.ParamError)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-
 	//hertz jwt(mw)
-	v, ok := c.Get("current_user_id")
-	if !ok {
-		resp.Base = errno.BuildBaseResp(errno.ParamError)
-		c.JSON(consts.StatusOK, resp)
-		return
-	}
+	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-
-	fileContent, err := file.Open()
-	if err != nil {
-		resp.Base = errno.BuildBaseResp(errno.ParamError)
+	//开启并发
+	var eg errgroup.Group
+	//上传至OSS
+	eg.Go(func() error { //同时Add(1)
+		req.AvatarFile, err = service.FileToByte(file)
+		if err != nil {
+			return errno.ReadFileError
+		}
+		err = service.NewAvatarService(ctx).UploadAvatar(&req, id)
+		if err != nil {
+			return errno.UploadFileError
+		}
+		return nil
+	})
+	//上传url至数据库
+	UserResp := new(db.User)
+	eg.Go(func() error { //Add(1)
+		avatarUrl := fmt.Sprintf("%s/%s/%d", conf.OSSConf.EndPoint, conf.OSSConf.MainDirectory, id)
+		UserResp, err = service.NewAvatarService(ctx).PutAvatar(id, avatarUrl)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	//Wait实现了错误处理与sync，仅返回第一个发生的错误
+	if err := eg.Wait(); err != nil {
+		resp.Base = errno.BuildUserBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	req.AvatarFile, _ = io.ReadAll(fileContent)
-	err = service.NewAvatarService(ctx).UploadAvatar(&req, id)
-
-	avatarUrl := fmt.Sprintf("%s/%s/%d", conf.OSSConf.EndPoint, conf.OSSConf.MainDirectory, id)
-	UserResp, err := service.NewAvatarService(ctx).PutAvatar(id, avatarUrl)
-
+	resp.Base = errno.BuildUserBaseResp(nil)
 	resp.User = service.BuildUserResp(UserResp)
 	c.JSON(consts.StatusOK, resp)
 }

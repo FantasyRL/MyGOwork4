@@ -3,6 +3,7 @@
 package video
 
 import (
+	"bibi/biz/mw/jwt"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -38,5 +39,8 @@ func _searchvideoMw() []app.HandlerFunc {
 
 func _putvideoMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
+	//return nil
 }

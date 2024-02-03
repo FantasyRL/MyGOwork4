@@ -52,6 +52,9 @@ func QueryUserByID(ctx context.Context, userModel *User) (*User, error) {
 
 func PutAvatar(ctx context.Context, userModel *User) (*User, error) {
 	userResp := new(User)
+	//if err:=dao.DB.WithContext(ctx).Where("id = ?",userModel.ID).Update("avatar",userModel.Avatar).Error;err!=nil{
+	//	return nil, err
+	//}
 	if err := dao.DB.WithContext(ctx).Where("id = ?", userModel.ID).First(userResp).Error; err != nil {
 		return nil, err
 	}

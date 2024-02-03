@@ -60,6 +60,13 @@ const docTemplate = `{
                 "summary": "PUTAvatar",
                 "parameters": [
                     {
+                        "type": "file",
+                        "description": "头像",
+                        "name": "avatar_file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "string",
                         "description": "token",
                         "name": "token",
@@ -155,10 +162,24 @@ const docTemplate = `{
                 "summary": "PutVideo",
                 "parameters": [
                     {
+                        "type": "file",
+                        "description": "视频文件",
+                        "name": "video_file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "string",
                         "description": "标题",
                         "name": "title",
                         "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "视频封面",
+                        "name": "cover",
+                        "in": "formData",
                         "required": true
                     },
                     {

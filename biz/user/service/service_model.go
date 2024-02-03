@@ -4,9 +4,12 @@ import (
 	"bibi/biz/model/user"
 	"bibi/biz/user/dal/db"
 	aliyunoss "bibi/oss"
+	"bibi/pkg/errno"
 	"context"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"io"
 	"log"
+	"mime/multipart"
 )
 
 type UserService struct {
@@ -37,4 +40,12 @@ func BuildUserResp(_user interface{}) *user.User {
 		Name:   p.Name,
 		Avatar: p.Avatar,
 	}
+}
+
+func FileToByte(file *multipart.FileHeader) ([]byte, error) {
+	fileContent, err := file.Open()
+	if err != nil {
+		return nil, errno.ParamError
+	}
+	return io.ReadAll(fileContent)
 }

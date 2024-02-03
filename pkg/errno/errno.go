@@ -13,6 +13,8 @@ const (
 	ExistUserErrCode
 	NotExistUserErrCode
 	AuthFailedErrCode //Authorization错误
+	ReadFileErrCode
+	UploadFileErrcode
 )
 
 const (
@@ -23,6 +25,8 @@ const (
 	UserIsNotExistErrMsg     = "User is not exist"
 	PasswordIsNotVerifiedMsg = "Username or password not verified"
 	AuthErrMsg               = "It is not your account"
+	ReadFileErrMsg           = "Error when read file"
+	UploadFileErrMsg         = "Upload file error"
 	FavoriteActionErrMsg     = "favorite add failed"
 
 	MessageAddFailedErrMsg    = "message add failed"
@@ -61,6 +65,8 @@ var (
 	NotExistUserError  = NewErrNo(NotExistUserErrCode, UserIsNotExistErrMsg)
 	PwdError           = NewErrNo(AuthFailedErrCode, PasswordIsNotVerifiedMsg)
 	AuthorizationError = NewErrNo(AuthFailedErrCode, AuthErrMsg)
+	UploadFileError    = NewErrNo(UploadFileErrcode, UploadFileErrMsg)
+	ReadFileError      = NewErrNo(ReadFileErrCode, ReadFileErrMsg)
 )
 
 // ConvertErr convert error to ErrNo

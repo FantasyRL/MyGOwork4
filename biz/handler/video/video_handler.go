@@ -26,7 +26,7 @@ import (
 // @Param video_file formData file true "视频文件"
 // @Param title query string true "标题"
 // @Param cover formData file true "视频封面"
-// @Param token query string true "token"
+// @Param Authorization header string true "token"
 // @router /bibi/video/upload [POST]
 func PutVideo(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -124,6 +124,12 @@ func PutVideo(ctx context.Context, c *app.RequestContext) {
 }
 
 // ListVideo .
+// @Summary ListVideo
+// @Description list user's videos
+// @Accept json/form
+// @Produce json
+// @Param Authorization header string true "token"
+// @Param page_num query int64 true "页码"
 // @router /bibi/video/myvideo [POST]
 func ListVideo(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -136,10 +142,27 @@ func ListVideo(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(video.ListUserVideoResp)
 
+	//jwt(mw)
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+	videoResp, count, err := service.NewVideoService(ctx).ListVideo(&req, id)
+	resp.Base = errno.BuildVideoBaseResp(err)
+	if err != nil {
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+	resp.VideoList = service.BuildListVideoResp(videoResp)
+	resp.Count = count
 	c.JSON(consts.StatusOK, resp)
 }
 
 // SearchVideo .
+// @Summary SearchVideo
+// @Description search videos
+// @Accept json/form
+// @Produce json
+// @Param page_num query int true "页码"
+// @Param param query string true "搜索内容"
 // @router /bibi/video/search [POST]
 func SearchVideo(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -151,6 +174,17 @@ func SearchVideo(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(video.SearchVideoResp)
+
+	videoResp, count, err := service.NewVideoService(ctx).SearchVideo(&req)
+
+	resp.Base = errno.BuildVideoBaseResp(err)
+	if err != nil {
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+
+	resp.VideoList = service.BuildListVideoResp(videoResp)
+	resp.Count = count
 
 	c.JSON(consts.StatusOK, resp)
 }

@@ -15,14 +15,9 @@ paths:
       - json/form
       description: show user's info
       parameters:
-      - description: 用户id
-        in: query
-        name: user_id
-        required: true
-        type: string
       - description: token
-        in: query
-        name: token
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:
@@ -41,8 +36,8 @@ paths:
         required: true
         type: file
       - description: token
-        in: query
-        name: token
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:
@@ -94,10 +89,49 @@ paths:
       responses: {}
   /bibi/video/myvideo:
     post:
+      consumes:
+      - json/form
+      description: list user's videos
+      parameters:
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: page_num
+        required: true
+        type: integer
+      produces:
+      - application/json
       responses: {}
+      summary: ListVideo
   /bibi/video/search:
     post:
+      consumes:
+      - json/form
+      description: search videos
+      parameters:
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: page_num
+        required: true
+        type: integer
+      - description: 搜索内容
+        in: query
+        name: param
+        required: true
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: SearchVideo
   /bibi/video/upload:
     post:
       consumes:
@@ -120,8 +154,8 @@ paths:
         required: true
         type: file
       - description: token
-        in: query
-        name: token
+        in: header
+        name: Authorization
         required: true
         type: string
       produces:

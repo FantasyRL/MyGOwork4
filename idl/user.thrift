@@ -39,8 +39,6 @@ struct LoginResp {
 }
 
 struct InfoReq {
-    1: i64 user_id,
-    2: string token,
 }
 
 struct InfoResp {
@@ -50,7 +48,6 @@ struct InfoResp {
 
 struct AvatarReq{
     1:binary avatar_file,
-    2:string token,
 }
 struct AvatarResp{
     1: BaseResp base,

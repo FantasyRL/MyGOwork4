@@ -29,7 +29,10 @@ func _hotvideoMw() []app.HandlerFunc {
 
 func _listvideoMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
+	//return nil
 }
 
 func _searchvideoMw() []app.HandlerFunc {

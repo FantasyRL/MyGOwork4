@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
+	"strconv"
 	"strings"
 )
 
@@ -31,6 +32,7 @@ type OSS struct {
 }
 
 var OSSConf OSS
+var PageSize int
 
 func Init() {
 	viper.SetConfigName("config")
@@ -45,6 +47,7 @@ func Init() {
 	}
 	sql := LoadMysql(viper.GetStringMapString("mysql"))
 	OSSConf = LoadOSS(viper.GetStringMapString("oss"))
+	PageSize, _ = strconv.Atoi(viper.GetStringMapString("page")["page-size"])
 	path := strings.Join([]string{sql.user, ":", sql.password, "@tcp(", sql.host, ":", sql.port, ")/", sql.dbname, "?charset=utf8mb4&parseTime=True"}, "")
 	dao.Init(path)
 }

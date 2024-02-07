@@ -73,8 +73,7 @@ func Login(ctx context.Context, c *app.RequestContext) {
 // @Description show user's info
 // @Accept json/form
 // @Produce json
-// @Param user_id query string true "用户id"
-// @Param token query string true "token"
+// @Param Authorization header string true "token"
 // @router /bibi/user [GET]
 func Info(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -86,15 +85,15 @@ func Info(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(user.InfoResp)
-	UserResp, err := service.NewUserService(ctx).Info(&req)
-	//hertz jwt(mw)
+
 	v, ok := c.Get("current_user_id")
 	if !ok {
 		err = errno.ParamError
 	}
-	if v != UserResp.ID {
-		err = errno.AuthorizationError
-	}
+	id, _ := v.(int64)
+	UserResp, err := service.NewUserService(ctx).Info(id)
+	//hertz jwt(mw)
+
 	resp.Base = errno.BuildUserBaseResp(err)
 	if err != nil {
 		c.JSON(consts.StatusOK, resp)
@@ -111,7 +110,7 @@ func Info(ctx context.Context, c *app.RequestContext) {
 // @Accept json/form
 // @Produce json
 // @Param avatar_file formData file true "头像"
-// @Param token query string true "token"
+// @Param Authorization header string true "token"
 // @router /bibi/user/avatar/upload [PUT]
 func Avatar(ctx context.Context, c *app.RequestContext) {
 	var err error

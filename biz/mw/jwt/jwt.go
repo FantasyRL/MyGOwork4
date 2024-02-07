@@ -19,12 +19,13 @@ var (
 
 func Init() {
 	JwtMiddleware, _ = jwt.New(&jwt.HertzJWTMiddleware{
-		Realm:       "BibiBibi",
-		Key:         []byte("BibiBibi secret key"),
-		TokenLookup: "query:token,form:token",
-		Timeout:     24 * time.Hour,
-		MaxRefresh:  24 * time.Hour,
-		IdentityKey: identityKey,
+		Realm:         "BibiBibi",
+		Key:           []byte("BibiBibi secret key"),
+		TokenLookup:   "header:Authorization", //header
+		TokenHeadName: "Bearer",               //header
+		Timeout:       24 * time.Hour,
+		MaxRefresh:    24 * time.Hour,
+		IdentityKey:   identityKey,
 
 		// Verify password at login
 		//类似于Login Handler

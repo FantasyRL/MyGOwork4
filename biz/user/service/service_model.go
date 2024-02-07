@@ -37,7 +37,7 @@ func BuildUserResp(_user interface{}) *user.User {
 	p, _ := (_user).(*db.User)
 	return &user.User{
 		ID:     p.ID,
-		Name:   p.Name,
+		Name:   p.UserName,
 		Avatar: p.Avatar,
 	}
 }

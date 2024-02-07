@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/errno.iml" filepath="$PROJECT_DIR$/.idea/errno.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../learn_slice_update/.idea/learn_slice_update.iml" filepath="$PROJECT_DIR$/../../../learn_slice_update/.idea/learn_slice_update.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0.36
+    container_name: bibi
+    volumes:
+      - ./pkg/conf/sql:/docker-entrypoint-initdb.d
+    ports:
+      - "18000:3306"
+    environment:
+      - MYSQL_DATABASE=bibi_db
+      - MYSQL_ROOT_PASSWORD=114514
+    security_opt:
+      - seccomp:unconfined
+    restart: always

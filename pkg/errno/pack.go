@@ -1,6 +1,7 @@
 package errno
 
 import (
+	"bibi/biz/model/interaction"
 	"bibi/biz/model/user"
 	"bibi/biz/model/video"
 	"errors"
@@ -49,4 +50,23 @@ func IsAllowExt(fileExt string, allowExtMap map[string]bool) bool {
 		return false
 	}
 	return true
+}
+
+func BuildInteractionBaseResp(err error) *interaction.BaseResp {
+	if err == nil {
+		return ErrToInteractionResp(Success)
+	}
+	e := ErrNo{}
+	if errors.As(err, &e) {
+		return ErrToInteractionResp(e)
+	}
+	_e := ServiceError.WithMessage(err.Error())
+	return ErrToInteractionResp(_e)
+}
+
+func ErrToInteractionResp(err ErrNo) *interaction.BaseResp {
+	return &interaction.BaseResp{
+		Code: err.ErrorCode,
+		Msg:  err.ErrorMsg,
+	}
 }

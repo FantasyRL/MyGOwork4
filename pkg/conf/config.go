@@ -31,8 +31,12 @@ type OSS struct {
 	MainDirectory   string
 }
 
-var OSSConf OSS
-var PageSize int
+var (
+	OSSConf    OSS
+	PageSize   int
+	RedisAddr  string
+	ServerAddr string
+)
 
 func Init() {
 	viper.SetConfigName("config")
@@ -45,9 +49,12 @@ func Init() {
 			fmt.Println("config file was found but another error was produced")
 		}
 	}
-	sql := LoadMysql(viper.GetStringMapString("mysql"))
 	OSSConf = LoadOSS(viper.GetStringMapString("oss"))
 	PageSize, _ = strconv.Atoi(viper.GetStringMapString("page")["page-size"])
+	RedisAddr = viper.GetStringMapString("redis")["addr"]
+	ServerAddr = viper.GetStringMapString("server")["addr"]
+
+	sql := LoadMysql(viper.GetStringMapString("mysql"))
 	path := strings.Join([]string{sql.user, ":", sql.password, "@tcp(", sql.host, ":", sql.port, ")/", sql.dbname, "?charset=utf8mb4&parseTime=True"}, "")
 	dao.Init(path)
 }

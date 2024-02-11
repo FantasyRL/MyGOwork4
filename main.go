@@ -4,6 +4,7 @@ package main
 
 import (
 	"bibi/biz/mw/jwt"
+	"bibi/biz/mw/redis"
 	"bibi/pkg/conf"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/hertz-contrib/logger/accesslog"
@@ -22,8 +23,11 @@ func main() {
 
 	conf.Init()
 	jwt.Init()
+	redis.Init()
 
-	h := server.New(server.WithHostPorts(":8000"))
+	h := server.New(
+		server.WithHostPorts(conf.ServerAddr),
+	)
 	h.Use(accesslog.New()) //todo:log
 	register(h)
 

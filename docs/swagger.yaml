@@ -9,6 +9,34 @@ info:
   title: BibiBibi
   version: "1.0"
 paths:
+  /bibi/interaction/like/action:
+    post:
+      consumes:
+      - json/form
+      description: like or dislike video
+      parameters:
+      - description: 视频id
+        in: query
+        name: video_id
+        required: true
+        type: integer
+      - description: 点赞:0;取消点赞:1
+        in: query
+        name: action_type
+        required: true
+        type: integer
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: like_action
+  /bibi/interaction/like/list:
+    get:
+      responses: {}
   /bibi/user:
     get:
       consumes:
@@ -113,11 +141,6 @@ paths:
       - json/form
       description: search videos
       parameters:
-      - description: token
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: 页码
         in: query
         name: page_num

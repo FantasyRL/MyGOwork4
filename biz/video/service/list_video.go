@@ -6,5 +6,5 @@ import (
 )
 
 func (s *VideoService) ListVideo(req *video.ListUserVideoReq, uid int64) ([]db.Video, int64, error) {
-	return db.ListVideo(s.ctx, int(req.PageNum), uid)
+	return db.ListVideosByID(s.ctx, int(req.PageNum), uid)
 }

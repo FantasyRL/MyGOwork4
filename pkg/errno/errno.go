@@ -14,7 +14,9 @@ const (
 	NotExistUserErrCode
 	AuthFailedErrCode //Authorization错误
 	ReadFileErrCode
-	UploadFileErrcode
+	UploadFileErrCode
+	LikeExistErrCode
+	VideoNotExistErrCode
 )
 
 const (
@@ -27,11 +29,12 @@ const (
 	AuthErrMsg               = "It is not your account"
 	ReadFileErrMsg           = "Error when read file"
 	UploadFileErrMsg         = "Upload file error"
-	FavoriteActionErrMsg     = "favorite add failed"
+	LikeExistErrMsg          = "You have liked this video"
+	LikeActionErrMsg         = "favorite add failed"
 
 	MessageAddFailedErrMsg    = "message add failed"
 	FriendListNoPermissionMsg = "You can't query his friend list"
-	VideoIsNotExistErrMsg     = "video is not exist"
+	VideoNotExistErrMsg       = "video is not exist"
 	CommentIsNotExistErrMsg   = "comment is not exist"
 )
 
@@ -65,8 +68,10 @@ var (
 	NotExistUserError  = NewErrNo(NotExistUserErrCode, UserIsNotExistErrMsg)
 	PwdError           = NewErrNo(AuthFailedErrCode, PasswordIsNotVerifiedMsg)
 	AuthorizationError = NewErrNo(AuthFailedErrCode, AuthErrMsg)
-	UploadFileError    = NewErrNo(UploadFileErrcode, UploadFileErrMsg)
+	UploadFileError    = NewErrNo(UploadFileErrCode, UploadFileErrMsg)
 	ReadFileError      = NewErrNo(ReadFileErrCode, ReadFileErrMsg)
+	LikeExistError     = NewErrNo(LikeExistErrCode, LikeExistErrMsg)
+	VideoNotExistError = NewErrNo(VideoNotExistErrCode, VideoNotExistErrMsg)
 )
 
 // ConvertErr convert error to ErrNo

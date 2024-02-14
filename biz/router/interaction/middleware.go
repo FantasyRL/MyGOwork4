@@ -37,5 +37,8 @@ func _likeactionMw() []app.HandlerFunc {
 
 func _likelistMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
+	//return nil
 }

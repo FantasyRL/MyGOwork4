@@ -16,6 +16,7 @@ const (
 	ReadFileErrCode
 	UploadFileErrCode
 	LikeExistErrCode
+	LikeNotExistErrCode
 	VideoNotExistErrCode
 )
 
@@ -30,6 +31,7 @@ const (
 	ReadFileErrMsg           = "Error when read file"
 	UploadFileErrMsg         = "Upload file error"
 	LikeExistErrMsg          = "You have liked this video"
+	LikeNotExistErrMsg       = "You don't like this video"
 	LikeActionErrMsg         = "favorite add failed"
 
 	MessageAddFailedErrMsg    = "message add failed"
@@ -71,6 +73,7 @@ var (
 	UploadFileError    = NewErrNo(UploadFileErrCode, UploadFileErrMsg)
 	ReadFileError      = NewErrNo(ReadFileErrCode, ReadFileErrMsg)
 	LikeExistError     = NewErrNo(LikeExistErrCode, LikeExistErrMsg)
+	LikeNotExistError  = NewErrNo(LikeNotExistErrCode, LikeNotExistErrMsg)
 	VideoNotExistError = NewErrNo(VideoNotExistErrCode, VideoNotExistErrMsg)
 )
 

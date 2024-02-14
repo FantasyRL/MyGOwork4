@@ -55,3 +55,35 @@ func DelVideoLikeCount(ctx context.Context, videoId int64, uid int64) error {
 	}
 	return nil
 }
+
+func GetUserLikeVideos(ctx context.Context, uid int64) ([]int64, error) {
+	//SMembers获取所有成员
+	vals, err := rds.RLike.SMembers(ctx, i64ToStr(uid)+likeSuffix).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	var videoIdList []int64
+	for _, id := range vals {
+		vid, _ := strconv.ParseInt(id, 10, 64)
+		videoIdList = append(videoIdList, vid)
+	}
+	return videoIdList, nil
+}
+
+func AddLikeVideoList(ctx context.Context, videoIdList []int64, uid int64) error {
+	rLike := NewRedisService(ctx, rds.RLike)
+	var err error
+	for _, videoId := range videoIdList {
+		err = rLike.Add(i64ToStr(uid)+likeSuffix, i64ToStr(videoId))
+	}
+	return err
+}
+
+func SetVideoLikeCounts(ctx context.Context, videoId int64, likeCount int64) error {
+	rVideo := NewRedisService(ctx, rds.RVideo)
+	if err := rVideo.Add(i64ToStr(videoId)+countSuffix, i64ToStr(likeCount)); err != nil {
+		return err
+	}
+	return nil
+}

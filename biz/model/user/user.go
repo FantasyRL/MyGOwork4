@@ -183,7 +183,7 @@ func (p *BaseResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("BaseResp(%+v)", *p)
+	return fmt.Sprintf("BaseResp(%+video)", *p)
 
 }
 
@@ -670,7 +670,7 @@ func (p *User) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("User(%+v)", *p)
+	return fmt.Sprintf("User(%+video)", *p)
 
 }
 
@@ -849,7 +849,7 @@ func (p *RegisterReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("RegisterReq(%+v)", *p)
+	return fmt.Sprintf("RegisterReq(%+video)", *p)
 
 }
 
@@ -1035,7 +1035,7 @@ func (p *RegisterResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("RegisterResp(%+v)", *p)
+	return fmt.Sprintf("RegisterResp(%+video)", *p)
 
 }
 
@@ -1214,7 +1214,7 @@ func (p *LoginReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("LoginReq(%+v)", *p)
+	return fmt.Sprintf("LoginReq(%+video)", *p)
 
 }
 
@@ -1451,7 +1451,7 @@ func (p *LoginResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("LoginResp(%+v)", *p)
+	return fmt.Sprintf("LoginResp(%+video)", *p)
 
 }
 
@@ -1531,7 +1531,7 @@ func (p *InfoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("InfoReq(%+v)", *p)
+	return fmt.Sprintf("InfoReq(%+video)", *p)
 
 }
 
@@ -1724,7 +1724,7 @@ func (p *InfoResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("InfoResp(%+v)", *p)
+	return fmt.Sprintf("InfoResp(%+video)", *p)
 
 }
 
@@ -1859,7 +1859,7 @@ func (p *AvatarReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AvatarReq(%+v)", *p)
+	return fmt.Sprintf("AvatarReq(%+video)", *p)
 
 }
 
@@ -2052,7 +2052,7 @@ func (p *AvatarResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AvatarResp(%+v)", *p)
+	return fmt.Sprintf("AvatarResp(%+video)", *p)
 
 }
 
@@ -2503,7 +2503,7 @@ func (p *UserHandlerRegisterArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerRegisterArgs(%+v)", *p)
+	return fmt.Sprintf("UserHandlerRegisterArgs(%+video)", *p)
 
 }
 
@@ -2647,7 +2647,7 @@ func (p *UserHandlerRegisterResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerRegisterResult(%+v)", *p)
+	return fmt.Sprintf("UserHandlerRegisterResult(%+video)", *p)
 
 }
 
@@ -2789,7 +2789,7 @@ func (p *UserHandlerLoginArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerLoginArgs(%+v)", *p)
+	return fmt.Sprintf("UserHandlerLoginArgs(%+video)", *p)
 
 }
 
@@ -2933,7 +2933,7 @@ func (p *UserHandlerLoginResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerLoginResult(%+v)", *p)
+	return fmt.Sprintf("UserHandlerLoginResult(%+video)", *p)
 
 }
 
@@ -3075,7 +3075,7 @@ func (p *UserHandlerInfoArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerInfoArgs(%+v)", *p)
+	return fmt.Sprintf("UserHandlerInfoArgs(%+video)", *p)
 
 }
 
@@ -3219,7 +3219,7 @@ func (p *UserHandlerInfoResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerInfoResult(%+v)", *p)
+	return fmt.Sprintf("UserHandlerInfoResult(%+video)", *p)
 
 }
 
@@ -3361,7 +3361,7 @@ func (p *UserHandlerAvatarArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerAvatarArgs(%+v)", *p)
+	return fmt.Sprintf("UserHandlerAvatarArgs(%+video)", *p)
 
 }
 
@@ -3505,6 +3505,6 @@ func (p *UserHandlerAvatarResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerAvatarResult(%+v)", *p)
+	return fmt.Sprintf("UserHandlerAvatarResult(%+video)", *p)
 
 }

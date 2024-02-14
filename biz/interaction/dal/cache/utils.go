@@ -15,7 +15,7 @@ type RdsService struct {
 const (
 	likeSuffix  = ":like"
 	countSuffix = ":count"
-	expTime     = time.Hour * 1 //到期自动移除k-v
+	expTime     = time.Hour * 1 //到期自动移除k-video
 )
 
 func NewRedisService(ctx context.Context, c *redis.Client) RdsService {
@@ -36,16 +36,15 @@ func (s *RdsService) Expire(k string) error {
 	return err
 }
 
-// Add k-v
+// Add k-video
 func (s *RdsService) Add(k string, v string) error {
 	tx := s.rdb.TxPipeline()
 	err := tx.SAdd(s.ctx, k, v).Err()
-
 	tx.Exec(s.ctx)
 	return err
 }
 
-// Del k-v
+// Del k-video
 func (s *RdsService) Del(k string, v string) error {
 	tx := s.rdb.TxPipeline()
 	err := tx.SRem(s.ctx, k, v).Err()
@@ -81,13 +80,13 @@ func (s *RdsService) Decrease(k string) error {
 	return err
 }
 
-// IsExist check k-v if IsExist
+// IsExist check k-video if IsExist
 func (s *RdsService) IsExist(k string, v string) (bool, error) {
 	e, err := s.rdb.SIsMember(s.ctx, k, v).Result()
 	return e, err
 }
 
-// Sum get the size of k-v
+// Sum get the size of k-video
 func (s *RdsService) Sum(k string) int64 {
 	total, _ := s.rdb.SCard(s.ctx, k).Result()
 	s.rdb.Expire(s.ctx, k, expTime)

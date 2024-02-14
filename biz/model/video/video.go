@@ -3,6 +3,7 @@
 package video
 
 import (
+	"bibi/biz/model/user"
 	"context"
 	"fmt"
 	"github.com/apache/thrift/lib/go/thrift"
@@ -183,21 +184,21 @@ func (p *BaseResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("BaseResp(%+v)", *p)
+	return fmt.Sprintf("BaseResp(%+video)", *p)
 
 }
 
 type Video struct {
-	ID    int64  `thrift:"id,1" form:"id" json:"id" query:"id"`
-	Title string `thrift:"title,2" form:"title" json:"title" query:"title"`
-	//    3:User author,
-	UID          int64  `thrift:"uid,3" form:"uid" json:"uid" query:"uid"`
-	PlayURL      string `thrift:"play_url,4" form:"play_url" json:"play_url" query:"play_url"`
-	CoverURL     string `thrift:"cover_url,5" form:"cover_url" json:"cover_url" query:"cover_url"`
-	LikeCount    int64  `thrift:"like_count,6" form:"like_count" json:"like_count" query:"like_count"`
-	CommentCount int64  `thrift:"comment_count,7" form:"comment_count" json:"comment_count" query:"comment_count"`
-	IsLike       bool   `thrift:"is_like,8" form:"is_like" json:"is_like" query:"is_like"`
-	PublishTime  string `thrift:"publish_time,9" form:"publish_time" json:"publish_time" query:"publish_time"`
+	ID           int64      `thrift:"id,1" form:"id" json:"id" query:"id"`
+	Title        string     `thrift:"title,2" form:"title" json:"title" query:"title"`
+	Author       *user.User `thrift:"author,3" form:"author" json:"author" query:"author"`
+	UID          int64      `thrift:"uid,4" form:"uid" json:"uid" query:"uid"`
+	PlayURL      string     `thrift:"play_url,5" form:"play_url" json:"play_url" query:"play_url"`
+	CoverURL     string     `thrift:"cover_url,6" form:"cover_url" json:"cover_url" query:"cover_url"`
+	LikeCount    int64      `thrift:"like_count,7" form:"like_count" json:"like_count" query:"like_count"`
+	CommentCount int64      `thrift:"comment_count,8" form:"comment_count" json:"comment_count" query:"comment_count"`
+	IsLike       int64      `thrift:"is_like,9" form:"is_like" json:"is_like" query:"is_like"`
+	PublishTime  string     `thrift:"publish_time,10" form:"publish_time" json:"publish_time" query:"publish_time"`
 }
 
 func NewVideo() *Video {
@@ -210,6 +211,15 @@ func (p *Video) GetID() (v int64) {
 
 func (p *Video) GetTitle() (v string) {
 	return p.Title
+}
+
+var Video_Author_DEFAULT *user.User
+
+func (p *Video) GetAuthor() (v *user.User) {
+	if !p.IsSetAuthor() {
+		return Video_Author_DEFAULT
+	}
+	return p.Author
 }
 
 func (p *Video) GetUID() (v int64) {
@@ -232,7 +242,7 @@ func (p *Video) GetCommentCount() (v int64) {
 	return p.CommentCount
 }
 
-func (p *Video) GetIsLike() (v bool) {
+func (p *Video) GetIsLike() (v int64) {
 	return p.IsLike
 }
 
@@ -241,15 +251,20 @@ func (p *Video) GetPublishTime() (v string) {
 }
 
 var fieldIDToName_Video = map[int16]string{
-	1: "id",
-	2: "title",
-	3: "uid",
-	4: "play_url",
-	5: "cover_url",
-	6: "like_count",
-	7: "comment_count",
-	8: "is_like",
-	9: "publish_time",
+	1:  "id",
+	2:  "title",
+	3:  "author",
+	4:  "uid",
+	5:  "play_url",
+	6:  "cover_url",
+	7:  "like_count",
+	8:  "comment_count",
+	9:  "is_like",
+	10: "publish_time",
+}
+
+func (p *Video) IsSetAuthor() bool {
+	return p.Author != nil
 }
 
 func (p *Video) Read(iprot thrift.TProtocol) (err error) {
@@ -288,7 +303,7 @@ func (p *Video) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 3:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -296,7 +311,7 @@ func (p *Video) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 4:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -312,7 +327,7 @@ func (p *Video) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 6:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -328,7 +343,7 @@ func (p *Video) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 8:
-			if fieldTypeId == thrift.BOOL {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -336,8 +351,16 @@ func (p *Video) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 9:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 10:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -391,6 +414,13 @@ func (p *Video) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *Video) ReadField3(iprot thrift.TProtocol) error {
+	p.Author = user.NewUser()
+	if err := p.Author.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+func (p *Video) ReadField4(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -399,7 +429,7 @@ func (p *Video) ReadField3(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *Video) ReadField4(iprot thrift.TProtocol) error {
+func (p *Video) ReadField5(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -408,7 +438,7 @@ func (p *Video) ReadField4(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *Video) ReadField5(iprot thrift.TProtocol) error {
+func (p *Video) ReadField6(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -417,7 +447,7 @@ func (p *Video) ReadField5(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *Video) ReadField6(iprot thrift.TProtocol) error {
+func (p *Video) ReadField7(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -426,7 +456,7 @@ func (p *Video) ReadField6(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *Video) ReadField7(iprot thrift.TProtocol) error {
+func (p *Video) ReadField8(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -435,16 +465,16 @@ func (p *Video) ReadField7(iprot thrift.TProtocol) error {
 	}
 	return nil
 }
-func (p *Video) ReadField8(iprot thrift.TProtocol) error {
+func (p *Video) ReadField9(iprot thrift.TProtocol) error {
 
-	if v, err := iprot.ReadBool(); err != nil {
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		p.IsLike = v
 	}
 	return nil
 }
-func (p *Video) ReadField9(iprot thrift.TProtocol) error {
+func (p *Video) ReadField10(iprot thrift.TProtocol) error {
 
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -494,6 +524,10 @@ func (p *Video) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField9(oprot); err != nil {
 			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
 			goto WriteFieldError
 		}
 	}
@@ -549,10 +583,10 @@ WriteFieldEndError:
 }
 
 func (p *Video) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("uid", thrift.I64, 3); err != nil {
+	if err = oprot.WriteFieldBegin("author", thrift.STRUCT, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.UID); err != nil {
+	if err := p.Author.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -566,10 +600,10 @@ WriteFieldEndError:
 }
 
 func (p *Video) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("play_url", thrift.STRING, 4); err != nil {
+	if err = oprot.WriteFieldBegin("uid", thrift.I64, 4); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.PlayURL); err != nil {
+	if err := oprot.WriteI64(p.UID); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -583,10 +617,10 @@ WriteFieldEndError:
 }
 
 func (p *Video) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("cover_url", thrift.STRING, 5); err != nil {
+	if err = oprot.WriteFieldBegin("play_url", thrift.STRING, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.CoverURL); err != nil {
+	if err := oprot.WriteString(p.PlayURL); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -600,10 +634,10 @@ WriteFieldEndError:
 }
 
 func (p *Video) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("like_count", thrift.I64, 6); err != nil {
+	if err = oprot.WriteFieldBegin("cover_url", thrift.STRING, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.LikeCount); err != nil {
+	if err := oprot.WriteString(p.CoverURL); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -617,10 +651,10 @@ WriteFieldEndError:
 }
 
 func (p *Video) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("comment_count", thrift.I64, 7); err != nil {
+	if err = oprot.WriteFieldBegin("like_count", thrift.I64, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.CommentCount); err != nil {
+	if err := oprot.WriteI64(p.LikeCount); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -634,10 +668,10 @@ WriteFieldEndError:
 }
 
 func (p *Video) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("is_like", thrift.BOOL, 8); err != nil {
+	if err = oprot.WriteFieldBegin("comment_count", thrift.I64, 8); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteBool(p.IsLike); err != nil {
+	if err := oprot.WriteI64(p.CommentCount); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -651,10 +685,10 @@ WriteFieldEndError:
 }
 
 func (p *Video) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("publish_time", thrift.STRING, 9); err != nil {
+	if err = oprot.WriteFieldBegin("is_like", thrift.I64, 9); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.PublishTime); err != nil {
+	if err := oprot.WriteI64(p.IsLike); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -667,11 +701,28 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
 }
 
+func (p *Video) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("publish_time", thrift.STRING, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.PublishTime); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
 func (p *Video) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("Video(%+v)", *p)
+	return fmt.Sprintf("Video(%+video)", *p)
 
 }
 
@@ -894,7 +945,7 @@ func (p *PutVideoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("PutVideoReq(%+v)", *p)
+	return fmt.Sprintf("PutVideoReq(%+video)", *p)
 
 }
 
@@ -1036,7 +1087,7 @@ func (p *PutVideoResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("PutVideoResp(%+v)", *p)
+	return fmt.Sprintf("PutVideoResp(%+video)", *p)
 
 }
 
@@ -1171,7 +1222,7 @@ func (p *ListUserVideoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ListUserVideoReq(%+v)", *p)
+	return fmt.Sprintf("ListUserVideoReq(%+video)", *p)
 
 }
 
@@ -1419,7 +1470,7 @@ func (p *ListUserVideoResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ListUserVideoResp(%+v)", *p)
+	return fmt.Sprintf("ListUserVideoResp(%+video)", *p)
 
 }
 
@@ -1598,7 +1649,7 @@ func (p *SearchVideoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("SearchVideoReq(%+v)", *p)
+	return fmt.Sprintf("SearchVideoReq(%+video)", *p)
 
 }
 
@@ -1846,7 +1897,7 @@ func (p *SearchVideoResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("SearchVideoResp(%+v)", *p)
+	return fmt.Sprintf("SearchVideoResp(%+video)", *p)
 
 }
 
@@ -1926,7 +1977,7 @@ func (p *HotVideoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("HotVideoReq(%+v)", *p)
+	return fmt.Sprintf("HotVideoReq(%+video)", *p)
 
 }
 
@@ -2130,7 +2181,7 @@ func (p *HotVideoReso) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("HotVideoReso(%+v)", *p)
+	return fmt.Sprintf("HotVideoReso(%+video)", *p)
 
 }
 
@@ -2581,7 +2632,7 @@ func (p *VideoHandlerPutVideoArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerPutVideoArgs(%+v)", *p)
+	return fmt.Sprintf("VideoHandlerPutVideoArgs(%+video)", *p)
 
 }
 
@@ -2725,7 +2776,7 @@ func (p *VideoHandlerPutVideoResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerPutVideoResult(%+v)", *p)
+	return fmt.Sprintf("VideoHandlerPutVideoResult(%+video)", *p)
 
 }
 
@@ -2867,7 +2918,7 @@ func (p *VideoHandlerListVideosByIDArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerListVideosByIDArgs(%+v)", *p)
+	return fmt.Sprintf("VideoHandlerListVideosByIDArgs(%+video)", *p)
 
 }
 
@@ -3011,7 +3062,7 @@ func (p *VideoHandlerListVideosByIDResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerListVideosByIDResult(%+v)", *p)
+	return fmt.Sprintf("VideoHandlerListVideosByIDResult(%+video)", *p)
 
 }
 
@@ -3153,7 +3204,7 @@ func (p *VideoHandlerSearchVideoArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerSearchVideoArgs(%+v)", *p)
+	return fmt.Sprintf("VideoHandlerSearchVideoArgs(%+video)", *p)
 
 }
 
@@ -3297,7 +3348,7 @@ func (p *VideoHandlerSearchVideoResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerSearchVideoResult(%+v)", *p)
+	return fmt.Sprintf("VideoHandlerSearchVideoResult(%+video)", *p)
 
 }
 
@@ -3439,7 +3490,7 @@ func (p *VideoHandlerHotVideoArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerHotVideoArgs(%+v)", *p)
+	return fmt.Sprintf("VideoHandlerHotVideoArgs(%+video)", *p)
 
 }
 
@@ -3583,6 +3634,6 @@ func (p *VideoHandlerHotVideoResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerHotVideoResult(%+v)", *p)
+	return fmt.Sprintf("VideoHandlerHotVideoResult(%+video)", *p)
 
 }

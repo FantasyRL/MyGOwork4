@@ -19,7 +19,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 -- DROP TABLE IF EXISTS `video`;
-CREATE TABLE `video` (
+CREATE TABLE video (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '视频ID',
     `uid` bigint NOT NULL COMMENT '用户ID',
     `play_url` varchar(255) NOT NULL COMMENT '视频url',
@@ -49,7 +49,7 @@ CREATE TABLE `like` (
             on delete cascade,
     constraint `favorite_video`
         foreign key (`videoId`)
-            references `video` (`id`)
+            references video (`id`)
             on delete cascade,
     KEY `userIdtoVideoIdIdx` (`uid`,`videoId`) USING BTREE,
     KEY `uid_idx` (`uid`) USING BTREE,

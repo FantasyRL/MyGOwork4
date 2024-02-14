@@ -185,7 +185,7 @@ func (p *BaseResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("BaseResp(%+v)", *p)
+	return fmt.Sprintf("BaseResp(%+video)", *p)
 
 }
 
@@ -459,7 +459,7 @@ func (p *Comment) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("Comment(%+v)", *p)
+	return fmt.Sprintf("Comment(%+video)", *p)
 
 }
 
@@ -472,7 +472,7 @@ func NewLikeActionReq() *LikeActionReq {
 	return &LikeActionReq{}
 }
 
-func (p *LikeActionReq) GetVideoID() (v int64) {
+func (p *LikeActionReq) GetVideoId() (v int64) {
 	return p.VideoID
 }
 
@@ -481,7 +481,7 @@ func (p *LikeActionReq) GetActionType() (v int64) {
 }
 
 var fieldIDToName_LikeActionReq = map[int16]string{
-	1: "video_id",
+	1: "videoId",
 	2: "action_type",
 }
 
@@ -601,7 +601,7 @@ WriteStructEndError:
 }
 
 func (p *LikeActionReq) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("video_id", thrift.I64, 1); err != nil {
+	if err = oprot.WriteFieldBegin("videoId", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI64(p.VideoID); err != nil {
@@ -638,7 +638,7 @@ func (p *LikeActionReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("LikeActionReq(%+v)", *p)
+	return fmt.Sprintf("LikeActionReq(%+video)", *p)
 
 }
 
@@ -780,18 +780,25 @@ func (p *LikeActionResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("LikeActionResp(%+v)", *p)
+	return fmt.Sprintf("LikeActionResp(%+video)", *p)
 
 }
 
 type LikeListReq struct {
+	PageNum int64 `thrift:"page_num,1" form:"page_num" json:"page_num" query:"page_num"`
 }
 
 func NewLikeListReq() *LikeListReq {
 	return &LikeListReq{}
 }
 
-var fieldIDToName_LikeListReq = map[int16]string{}
+func (p *LikeListReq) GetPageNum() (v int64) {
+	return p.PageNum
+}
+
+var fieldIDToName_LikeListReq = map[int16]string{
+	1: "page_num",
+}
 
 func (p *LikeListReq) Read(iprot thrift.TProtocol) (err error) {
 
@@ -810,8 +817,20 @@ func (p *LikeListReq) Read(iprot thrift.TProtocol) (err error) {
 		if fieldTypeId == thrift.STOP {
 			break
 		}
-		if err = iprot.Skip(fieldTypeId); err != nil {
-			goto SkipFieldTypeError
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		}
 		if err = iprot.ReadFieldEnd(); err != nil {
 			goto ReadFieldEndError
@@ -826,8 +845,10 @@ ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
-SkipFieldTypeError:
-	return thrift.PrependError(fmt.Sprintf("%T skip field type %d error", p, fieldTypeId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_LikeListReq[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
 ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
@@ -835,11 +856,26 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
+func (p *LikeListReq) ReadField1(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.PageNum = v
+	}
+	return nil
+}
+
 func (p *LikeListReq) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
 	if err = oprot.WriteStructBegin("LikeListReq"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -850,17 +886,36 @@ func (p *LikeListReq) Write(oprot thrift.TProtocol) (err error) {
 	return nil
 WriteStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
 WriteFieldStopError:
 	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
 WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
+func (p *LikeListReq) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("page_num", thrift.I64, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.PageNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
 func (p *LikeListReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("LikeListReq(%+v)", *p)
+	return fmt.Sprintf("LikeListReq(%+video)", *p)
 
 }
 
@@ -1064,7 +1119,7 @@ func (p *LikeListResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("LikeListResp(%+v)", *p)
+	return fmt.Sprintf("LikeListResp(%+video)", *p)
 
 }
 
@@ -1395,7 +1450,7 @@ func (p *InteractionHandlerLikeActionArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("InteractionHandlerLikeActionArgs(%+v)", *p)
+	return fmt.Sprintf("InteractionHandlerLikeActionArgs(%+video)", *p)
 
 }
 
@@ -1539,7 +1594,7 @@ func (p *InteractionHandlerLikeActionResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("InteractionHandlerLikeActionResult(%+v)", *p)
+	return fmt.Sprintf("InteractionHandlerLikeActionResult(%+video)", *p)
 
 }
 
@@ -1681,7 +1736,7 @@ func (p *InteractionHandlerLikeListArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("InteractionHandlerLikeListArgs(%+v)", *p)
+	return fmt.Sprintf("InteractionHandlerLikeListArgs(%+video)", *p)
 
 }
 
@@ -1825,6 +1880,6 @@ func (p *InteractionHandlerLikeListResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("InteractionHandlerLikeListResult(%+v)", *p)
+	return fmt.Sprintf("InteractionHandlerLikeListResult(%+video)", *p)
 
 }

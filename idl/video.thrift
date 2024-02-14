@@ -1,5 +1,7 @@
 namespace go video
 
+include "user.thrift"
+
 struct BaseResp {
     1: i64 code,
     2: string msg,
@@ -8,14 +10,14 @@ struct BaseResp {
 struct Video{
     1:i64 id,
     2:string title,
-//    3:User author,
-    3:i64 uid,
-    4:string play_url,
-    5:string cover_url,
-    6:i64 like_count,
-    7:i64 comment_count,
-    8:bool is_like,
-    9:string publish_time,
+    3:user.User author,
+    4:i64 uid,
+    5:string play_url,
+    6:string cover_url,
+    7:i64 like_count,
+    8:i64 comment_count,
+    9:i64 is_like,
+    10:string publish_time,
 }
 
 struct PutVideoReq{

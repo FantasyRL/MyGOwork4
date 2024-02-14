@@ -48,10 +48,30 @@ func (s *LikeService) Like(req *interaction.LikeActionReq, uid int64) error {
 		return db.LikeCreate(uid, req.VideoID, 1)
 	}
 	return db.LikeStatusUpdate(uid, req.VideoID, 1)
-
 }
 
-func (s *LikeService) DisLike(req *interaction.LikeActionReq, id int64) error {
-	return nil
+func (s *LikeService) DisLike(req *interaction.LikeActionReq, uid int64) error {
+	exist, err := cache.IsVideoLikeExist(s.ctx, req.VideoID, uid)
+	if err != nil {
+		return err
+	}
+	if !exist {
+		err = db.IsLikeExist(uid, req.VideoID)
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errno.LikeNotExistError
+		}
+		if err != nil {
+			return err
+		}
 
+		if err = db.CheckLikeStatus(uid, req.VideoID, 0); err == nil {
+			return errno.LikeNotExistError
+		}
+	}
+	if exist {
+		if err = cache.DelVideoLikeCount(s.ctx, req.VideoID, uid); err != nil {
+			return err
+		}
+	}
+	return db.LikeStatusUpdate(uid, req.VideoID, 0)
 }

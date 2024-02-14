@@ -36,7 +36,19 @@ paths:
       summary: like_action
   /bibi/interaction/like/list:
     get:
+      consumes:
+      - json/form
+      description: show the list of your liked videos
+      parameters:
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: like_list
   /bibi/user:
     get:
       consumes:
@@ -112,6 +124,9 @@ paths:
       - application/json
       responses: {}
       summary: Register
+  /bibi/v/myvideo:
+    post:
+      responses: {}
   /bibi/video/hot:
     get:
       responses: {}

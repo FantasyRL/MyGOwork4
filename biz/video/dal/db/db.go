@@ -24,6 +24,7 @@ func GetVideoCountByID(uid int64) (count int64, err error) {
 func ListVideosByID(ctx context.Context, pageNum int, uid int64) ([]Video, int64, error) {
 	videos := new([]Video)
 	var count int64 = 0
+	//按创建时间降序
 	if err := dao.DB.Model(&Video{}).Where("uid = ?", uid).Count(&count).Order("created_at DESC").
 		Limit(conf.PageSize).Offset((pageNum - 1) * conf.PageSize).Find(videos).
 		Error; err != nil {
@@ -53,4 +54,13 @@ func CheckVideoExistById(videoId int64) error {
 		return errno.VideoNotExistError
 	}
 	return nil
+}
+
+func GetVideoByIdList(videoIdList []int64) ([]Video, error) {
+	videos := new([]Video)
+	if err := dao.DB.Model(Video{}).Where("id IN ?", videoIdList).Order("created_at DESC").Find(videos).Error; err != nil {
+		return nil, err
+	}
+	return *videos, nil
+
 }

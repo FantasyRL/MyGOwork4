@@ -57,6 +57,23 @@ const docTemplate = `{
         },
         "/bibi/interaction/like/list": {
             "get": {
+                "description": "show the list of your liked videos",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "like_list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {}
             }
         },
@@ -166,6 +183,11 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
+                "responses": {}
+            }
+        },
+        "/bibi/video/myvideo": {
+            "post": {
                 "responses": {}
             }
         },

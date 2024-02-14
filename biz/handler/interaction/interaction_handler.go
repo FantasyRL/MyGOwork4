@@ -3,8 +3,12 @@
 package interaction
 
 import (
+	"bibi/biz/interaction/pack"
 	"bibi/biz/interaction/service"
 	"bibi/biz/model/interaction"
+	"bibi/biz/user/dal/db"
+	userService "bibi/biz/user/service"
+	videoService "bibi/biz/video/service"
 	"bibi/pkg/errno"
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -45,6 +49,11 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 }
 
 // LikeList .
+// @Summary like_list
+// @Description show the list of your liked videos
+// @Accept json/form
+// @Produce json
+// @Param Authorization header string true "token"
 // @router /bibi/interaction/like/list [GET]
 func LikeList(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -57,5 +66,38 @@ func LikeList(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(interaction.LikeListResp)
 
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+
+	//todo:用rpc改掉这里混沌的架构
+	likeResp, err := service.NewLikeService(ctx).LikeVideoList(&req, id)
+	if err != nil {
+		resp.Base = errno.BuildInteractionBaseResp(err)
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+	videoResp, err := videoService.NewVideoService(ctx).GetLikeVideoList(likeResp)
+	if err != nil {
+		resp.Base = errno.BuildInteractionBaseResp(err)
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+	var userResp []db.User
+	var videoLikeList []int64
+	for _, videoId := range likeResp {
+		videoLikeCount, _ := service.NewLikeService(ctx).GetVideoLikeById(videoId)
+		videoLikeList = append(videoLikeList, videoLikeCount)
+	}
+	for _, video := range videoResp {
+		user, _ := userService.NewUserService(ctx).GetUserByVideo(video)
+		userResp = append(userResp, *user)
+	}
+	isLikeList := make([]int64, 0, len(likeResp))
+	for i := 0; i < len(likeResp); i++ {
+		isLikeList = append(isLikeList, 1)
+	}
+
+	resp.Base = errno.BuildInteractionBaseResp(err)
+	resp.VideoList = pack.BuildVideoListResp(videoResp, userResp, videoLikeList, isLikeList)
 	c.JSON(consts.StatusOK, resp)
 }

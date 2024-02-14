@@ -65,3 +65,11 @@ func PutAvatar(ctx context.Context, userModel *User) (*User, error) {
 
 	return userModel, nil
 }
+
+func QueryUserByIDList(uidList []int64) ([]User, error) {
+	userResp := new([]User)
+	if err := dao.DB.Model(User{}).Where("id IN ?", uidList).Find(userResp).Error; err != nil {
+		return nil, err
+	}
+	return *userResp, nil
+}

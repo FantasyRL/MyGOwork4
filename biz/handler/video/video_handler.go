@@ -204,3 +204,19 @@ func HotVideo(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(consts.StatusOK, resp)
 }
+
+// ListVideosByID .
+// @router /bibi/video/myvideo [POST]
+func ListVideosByID(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req video.ListUserVideoReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(video.ListUserVideoResp)
+
+	c.JSON(consts.StatusOK, resp)
+}

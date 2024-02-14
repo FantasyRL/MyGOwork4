@@ -3,11 +3,11 @@
 package video
 
 import (
-	"bibi/biz/video/dal/db"
-	"bibi/biz/video/pack"
-	"bibi/biz/video/service"
+	"bibi/biz/dal/db"
+	"bibi/biz/service/video_service"
 	"bibi/pkg/conf"
 	"bibi/pkg/errno"
+	"bibi/pkg/pack"
 	"context"
 	"fmt"
 	"golang.org/x/sync/errgroup"
@@ -53,8 +53,8 @@ func PutVideo(ctx context.Context, c *app.RequestContext) {
 	allowExtVideo := map[string]bool{
 		".mp4": true,
 	}
-	if !errno.IsAllowExt(videoExt, allowExtVideo) {
-		resp.Base = errno.BuildVideoBaseResp(errno.ParamError)
+	if !pack.IsAllowExt(videoExt, allowExtVideo) {
+		resp.Base = pack.BuildVideoBaseResp(errno.ParamError)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
@@ -64,8 +64,8 @@ func PutVideo(ctx context.Context, c *app.RequestContext) {
 		".png":  true,
 		".jpeg": true,
 	}
-	if !errno.IsAllowExt(coverExt, allowExtCover) {
-		resp.Base = errno.BuildVideoBaseResp(errno.ParamError)
+	if !pack.IsAllowExt(coverExt, allowExtCover) {
+		resp.Base = pack.BuildVideoBaseResp(errno.ParamError)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
@@ -81,7 +81,7 @@ func PutVideo(ctx context.Context, c *app.RequestContext) {
 		if err != nil {
 			return errno.ReadFileError
 		}
-		err = service.NewVideoService(ctx).UploadCover(coverByte, coverName)
+		err = video_service.NewVideoService(ctx).UploadCover(coverByte, coverName)
 		if err != nil {
 			return errno.UploadFileError
 		}
@@ -92,7 +92,7 @@ func PutVideo(ctx context.Context, c *app.RequestContext) {
 		if err != nil {
 			return errno.ReadFileError
 		}
-		err = service.NewVideoService(ctx).UploadVideo(videoByte, videoName)
+		err = video_service.NewVideoService(ctx).UploadVideo(videoByte, videoName)
 		if err != nil {
 			return errno.UploadFileError
 		}
@@ -108,18 +108,18 @@ func PutVideo(ctx context.Context, c *app.RequestContext) {
 			PlayUrl:  videoUrl,
 			CoverUrl: coverUrl,
 		}
-		_, err = service.NewVideoService(ctx).PutVideo(VideoReq)
+		_, err = video_service.NewVideoService(ctx).PutVideo(VideoReq)
 		if err != nil {
 			return err
 		}
 		return nil
 	})
 	if err := eg.Wait(); err != nil {
-		resp.Base = errno.BuildVideoBaseResp(err)
+		resp.Base = pack.BuildVideoBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	resp.Base = errno.BuildVideoBaseResp(nil)
+	resp.Base = pack.BuildVideoBaseResp(nil)
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -130,7 +130,7 @@ func PutVideo(ctx context.Context, c *app.RequestContext) {
 // @Produce json
 // @Param Authorization header string true "token"
 // @Param page_num query int64 true "页码"
-// @router /bibi/video/myvideo [POST]
+// @router /bibi/video/published [POST]
 func ListVideo(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req video.ListUserVideoReq
@@ -145,13 +145,13 @@ func ListVideo(ctx context.Context, c *app.RequestContext) {
 	//jwt(mw)
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
-	videoResp, count, err := service.NewVideoService(ctx).ListVideo(&req, id)
-	resp.Base = errno.BuildVideoBaseResp(err)
+	videoResp, count, err := video_service.NewVideoService(ctx).ListVideo(&req, id)
+	resp.Base = pack.BuildVideoBaseResp(err)
 	if err != nil {
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	resp.VideoList = service.BuildListVideoResp(videoResp)
+	resp.VideoList = video_service.BuildListVideoResp(videoResp)
 	resp.Count = count
 	c.JSON(consts.StatusOK, resp)
 }
@@ -175,15 +175,15 @@ func SearchVideo(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(video.SearchVideoResp)
 
-	videoResp, count, err := service.NewVideoService(ctx).SearchVideo(&req)
+	videoResp, count, err := video_service.NewVideoService(ctx).SearchVideo(&req)
 
-	resp.Base = errno.BuildVideoBaseResp(err)
+	resp.Base = pack.BuildVideoBaseResp(err)
 	if err != nil {
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
 
-	resp.VideoList = service.BuildListVideoResp(videoResp)
+	resp.VideoList = video_service.BuildListVideoResp(videoResp)
 	resp.Count = count
 
 	c.JSON(consts.StatusOK, resp)
@@ -201,22 +201,6 @@ func HotVideo(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(video.HotVideoReq)
-
-	c.JSON(consts.StatusOK, resp)
-}
-
-// ListVideosByID .
-// @router /bibi/video/myvideo [POST]
-func ListVideosByID(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req video.ListUserVideoReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(video.ListUserVideoResp)
 
 	c.JSON(consts.StatusOK, resp)
 }

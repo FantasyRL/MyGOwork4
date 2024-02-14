@@ -1,25 +1,26 @@
-package errno
+package pack
 
 import (
 	"bibi/biz/model/interaction"
 	"bibi/biz/model/user"
 	"bibi/biz/model/video"
+	"bibi/pkg/errno"
 	"errors"
 )
 
 func BuildUserBaseResp(err error) *user.BaseResp {
 	if err == nil {
-		return ErrToUserResp(Success)
+		return ErrToUserResp(errno.Success)
 	}
-	e := ErrNo{}
+	e := errno.ErrNo{}
 	if errors.As(err, &e) {
 		return ErrToUserResp(e)
 	}
-	_e := ServiceError.WithMessage(err.Error())
+	_e := errno.ServiceError.WithMessage(err.Error())
 	return ErrToUserResp(_e)
 }
 
-func ErrToUserResp(err ErrNo) *user.BaseResp {
+func ErrToUserResp(err errno.ErrNo) *user.BaseResp {
 	return &user.BaseResp{
 		Code: err.ErrorCode,
 		Msg:  err.ErrorMsg,
@@ -28,43 +29,36 @@ func ErrToUserResp(err ErrNo) *user.BaseResp {
 
 func BuildVideoBaseResp(err error) *video.BaseResp {
 	if err == nil {
-		return ErrToVideoResp(Success)
+		return ErrToVideoResp(errno.Success)
 	}
-	e := ErrNo{}
+	e := errno.ErrNo{}
 	if errors.As(err, &e) {
 		return ErrToVideoResp(e)
 	}
-	_e := ServiceError.WithMessage(err.Error())
+	_e := errno.ServiceError.WithMessage(err.Error())
 	return ErrToVideoResp(_e)
 }
 
-func ErrToVideoResp(err ErrNo) *video.BaseResp {
+func ErrToVideoResp(err errno.ErrNo) *video.BaseResp {
 	return &video.BaseResp{
 		Code: err.ErrorCode,
 		Msg:  err.ErrorMsg,
 	}
 }
 
-func IsAllowExt(fileExt string, allowExtMap map[string]bool) bool {
-	if _, ok := allowExtMap[fileExt]; !ok {
-		return false
-	}
-	return true
-}
-
 func BuildInteractionBaseResp(err error) *interaction.BaseResp {
 	if err == nil {
-		return ErrToInteractionResp(Success)
+		return ErrToInteractionResp(errno.Success)
 	}
-	e := ErrNo{}
+	e := errno.ErrNo{}
 	if errors.As(err, &e) {
 		return ErrToInteractionResp(e)
 	}
-	_e := ServiceError.WithMessage(err.Error())
+	_e := errno.ServiceError.WithMessage(err.Error())
 	return ErrToInteractionResp(_e)
 }
 
-func ErrToInteractionResp(err ErrNo) *interaction.BaseResp {
+func ErrToInteractionResp(err errno.ErrNo) *interaction.BaseResp {
 	return &interaction.BaseResp{
 		Code: err.ErrorCode,
 		Msg:  err.ErrorMsg,

@@ -1,15 +1,12 @@
-package service
+package user_service
 
 import (
+	"bibi/biz/dal/db"
 	"bibi/biz/model/user"
-	"bibi/biz/user/dal/db"
 	aliyunoss "bibi/oss"
-	"bibi/pkg/errno"
 	"context"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"io"
 	"log"
-	"mime/multipart"
 )
 
 type UserService struct {
@@ -34,18 +31,11 @@ func NewAvatarService(ctx context.Context) *AvatarService {
 }
 
 func BuildUserResp(_user interface{}) *user.User {
+	//这里使用了一个及其抽象的断言
 	p, _ := (_user).(*db.User)
 	return &user.User{
 		ID:     p.ID,
 		Name:   p.UserName,
 		Avatar: p.Avatar,
 	}
-}
-
-func FileToByte(file *multipart.FileHeader) ([]byte, error) {
-	fileContent, err := file.Open()
-	if err != nil {
-		return nil, errno.ParamError
-	}
-	return io.ReadAll(fileContent)
 }

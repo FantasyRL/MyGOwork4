@@ -47,13 +47,3 @@ func _putvideoMw() []app.HandlerFunc {
 	}
 	//return nil
 }
-
-func _vMw() []app.HandlerFunc {
-	// your code...
-	return nil
-}
-
-func _listvideosbyidMw() []app.HandlerFunc {
-	// your code...
-	return nil
-}

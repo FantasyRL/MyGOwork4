@@ -20,9 +20,9 @@ func Register(r *server.Hertz) {
 	{
 		_bibi := root.Group("/bibi", _bibiMw()...)
 		{
-			_v := _bibi.Group("/video", _vMw()...)
+			_v := _bibi.Group("/video", _videoMw()...)
 			_v.GET("/hot", append(_hotvideoMw(), video.HotVideo)...)
-			_v.POST("/myvideo", append(_listvideosbyidMw(), video.ListVideosByID)...)
+			_v.POST("/published", append(_listvideoMw(), video.ListVideo)...)
 			_v.POST("/search", append(_searchvideoMw(), video.SearchVideo)...)
 			_v.POST("/upload", append(_putvideoMw(), video.PutVideo)...)
 		}

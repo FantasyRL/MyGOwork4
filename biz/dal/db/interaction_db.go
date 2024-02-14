@@ -1,6 +1,8 @@
 package db
 
-import "bibi/dao"
+import (
+	"bibi/dao"
+)
 
 func CheckLikeStatus(uid int64, videoId int64, status int64) error {
 	var like Like

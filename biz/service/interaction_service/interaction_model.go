@@ -1,4 +1,4 @@
-package service
+package interaction_service
 
 import (
 	"context"

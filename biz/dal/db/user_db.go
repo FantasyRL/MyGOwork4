@@ -11,12 +11,6 @@ import (
 
 func Register(ctx context.Context, userModel *User) (*User, error) {
 	userResp := new(User)
-
-	//var count int64 = 0
-	//dao.DB.WithContext(ctx).Where("name = ?", userModel.UserName).First(&userResp).Count(&count)
-	//if count == 1 {
-	//	return nil, errno.ExistUserError
-	//}
 	//WithContext(ctx)是将一个context.Context对象和数据库连接绑定，以实现在数据库操作中使用context.Context上下文传递。
 	if err := dao.DB.WithContext(ctx).Where("user_name = ?", userModel.UserName).First(&userResp).Error; err == nil {
 		return nil, errno.ExistUserError
@@ -51,19 +45,12 @@ func QueryUserByID(ctx context.Context, userModel *User) (*User, error) {
 }
 
 func PutAvatar(ctx context.Context, userModel *User) (*User, error) {
+	//这里可能出问题，留个注释
 	userResp := new(User)
-	//if err:=dao.DB.WithContext(ctx).Where("id = ?",userModel.ID).Update("avatar",userModel.Avatar).Error;err!=nil{
-	//	return nil, err
-	//}
-	if err := dao.DB.WithContext(ctx).Where("id = ?", userModel.ID).First(userResp).Error; err != nil {
+	if err := dao.DB.Model(User{}).Where("id = ?", userModel.ID).Update("avatar", userModel.Avatar).First(userResp).Error; err != nil {
 		return nil, err
 	}
-	userResp.Avatar = userModel.Avatar
-	if err := dao.DB.WithContext(ctx).Save(userResp).Error; err != nil {
-		return nil, err
-	}
-
-	return userModel, nil
+	return userResp, nil
 }
 
 func QueryUserByIDList(uidList []int64) ([]User, error) {

@@ -1,9 +1,10 @@
 package jwt
 
 import (
-	user2 "bibi/biz/model/user"
-	"bibi/biz/user/service"
+	"bibi/biz/model/user"
+	"bibi/biz/service/user_service"
 	"bibi/pkg/errno"
+	"bibi/pkg/pack"
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -31,14 +32,14 @@ func Init() {
 		//类似于Login Handler
 		Authenticator: func(ctx context.Context, c *app.RequestContext) (interface{}, error) {
 			var err error
-			var req user2.LoginReq
+			var req user.LoginReq
 			err = c.BindAndValidate(&req)
 			if err != nil {
 				c.String(consts.StatusBadRequest, err.Error())
 				return nil, err
 			}
 
-			userResp, err := service.NewUserService(ctx).Login(&req)
+			userResp, err := user_service.NewUserService(ctx).Login(&req)
 			if err != nil {
 				return nil, err
 			}
@@ -76,12 +77,12 @@ func Init() {
 		},
 		// Validation failed, build the message
 		Unauthorized: func(ctx context.Context, c *app.RequestContext, code int, message string) {
-			resp := new(user2.LoginResp)
-			resp.Base = errno.BuildUserBaseResp(errno.PwdError)
+			resp := new(user.LoginResp)
+			resp.Base = pack.BuildUserBaseResp(errno.PwdError)
 			c.JSON(consts.StatusOK, resp.Base)
 		},
 		HTTPStatusMessageFunc: func(e error, ctx context.Context, c *app.RequestContext) string {
-			resp := errno.BuildUserBaseResp(e)
+			resp := pack.BuildUserBaseResp(e)
 			return resp.Msg
 		},
 	})

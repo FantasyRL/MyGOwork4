@@ -1,7 +1,7 @@
-package service
+package video_service
 
 import (
-	"bibi/biz/video/dal/db"
+	"bibi/biz/dal/db"
 	"bibi/pkg/conf"
 	"bytes"
 	"log"

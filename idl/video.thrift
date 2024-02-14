@@ -61,7 +61,7 @@ struct HotVideoReso{
 
 service VideoHandler{
     PutVideoResp PutVideo(1:PutVideoReq req)(api.post="/bibi/video/upload"),
-    ListUserVideoResp ListVideosByID(1:ListUserVideoReq req)(api.post="/bibi/video/myvideo"),
+    ListUserVideoResp ListVideosByID(1:ListUserVideoReq req)(api.post="/bibi/video/published"),
     SearchVideoResp SearchVideo(1:SearchVideoReq req)(api.post="/bibi/video/search"),
     HotVideoReq HotVideo(1:HotVideoReq req)(api.get="/bibi/video/hot"),
 }

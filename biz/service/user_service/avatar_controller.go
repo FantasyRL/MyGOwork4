@@ -1,8 +1,8 @@
-package service
+package user_service
 
 import (
+	"bibi/biz/dal/db"
 	"bibi/biz/model/user"
-	db2 "bibi/biz/user/dal/db"
 	"bibi/pkg/conf"
 	"bytes"
 	"log"
@@ -18,10 +18,10 @@ func (s *AvatarService) UploadAvatar(req *user.AvatarReq, id int64) error {
 	return err
 }
 
-func (s *AvatarService) PutAvatar(id int64, avatarUrl string) (*db2.User, error) {
-	userModel := &db2.User{
+func (s *AvatarService) PutAvatar(id int64, avatarUrl string) (*db.User, error) {
+	userModel := &db.User{
 		ID:     id,
 		Avatar: avatarUrl,
 	}
-	return db2.PutAvatar(s.ctx, userModel)
+	return db.PutAvatar(s.ctx, userModel)
 }

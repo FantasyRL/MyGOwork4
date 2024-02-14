@@ -1,8 +1,8 @@
-package service
+package video_service
 
 import (
+	"bibi/biz/dal/db"
 	"bibi/biz/model/video"
-	"bibi/biz/video/dal/db"
 )
 
 func (s *VideoService) SearchVideo(req *video.SearchVideoReq) ([]db.Video, int64, error) {

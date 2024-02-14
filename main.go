@@ -27,7 +27,10 @@ func main() {
 
 	h := server.New(
 		server.WithHostPorts(conf.ServerAddr),
+		server.WithStreamBody(true),
+		server.WithMaxRequestBodySize(16*1024*1024), //最大字节数
 	)
+
 	h.Use(accesslog.New()) //todo:log
 	register(h)
 

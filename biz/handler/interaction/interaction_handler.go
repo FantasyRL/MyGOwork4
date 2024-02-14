@@ -3,13 +3,12 @@
 package interaction
 
 import (
-	"bibi/biz/interaction/pack"
-	"bibi/biz/interaction/service"
+	"bibi/biz/dal/db"
 	"bibi/biz/model/interaction"
-	"bibi/biz/user/dal/db"
-	userService "bibi/biz/user/service"
-	videoService "bibi/biz/video/service"
-	"bibi/pkg/errno"
+	"bibi/biz/service/interaction_service"
+	"bibi/biz/service/user_service"
+	"bibi/biz/service/video_service"
+	"bibi/pkg/pack"
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -40,11 +39,11 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 
 	switch req.ActionType {
 	case 1:
-		err = service.NewLikeService(ctx).Like(&req, id)
+		err = interaction_service.NewLikeService(ctx).Like(&req, id)
 	case 0:
-		err = service.NewLikeService(ctx).DisLike(&req, id)
+		err = interaction_service.NewLikeService(ctx).DisLike(&req, id)
 	}
-	resp.Base = errno.BuildInteractionBaseResp(err)
+	resp.Base = pack.BuildInteractionBaseResp(err)
 	c.JSON(consts.StatusOK, resp)
 }
 
@@ -70,26 +69,26 @@ func LikeList(ctx context.Context, c *app.RequestContext) {
 	id := v.(int64)
 
 	//todo:用rpc改掉这里混沌的架构
-	likeResp, err := service.NewLikeService(ctx).LikeVideoList(&req, id)
+	likeResp, err := interaction_service.NewLikeService(ctx).LikeVideoList(&req, id)
 	if err != nil {
-		resp.Base = errno.BuildInteractionBaseResp(err)
+		resp.Base = pack.BuildInteractionBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	videoResp, err := videoService.NewVideoService(ctx).GetLikeVideoList(likeResp)
+	videoResp, err := video_service.NewVideoService(ctx).GetLikeVideoList(likeResp)
 	if err != nil {
-		resp.Base = errno.BuildInteractionBaseResp(err)
+		resp.Base = pack.BuildInteractionBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
 	var userResp []db.User
 	var videoLikeList []int64
 	for _, videoId := range likeResp {
-		videoLikeCount, _ := service.NewLikeService(ctx).GetVideoLikeById(videoId)
+		videoLikeCount, _ := interaction_service.NewLikeService(ctx).GetVideoLikeById(videoId)
 		videoLikeList = append(videoLikeList, videoLikeCount)
 	}
 	for _, video := range videoResp {
-		user, _ := userService.NewUserService(ctx).GetUserByVideo(video)
+		user, _ := user_service.NewUserService(ctx).GetUserByVideo(video)
 		userResp = append(userResp, *user)
 	}
 	isLikeList := make([]int64, 0, len(likeResp))
@@ -97,7 +96,7 @@ func LikeList(ctx context.Context, c *app.RequestContext) {
 		isLikeList = append(isLikeList, 1)
 	}
 
-	resp.Base = errno.BuildInteractionBaseResp(err)
-	resp.VideoList = pack.BuildVideoListResp(videoResp, userResp, videoLikeList, isLikeList)
+	resp.Base = pack.BuildInteractionBaseResp(err)
+	resp.VideoList = video_service.BuildVideoListResp(videoResp, userResp, videoLikeList, isLikeList)
 	c.JSON(consts.StatusOK, resp)
 }

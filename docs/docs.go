@@ -186,17 +186,12 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/bibi/video/myvideo": {
-            "post": {
-                "responses": {}
-            }
-        },
         "/bibi/video/hot": {
             "get": {
                 "responses": {}
             }
         },
-        "/bibi/video/myvideo": {
+        "/bibi/video/published": {
             "post": {
                 "description": "list user's videos",
                 "consumes": [

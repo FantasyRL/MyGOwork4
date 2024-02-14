@@ -1,8 +1,8 @@
-package service
+package interaction_service
 
 import (
-	"bibi/biz/interaction/dal/cache"
-	"bibi/biz/interaction/dal/db"
+	"bibi/biz/dal/cache"
+	"bibi/biz/dal/db"
 	"bibi/biz/model/interaction"
 	"bibi/pkg/errno"
 	"errors"

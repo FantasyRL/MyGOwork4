@@ -10,19 +10,33 @@ import (
 )
 
 //todo:isVideoExist;isAuthor(uid:video_id:countSuffix)
-func (s *LikeService) Like(req *interaction.LikeActionReq, uid int64) error {
-	//video是否存在，那不是还是在和数据库交互
-	//if err=dbVideo.CheckVideoExistById(req.VideoID);err!=nil{
-	//	return
-	//}
-	//点赞是否存在于redis
-	exist, err := cache.IsVideoLikeExist(s.ctx, req.VideoID, uid)
+func (s *InteractionService) Like(req *interaction.LikeActionReq, uid int64) error {
+
+	//用户数据是否存在于redis
+	exist, err := cache.IsUserLikeCacheExist(s.ctx, uid)
 	if err != nil {
 		return err
 	}
-	if exist {
+	if !exist {
+		videoIdList, err := db.GetVideoByUid(uid)
+		if err != nil {
+			return err
+		}
+		err = cache.AddLikeVideoList(s.ctx, videoIdList, uid)
+		if err != nil {
+			return err
+		}
+	}
+
+	//该点赞是否存在
+	exist2, err := cache.IsVideoLikeExist(s.ctx, req.VideoID, uid)
+	if err != nil {
+		return err
+	}
+	if exist2 {
 		return errno.LikeExistError
 	}
+
 	//视频点赞量redis是否过期,若过期则直接存入mysql，未过期则同步视频点赞量
 	ok, _, err := cache.GetVideoLikeCount(s.ctx, req.VideoID)
 	if err != nil {
@@ -34,14 +48,15 @@ func (s *LikeService) Like(req *interaction.LikeActionReq, uid int64) error {
 		if err := cache.AddVideoLikeCount(s.ctx, req.VideoID, uid); err != nil {
 			return err
 		}
+
+	} else {
+		//只添加用户点赞
+		if err := cache.AddUserLikeVideo(s.ctx, req.VideoID, uid); err != nil {
+			return err
+		}
 	}
 
-	//检查点赞是否重复
-	if err = db.CheckLikeStatus(uid, req.VideoID, 1); err == nil {
-		return errno.LikeExistError
-	}
-
-	//检查点赞是否存在
+	//检查点赞条目是否存在，存在则更新，不存在则创建
 	err = db.IsLikeExist(uid, req.VideoID)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		//创建点赞
@@ -50,7 +65,7 @@ func (s *LikeService) Like(req *interaction.LikeActionReq, uid int64) error {
 	return db.LikeStatusUpdate(uid, req.VideoID, 1)
 }
 
-func (s *LikeService) DisLike(req *interaction.LikeActionReq, uid int64) error {
+func (s *InteractionService) DisLike(req *interaction.LikeActionReq, uid int64) error {
 	exist, err := cache.IsVideoLikeExist(s.ctx, req.VideoID, uid)
 	if err != nil {
 		return err

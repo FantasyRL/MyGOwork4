@@ -3,8 +3,8 @@
 package main
 
 import (
+	"bibi/biz/dal/cache"
 	"bibi/biz/mw/jwt"
-	"bibi/biz/mw/redis"
 	"bibi/pkg/conf"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/hertz-contrib/logger/accesslog"
@@ -23,7 +23,7 @@ func main() {
 
 	conf.Init()
 	jwt.Init()
-	redis.Init()
+	cache.Init()
 
 	h := server.New(
 		server.WithHostPorts(conf.ServerAddr),

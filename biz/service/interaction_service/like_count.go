@@ -7,9 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//todo:commentCount
-
-func (s *LikeService) GetVideoLikeById(videoId int64) (int64, error) {
+func (s *InteractionService) GetVideoLikeById(videoId int64) (int64, error) {
 	//redis
 	_, likeCount, err := cache.GetVideoLikeCount(s.ctx, videoId)
 	if err != nil {

@@ -18,6 +18,7 @@ const (
 	LikeExistErrCode
 	LikeNotExistErrCode
 	VideoNotExistErrCode
+	CommentIsNotExistErrCode
 )
 
 const (
@@ -66,15 +67,16 @@ var (
 	ServiceError = NewErrNo(ServiceErrCode, ServerErrMsg)
 	ParamError   = NewErrNo(ParamErrCode, ParamErrMsg)
 
-	ExistUserError     = NewErrNo(ExistUserErrCode, UserAlreadyExistErrMsg)
-	NotExistUserError  = NewErrNo(NotExistUserErrCode, UserIsNotExistErrMsg)
-	PwdError           = NewErrNo(AuthFailedErrCode, PasswordIsNotVerifiedMsg)
-	AuthorizationError = NewErrNo(AuthFailedErrCode, AuthErrMsg)
-	UploadFileError    = NewErrNo(UploadFileErrCode, UploadFileErrMsg)
-	ReadFileError      = NewErrNo(ReadFileErrCode, ReadFileErrMsg)
-	LikeExistError     = NewErrNo(LikeExistErrCode, LikeExistErrMsg)
-	LikeNotExistError  = NewErrNo(LikeNotExistErrCode, LikeNotExistErrMsg)
-	VideoNotExistError = NewErrNo(VideoNotExistErrCode, VideoNotExistErrMsg)
+	ExistUserError         = NewErrNo(ExistUserErrCode, UserAlreadyExistErrMsg)
+	NotExistUserError      = NewErrNo(NotExistUserErrCode, UserIsNotExistErrMsg)
+	PwdError               = NewErrNo(AuthFailedErrCode, PasswordIsNotVerifiedMsg)
+	AuthorizationError     = NewErrNo(AuthFailedErrCode, AuthErrMsg)
+	UploadFileError        = NewErrNo(UploadFileErrCode, UploadFileErrMsg)
+	ReadFileError          = NewErrNo(ReadFileErrCode, ReadFileErrMsg)
+	LikeExistError         = NewErrNo(LikeExistErrCode, LikeExistErrMsg)
+	LikeNotExistError      = NewErrNo(LikeNotExistErrCode, LikeNotExistErrMsg)
+	VideoNotExistError     = NewErrNo(VideoNotExistErrCode, VideoNotExistErrMsg)
+	CommentIsNotExistError = NewErrNo(CommentIsNotExistErrCode, CommentIsNotExistErrMsg)
 )
 
 // ConvertErr convert error to ErrNo

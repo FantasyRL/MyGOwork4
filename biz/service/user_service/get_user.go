@@ -8,7 +8,7 @@ func (s *UserService) GetUserByVideo(video db.Video) (*db.User, error) {
 	userModel := &db.User{
 		ID: video.Uid,
 	}
-	return db.QueryUserByID(s.ctx, userModel)
+	return db.QueryUserByID(userModel)
 }
 func (s *UserService) GetUserById() {
 

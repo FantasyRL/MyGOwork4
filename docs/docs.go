@@ -19,6 +19,54 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/bibi/interaction/comment": {
+            "post": {
+                "description": "comment video or delete your comment",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "comment_action",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "视频id",
+                        "name": "video_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "正文",
+                        "name": "content",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "删除评论:0;评论:1",
+                        "name": "action_type",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/bibi/interaction/comment/list": {
+            "post": {
+                "responses": {}
+            }
+        },
         "/bibi/interaction/like/action": {
             "post": {
                 "description": "like or dislike video",
@@ -66,6 +114,13 @@ const docTemplate = `{
                 ],
                 "summary": "like_list",
                 "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page_num",
+                        "in": "query",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "token",
@@ -188,6 +243,14 @@ const docTemplate = `{
         },
         "/bibi/video/hot": {
             "get": {
+                "description": "hot video rank",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "HotVideo",
                 "responses": {}
             }
         },

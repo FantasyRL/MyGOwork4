@@ -183,20 +183,18 @@ func (p *BaseResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("BaseResp(%+video)", *p)
+	return fmt.Sprintf("BaseResp(%+v)", *p)
 
 }
 
 type User struct {
-	ID             int64  `thrift:"id,1" form:"id" json:"id" query:"id"`
-	Name           string `thrift:"name,2" form:"name" json:"name" query:"name"`
-	FollowCount    int64  `thrift:"follow_count,3" form:"follow_count" json:"follow_count" query:"follow_count"`
-	FollowerCount  int64  `thrift:"follower_count,4" form:"follower_count" json:"follower_count" query:"follower_count"`
-	IsFollow       bool   `thrift:"is_follow,5" form:"is_follow" json:"is_follow" query:"is_follow"`
-	Avatar         string `thrift:"avatar,6" form:"avatar" json:"avatar" query:"avatar"`
-	TotalFavorited int64  `thrift:"total_favorited,7" form:"total_favorited" json:"total_favorited" query:"total_favorited"`
-	VideoCount     int64  `thrift:"video_count,8" form:"video_count" json:"video_count" query:"video_count"`
-	FavoriteCount  int64  `thrift:"favorite_count,9" form:"favorite_count" json:"favorite_count" query:"favorite_count"`
+	ID            int64  `thrift:"id,1" form:"id" json:"id" query:"id"`
+	Name          string `thrift:"name,2" form:"name" json:"name" query:"name"`
+	FollowCount   int64  `thrift:"follow_count,3" form:"follow_count" json:"follow_count" query:"follow_count"`
+	FollowerCount int64  `thrift:"follower_count,4" form:"follower_count" json:"follower_count" query:"follower_count"`
+	IsFollow      bool   `thrift:"is_follow,5" form:"is_follow" json:"is_follow" query:"is_follow"`
+	Avatar        string `thrift:"avatar,6" form:"avatar" json:"avatar" query:"avatar"`
+	VideoCount    int64  `thrift:"video_count,7" form:"video_count" json:"video_count" query:"video_count"`
 }
 
 func NewUser() *User {
@@ -227,16 +225,8 @@ func (p *User) GetAvatar() (v string) {
 	return p.Avatar
 }
 
-func (p *User) GetTotalFavorited() (v int64) {
-	return p.TotalFavorited
-}
-
 func (p *User) GetVideoCount() (v int64) {
 	return p.VideoCount
-}
-
-func (p *User) GetFavoriteCount() (v int64) {
-	return p.FavoriteCount
 }
 
 var fieldIDToName_User = map[int16]string{
@@ -246,9 +236,7 @@ var fieldIDToName_User = map[int16]string{
 	4: "follower_count",
 	5: "is_follow",
 	6: "avatar",
-	7: "total_favorited",
-	8: "video_count",
-	9: "favorite_count",
+	7: "video_count",
 }
 
 func (p *User) Read(iprot thrift.TProtocol) (err error) {
@@ -321,22 +309,6 @@ func (p *User) Read(iprot thrift.TProtocol) (err error) {
 		case 7:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField7(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 8:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField8(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 9:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -430,25 +402,7 @@ func (p *User) ReadField7(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		p.TotalFavorited = v
-	}
-	return nil
-}
-func (p *User) ReadField8(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadI64(); err != nil {
-		return err
-	} else {
 		p.VideoCount = v
-	}
-	return nil
-}
-func (p *User) ReadField9(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadI64(); err != nil {
-		return err
-	} else {
-		p.FavoriteCount = v
 	}
 	return nil
 }
@@ -485,14 +439,6 @@ func (p *User) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField7(oprot); err != nil {
 			fieldId = 7
-			goto WriteFieldError
-		}
-		if err = p.writeField8(oprot); err != nil {
-			fieldId = 8
-			goto WriteFieldError
-		}
-		if err = p.writeField9(oprot); err != nil {
-			fieldId = 9
 			goto WriteFieldError
 		}
 	}
@@ -616,10 +562,10 @@ WriteFieldEndError:
 }
 
 func (p *User) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("total_favorited", thrift.I64, 7); err != nil {
+	if err = oprot.WriteFieldBegin("video_count", thrift.I64, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.TotalFavorited); err != nil {
+	if err := oprot.WriteI64(p.VideoCount); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -632,45 +578,11 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
 }
 
-func (p *User) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("video_count", thrift.I64, 8); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.VideoCount); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
-}
-
-func (p *User) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("favorite_count", thrift.I64, 9); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.FavoriteCount); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
-}
-
 func (p *User) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("User(%+video)", *p)
+	return fmt.Sprintf("User(%+v)", *p)
 
 }
 
@@ -849,7 +761,7 @@ func (p *RegisterReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("RegisterReq(%+video)", *p)
+	return fmt.Sprintf("RegisterReq(%+v)", *p)
 
 }
 
@@ -1035,7 +947,7 @@ func (p *RegisterResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("RegisterResp(%+video)", *p)
+	return fmt.Sprintf("RegisterResp(%+v)", *p)
 
 }
 
@@ -1214,7 +1126,7 @@ func (p *LoginReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("LoginReq(%+video)", *p)
+	return fmt.Sprintf("LoginReq(%+v)", *p)
 
 }
 
@@ -1451,7 +1363,7 @@ func (p *LoginResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("LoginResp(%+video)", *p)
+	return fmt.Sprintf("LoginResp(%+v)", *p)
 
 }
 
@@ -1531,7 +1443,7 @@ func (p *InfoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("InfoReq(%+video)", *p)
+	return fmt.Sprintf("InfoReq(%+v)", *p)
 
 }
 
@@ -1724,7 +1636,7 @@ func (p *InfoResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("InfoResp(%+video)", *p)
+	return fmt.Sprintf("InfoResp(%+v)", *p)
 
 }
 
@@ -1859,7 +1771,7 @@ func (p *AvatarReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AvatarReq(%+video)", *p)
+	return fmt.Sprintf("AvatarReq(%+v)", *p)
 
 }
 
@@ -2052,7 +1964,7 @@ func (p *AvatarResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("AvatarResp(%+video)", *p)
+	return fmt.Sprintf("AvatarResp(%+v)", *p)
 
 }
 
@@ -2503,7 +2415,7 @@ func (p *UserHandlerRegisterArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerRegisterArgs(%+video)", *p)
+	return fmt.Sprintf("UserHandlerRegisterArgs(%+v)", *p)
 
 }
 
@@ -2647,7 +2559,7 @@ func (p *UserHandlerRegisterResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerRegisterResult(%+video)", *p)
+	return fmt.Sprintf("UserHandlerRegisterResult(%+v)", *p)
 
 }
 
@@ -2789,7 +2701,7 @@ func (p *UserHandlerLoginArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerLoginArgs(%+video)", *p)
+	return fmt.Sprintf("UserHandlerLoginArgs(%+v)", *p)
 
 }
 
@@ -2933,7 +2845,7 @@ func (p *UserHandlerLoginResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerLoginResult(%+video)", *p)
+	return fmt.Sprintf("UserHandlerLoginResult(%+v)", *p)
 
 }
 
@@ -3075,7 +2987,7 @@ func (p *UserHandlerInfoArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerInfoArgs(%+video)", *p)
+	return fmt.Sprintf("UserHandlerInfoArgs(%+v)", *p)
 
 }
 
@@ -3219,7 +3131,7 @@ func (p *UserHandlerInfoResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerInfoResult(%+video)", *p)
+	return fmt.Sprintf("UserHandlerInfoResult(%+v)", *p)
 
 }
 
@@ -3361,7 +3273,7 @@ func (p *UserHandlerAvatarArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerAvatarArgs(%+video)", *p)
+	return fmt.Sprintf("UserHandlerAvatarArgs(%+v)", *p)
 
 }
 
@@ -3505,6 +3417,6 @@ func (p *UserHandlerAvatarResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("UserHandlerAvatarResult(%+video)", *p)
+	return fmt.Sprintf("UserHandlerAvatarResult(%+v)", *p)
 
 }

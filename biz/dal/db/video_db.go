@@ -5,7 +5,20 @@ import (
 	"bibi/pkg/conf"
 	"bibi/pkg/errno"
 	"context"
+	"gorm.io/gorm"
+	"time"
 )
+
+type Video struct {
+	ID        int64 `gorm:"primary_key"`
+	Uid       int64
+	Title     string
+	PlayUrl   string
+	CoverUrl  string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `sql:"index"`
+}
 
 func CreateVideo(ctx context.Context, video *Video) (*Video, error) {
 	if err := dao.DB.WithContext(ctx).Create(video).Error; err != nil {
@@ -58,7 +71,8 @@ func CheckVideoExistById(videoId int64) error {
 
 func GetVideoByIdList(videoIdList []int64) ([]Video, error) {
 	videos := new([]Video)
-	if err := dao.DB.Model(Video{}).Where("id IN ?", videoIdList).Order("created_at DESC").Find(videos).Error; err != nil {
+	//.Order("created_at DESC")没必要
+	if err := dao.DB.Model(Video{}).Where("id IN ?", videoIdList).Find(videos).Error; err != nil {
 		return nil, err
 	}
 	return *videos, nil

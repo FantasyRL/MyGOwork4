@@ -42,3 +42,21 @@ func _likelistMw() []app.HandlerFunc {
 	}
 	//return nil
 }
+
+func _commentMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _commentactionMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
+	//return nil
+}
+
+func _commentlistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

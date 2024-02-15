@@ -6,12 +6,14 @@ import (
 	"bibi/biz/dal/db"
 	"bibi/biz/model/interaction"
 	"bibi/biz/service/interaction_service"
-	"bibi/biz/service/user_service"
 	"bibi/biz/service/video_service"
+	"bibi/pkg/conf"
+	"bibi/pkg/errno"
 	"bibi/pkg/pack"
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"golang.org/x/sync/errgroup"
 )
 
 // LikeAction .
@@ -39,9 +41,13 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 
 	switch req.ActionType {
 	case 1:
-		err = interaction_service.NewLikeService(ctx).Like(&req, id)
+		err = interaction_service.NewInteractionService(ctx).Like(&req, id)
 	case 0:
-		err = interaction_service.NewLikeService(ctx).DisLike(&req, id)
+		err = interaction_service.NewInteractionService(ctx).DisLike(&req, id)
+	default:
+		resp.Base = pack.BuildInteractionBaseResp(errno.ParamError)
+		c.JSON(consts.StatusOK, resp)
+		return
 	}
 	resp.Base = pack.BuildInteractionBaseResp(err)
 	c.JSON(consts.StatusOK, resp)
@@ -52,6 +58,7 @@ func LikeAction(ctx context.Context, c *app.RequestContext) {
 // @Description show the list of your liked videos
 // @Accept json/form
 // @Produce json
+// @Param page_num query int64 true "页码"
 // @Param Authorization header string true "token"
 // @router /bibi/interaction/like/list [GET]
 func LikeList(ctx context.Context, c *app.RequestContext) {
@@ -68,35 +75,122 @@ func LikeList(ctx context.Context, c *app.RequestContext) {
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
 
-	//todo:用rpc改掉这里混沌的架构
-	likeResp, err := interaction_service.NewLikeService(ctx).LikeVideoList(&req, id)
+	//todo:未来用rpc改掉这里混沌的架构
+	allLikeResp, err := interaction_service.NewInteractionService(ctx).LikeVideoList(&req, id)
 	if err != nil {
 		resp.Base = pack.BuildInteractionBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	videoResp, err := video_service.NewVideoService(ctx).GetLikeVideoList(likeResp)
-	if err != nil {
-		resp.Base = pack.BuildInteractionBaseResp(err)
+	resp.VideoCount = int64(len(allLikeResp))
+
+	var likeResp []int64
+	if len(allLikeResp) <= int(req.PageNum-1)*conf.PageSize || int(req.PageNum-1)*conf.PageSize < 0 {
+		resp.Base = pack.BuildInteractionBaseResp(nil)
 		c.JSON(consts.StatusOK, resp)
 		return
+	} else {
+		fst := int(req.PageNum-1) * conf.PageSize
+		for i := fst; i < fst+conf.PageSize && i < len(allLikeResp); i++ {
+			likeResp = append(likeResp, allLikeResp[i])
+		}
 	}
-	var userResp []db.User
+
+	var eg errgroup.Group
+
+	var videoResp []db.Video
+	eg.Go(func() error {
+		videoResp, err = video_service.NewVideoService(ctx).GetLikeVideoList(likeResp)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
 	var videoLikeList []int64
-	for _, videoId := range likeResp {
-		videoLikeCount, _ := interaction_service.NewLikeService(ctx).GetVideoLikeById(videoId)
-		videoLikeList = append(videoLikeList, videoLikeCount)
-	}
-	for _, video := range videoResp {
-		user, _ := user_service.NewUserService(ctx).GetUserByVideo(video)
-		userResp = append(userResp, *user)
-	}
+	eg.Go(func() error {
+		for _, videoId := range likeResp {
+			videoLikeCount, _ := interaction_service.NewInteractionService(ctx).GetVideoLikeById(videoId)
+			videoLikeList = append(videoLikeList, videoLikeCount)
+		}
+		return nil
+	})
+
 	isLikeList := make([]int64, 0, len(likeResp))
-	for i := 0; i < len(likeResp); i++ {
-		isLikeList = append(isLikeList, 1)
+	eg.Go(func() error {
+		//因为是点赞列表，所以都是1
+		for i := 0; i < len(likeResp); i++ {
+			isLikeList = append(isLikeList, 1)
+		}
+		return nil
+	})
+
+	if err = eg.Wait(); err != nil {
+		resp.Base = pack.BuildInteractionBaseResp(err)
+		c.JSON(consts.StatusOK, resp)
 	}
 
 	resp.Base = pack.BuildInteractionBaseResp(err)
-	resp.VideoList = video_service.BuildVideoListResp(videoResp, userResp, videoLikeList, isLikeList)
+	resp.VideoList = video_service.BuildVideoListResp(videoResp, videoLikeList, isLikeList)
+	c.JSON(consts.StatusOK, resp)
+}
+
+// CommentAction .
+// @Summary comment_action
+// @Description comment video or delete your comment
+// @Accept json/form
+// @Produce json
+// @Param video_id query int true "视频id"
+// @Param content query string true "正文"
+// @Param action_type query int true "删除评论:0;评论:1"
+// @Param Authorization header string true "token"
+// @router /bibi/interaction/comment [POST]
+func CommentAction(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req interaction.CommentActionReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(interaction.CommentActionResp)
+
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+
+	switch req.ActionType {
+	case 1:
+		err = interaction_service.NewInteractionService(ctx).CommentCreate(&req, id)
+	case 0:
+		err = interaction_service.NewInteractionService(ctx).CommentDelete(&req, id)
+	default:
+		resp.Base = pack.BuildInteractionBaseResp(errno.ParamError)
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+	resp.Base = pack.BuildInteractionBaseResp(err)
+	c.JSON(consts.StatusOK, resp)
+}
+
+// CommentList .
+// @Summary comment_list
+// @Description show video's comments
+// @Accept json/form
+// @Produce json
+// @Param video_id query int true "视频id"
+// @Param page_num query string true "页码"
+// @router /bibi/interaction/comment/list [POST]
+func CommentList(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req interaction.CommentListReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(interaction.CommentListResp)
+
 	c.JSON(consts.StatusOK, resp)
 }

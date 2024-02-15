@@ -4,10 +4,10 @@ import (
 	"context"
 )
 
-type LikeService struct {
+type InteractionService struct {
 	ctx context.Context
 }
 
-func NewLikeService(ctx context.Context) *LikeService {
-	return &LikeService{ctx: ctx}
+func NewInteractionService(ctx context.Context) *InteractionService {
+	return &InteractionService{ctx: ctx}
 }

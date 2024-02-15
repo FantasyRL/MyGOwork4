@@ -37,7 +37,7 @@ CREATE TABLE video (
 CREATE TABLE `like` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增主键',
     `uid` bigint NOT NULL COMMENT '点赞用户id',
-    `videoId` bigint NOT NULL COMMENT '被点赞的视频id',
+    `video_id` bigint NOT NULL COMMENT '被点赞的视频id',
     `status` bigint NOT NULL DEFAULT 1 COMMENT '点赞：1 取消：0',#因为取消点赞不是真的删除行所以就多个status
     `created_at` timestamp NOT NULL DEFAULT current_timestamp COMMENT '点赞时间',
     `updated_at` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
@@ -48,10 +48,25 @@ CREATE TABLE `like` (
             references `user` (`id`)
             on delete cascade,
     constraint `favorite_video`
-        foreign key (`videoId`)
+        foreign key (video_id)
             references video (`id`)
             on delete cascade,
-    KEY `userIdtoVideoIdIdx` (`uid`,`videoId`) USING BTREE,
+    KEY `userIdtoVideoIdIdx` (`uid`,video_id) USING BTREE,
     KEY `uid_idx` (`uid`) USING BTREE,
-    KEY `video_idx` (`videoId`) USING BTREE
+    KEY `video_idx` (video_id) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='点赞表';
+
+CREATE TABLE `comment`(
+    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '评论id' ,
+    `video_id` bigint NOT NULL COMMENT '被评论视频id',
+    `uid` bigint NOT NULL COMMENT '评论用户',
+    `content` varchar(255) NOT NULL COMMENT '评论内容',
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp COMMENT '评论时间',
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
+    `deleted_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    constraint `video_comment`
+        foreign key (video_id)
+            references video (`id`)
+            on delete cascade
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='评论表';

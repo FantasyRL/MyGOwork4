@@ -33,9 +33,11 @@ func NewAvatarService(ctx context.Context) *AvatarService {
 func BuildUserResp(_user interface{}) *user.User {
 	//这里使用了一个及其抽象的断言
 	p, _ := (_user).(*db.User)
+	videoCount, _ := db.GetVideoCountByID(p.ID)
 	return &user.User{
-		ID:     p.ID,
-		Name:   p.UserName,
-		Avatar: p.Avatar,
+		ID:         p.ID,
+		Name:       p.UserName,
+		Avatar:     p.Avatar,
+		VideoCount: videoCount,
 	}
 }

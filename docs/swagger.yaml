@@ -9,6 +9,39 @@ info:
   title: BibiBibi
   version: "1.0"
 paths:
+  /bibi/interaction/comment:
+    post:
+      consumes:
+      - json/form
+      description: comment video or delete your comment
+      parameters:
+      - description: 视频id
+        in: query
+        name: video_id
+        required: true
+        type: integer
+      - description: 正文
+        in: query
+        name: content
+        required: true
+        type: string
+      - description: 删除评论:0;评论:1
+        in: query
+        name: action_type
+        required: true
+        type: integer
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: comment_action
+  /bibi/interaction/comment/list:
+    post:
+      responses: {}
   /bibi/interaction/like/action:
     post:
       consumes:
@@ -40,6 +73,11 @@ paths:
       - json/form
       description: show the list of your liked videos
       parameters:
+      - description: 页码
+        in: query
+        name: page_num
+        required: true
+        type: integer
       - description: token
         in: header
         name: Authorization
@@ -126,7 +164,13 @@ paths:
       summary: Register
   /bibi/video/hot:
     get:
+      consumes:
+      - json/form
+      description: hot video rank
+      produces:
+      - application/json
       responses: {}
+      summary: HotVideo
   /bibi/video/published:
     post:
       consumes:

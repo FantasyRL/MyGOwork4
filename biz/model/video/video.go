@@ -184,7 +184,7 @@ func (p *BaseResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("BaseResp(%+video)", *p)
+	return fmt.Sprintf("BaseResp(%+v)", *p)
 
 }
 
@@ -722,7 +722,7 @@ func (p *Video) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("Video(%+video)", *p)
+	return fmt.Sprintf("Video(%+v)", *p)
 
 }
 
@@ -945,7 +945,7 @@ func (p *PutVideoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("PutVideoReq(%+video)", *p)
+	return fmt.Sprintf("PutVideoReq(%+v)", *p)
 
 }
 
@@ -1087,7 +1087,7 @@ func (p *PutVideoResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("PutVideoResp(%+video)", *p)
+	return fmt.Sprintf("PutVideoResp(%+v)", *p)
 
 }
 
@@ -1222,7 +1222,7 @@ func (p *ListUserVideoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ListUserVideoReq(%+video)", *p)
+	return fmt.Sprintf("ListUserVideoReq(%+v)", *p)
 
 }
 
@@ -1470,7 +1470,7 @@ func (p *ListUserVideoResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ListUserVideoResp(%+video)", *p)
+	return fmt.Sprintf("ListUserVideoResp(%+v)", *p)
 
 }
 
@@ -1649,7 +1649,7 @@ func (p *SearchVideoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("SearchVideoReq(%+video)", *p)
+	return fmt.Sprintf("SearchVideoReq(%+v)", *p)
 
 }
 
@@ -1897,7 +1897,7 @@ func (p *SearchVideoResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("SearchVideoResp(%+video)", *p)
+	return fmt.Sprintf("SearchVideoResp(%+v)", *p)
 
 }
 
@@ -1977,42 +1977,42 @@ func (p *HotVideoReq) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("HotVideoReq(%+video)", *p)
+	return fmt.Sprintf("HotVideoReq(%+v)", *p)
 
 }
 
-type HotVideoReso struct {
+type HotVideoResp struct {
 	Base      *BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
 	VideoList []*Video  `thrift:"video_list,2" form:"video_list" json:"video_list" query:"video_list"`
 }
 
-func NewHotVideoReso() *HotVideoReso {
-	return &HotVideoReso{}
+func NewHotVideoResp() *HotVideoResp {
+	return &HotVideoResp{}
 }
 
-var HotVideoReso_Base_DEFAULT *BaseResp
+var HotVideoResp_Base_DEFAULT *BaseResp
 
-func (p *HotVideoReso) GetBase() (v *BaseResp) {
+func (p *HotVideoResp) GetBase() (v *BaseResp) {
 	if !p.IsSetBase() {
-		return HotVideoReso_Base_DEFAULT
+		return HotVideoResp_Base_DEFAULT
 	}
 	return p.Base
 }
 
-func (p *HotVideoReso) GetVideoList() (v []*Video) {
+func (p *HotVideoResp) GetVideoList() (v []*Video) {
 	return p.VideoList
 }
 
-var fieldIDToName_HotVideoReso = map[int16]string{
+var fieldIDToName_HotVideoResp = map[int16]string{
 	1: "base",
 	2: "video_list",
 }
 
-func (p *HotVideoReso) IsSetBase() bool {
+func (p *HotVideoResp) IsSetBase() bool {
 	return p.Base != nil
 }
 
-func (p *HotVideoReso) Read(iprot thrift.TProtocol) (err error) {
+func (p *HotVideoResp) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -2066,7 +2066,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_HotVideoReso[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_HotVideoResp[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -2076,14 +2076,14 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *HotVideoReso) ReadField1(iprot thrift.TProtocol) error {
+func (p *HotVideoResp) ReadField1(iprot thrift.TProtocol) error {
 	p.Base = NewBaseResp()
 	if err := p.Base.Read(iprot); err != nil {
 		return err
 	}
 	return nil
 }
-func (p *HotVideoReso) ReadField2(iprot thrift.TProtocol) error {
+func (p *HotVideoResp) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -2103,9 +2103,9 @@ func (p *HotVideoReso) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *HotVideoReso) Write(oprot thrift.TProtocol) (err error) {
+func (p *HotVideoResp) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("HotVideoReso"); err != nil {
+	if err = oprot.WriteStructBegin("HotVideoResp"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -2135,7 +2135,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *HotVideoReso) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *HotVideoResp) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("base", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -2152,7 +2152,7 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *HotVideoReso) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *HotVideoResp) writeField2(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("video_list", thrift.LIST, 2); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -2177,22 +2177,22 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *HotVideoReso) String() string {
+func (p *HotVideoResp) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("HotVideoReso(%+video)", *p)
+	return fmt.Sprintf("HotVideoResp(%+v)", *p)
 
 }
 
 type VideoHandler interface {
 	PutVideo(ctx context.Context, req *PutVideoReq) (r *PutVideoResp, err error)
 
-	ListVideosByID(ctx context.Context, req *ListUserVideoReq) (r *ListUserVideoResp, err error)
+	ListVideo(ctx context.Context, req *ListUserVideoReq) (r *ListUserVideoResp, err error)
 
 	SearchVideo(ctx context.Context, req *SearchVideoReq) (r *SearchVideoResp, err error)
 
-	HotVideo(ctx context.Context, req *HotVideoReq) (r *HotVideoReq, err error)
+	HotVideo(ctx context.Context, req *HotVideoReq) (r *HotVideoResp, err error)
 }
 
 type VideoHandlerClient struct {
@@ -2230,11 +2230,11 @@ func (p *VideoHandlerClient) PutVideo(ctx context.Context, req *PutVideoReq) (r 
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *VideoHandlerClient) ListVideosByID(ctx context.Context, req *ListUserVideoReq) (r *ListUserVideoResp, err error) {
-	var _args VideoHandlerListVideosByIDArgs
+func (p *VideoHandlerClient) ListVideo(ctx context.Context, req *ListUserVideoReq) (r *ListUserVideoResp, err error) {
+	var _args VideoHandlerListVideoArgs
 	_args.Req = req
-	var _result VideoHandlerListVideosByIDResult
-	if err = p.Client_().Call(ctx, "ListVideosByID", &_args, &_result); err != nil {
+	var _result VideoHandlerListVideoResult
+	if err = p.Client_().Call(ctx, "ListVideo", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -2248,7 +2248,7 @@ func (p *VideoHandlerClient) SearchVideo(ctx context.Context, req *SearchVideoRe
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *VideoHandlerClient) HotVideo(ctx context.Context, req *HotVideoReq) (r *HotVideoReq, err error) {
+func (p *VideoHandlerClient) HotVideo(ctx context.Context, req *HotVideoReq) (r *HotVideoResp, err error) {
 	var _args VideoHandlerHotVideoArgs
 	_args.Req = req
 	var _result VideoHandlerHotVideoResult
@@ -2279,7 +2279,7 @@ func (p *VideoHandlerProcessor) ProcessorMap() map[string]thrift.TProcessorFunct
 func NewVideoHandlerProcessor(handler VideoHandler) *VideoHandlerProcessor {
 	self := &VideoHandlerProcessor{handler: handler, processorMap: make(map[string]thrift.TProcessorFunction)}
 	self.AddToProcessorMap("PutVideo", &videoHandlerProcessorPutVideo{handler: handler})
-	self.AddToProcessorMap("ListVideosByID", &videoHandlerProcessorListVideosByID{handler: handler})
+	self.AddToProcessorMap("ListVideo", &videoHandlerProcessorListVideo{handler: handler})
 	self.AddToProcessorMap("SearchVideo", &videoHandlerProcessorSearchVideo{handler: handler})
 	self.AddToProcessorMap("HotVideo", &videoHandlerProcessorHotVideo{handler: handler})
 	return self
@@ -2350,16 +2350,16 @@ func (p *videoHandlerProcessorPutVideo) Process(ctx context.Context, seqId int32
 	return true, err
 }
 
-type videoHandlerProcessorListVideosByID struct {
+type videoHandlerProcessorListVideo struct {
 	handler VideoHandler
 }
 
-func (p *videoHandlerProcessorListVideosByID) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := VideoHandlerListVideosByIDArgs{}
+func (p *videoHandlerProcessorListVideo) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := VideoHandlerListVideoArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("ListVideosByID", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("ListVideo", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush(ctx)
@@ -2368,11 +2368,11 @@ func (p *videoHandlerProcessorListVideosByID) Process(ctx context.Context, seqId
 
 	iprot.ReadMessageEnd()
 	var err2 error
-	result := VideoHandlerListVideosByIDResult{}
+	result := VideoHandlerListVideoResult{}
 	var retval *ListUserVideoResp
-	if retval, err2 = p.handler.ListVideosByID(ctx, args.Req); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing ListVideosByID: "+err2.Error())
-		oprot.WriteMessageBegin("ListVideosByID", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.ListVideo(ctx, args.Req); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing ListVideo: "+err2.Error())
+		oprot.WriteMessageBegin("ListVideo", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush(ctx)
@@ -2380,7 +2380,7 @@ func (p *videoHandlerProcessorListVideosByID) Process(ctx context.Context, seqId
 	} else {
 		result.Success = retval
 	}
-	if err2 = oprot.WriteMessageBegin("ListVideosByID", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("ListVideo", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -2465,7 +2465,7 @@ func (p *videoHandlerProcessorHotVideo) Process(ctx context.Context, seqId int32
 	iprot.ReadMessageEnd()
 	var err2 error
 	result := VideoHandlerHotVideoResult{}
-	var retval *HotVideoReq
+	var retval *HotVideoResp
 	if retval, err2 = p.handler.HotVideo(ctx, args.Req); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing HotVideo: "+err2.Error())
 		oprot.WriteMessageBegin("HotVideo", thrift.EXCEPTION, seqId)
@@ -2632,7 +2632,7 @@ func (p *VideoHandlerPutVideoArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerPutVideoArgs(%+video)", *p)
+	return fmt.Sprintf("VideoHandlerPutVideoArgs(%+v)", *p)
 
 }
 
@@ -2776,36 +2776,36 @@ func (p *VideoHandlerPutVideoResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerPutVideoResult(%+video)", *p)
+	return fmt.Sprintf("VideoHandlerPutVideoResult(%+v)", *p)
 
 }
 
-type VideoHandlerListVideosByIDArgs struct {
+type VideoHandlerListVideoArgs struct {
 	Req *ListUserVideoReq `thrift:"req,1"`
 }
 
-func NewVideoHandlerListVideosByIDArgs() *VideoHandlerListVideosByIDArgs {
-	return &VideoHandlerListVideosByIDArgs{}
+func NewVideoHandlerListVideoArgs() *VideoHandlerListVideoArgs {
+	return &VideoHandlerListVideoArgs{}
 }
 
-var VideoHandlerListVideosByIDArgs_Req_DEFAULT *ListUserVideoReq
+var VideoHandlerListVideoArgs_Req_DEFAULT *ListUserVideoReq
 
-func (p *VideoHandlerListVideosByIDArgs) GetReq() (v *ListUserVideoReq) {
+func (p *VideoHandlerListVideoArgs) GetReq() (v *ListUserVideoReq) {
 	if !p.IsSetReq() {
-		return VideoHandlerListVideosByIDArgs_Req_DEFAULT
+		return VideoHandlerListVideoArgs_Req_DEFAULT
 	}
 	return p.Req
 }
 
-var fieldIDToName_VideoHandlerListVideosByIDArgs = map[int16]string{
+var fieldIDToName_VideoHandlerListVideoArgs = map[int16]string{
 	1: "req",
 }
 
-func (p *VideoHandlerListVideosByIDArgs) IsSetReq() bool {
+func (p *VideoHandlerListVideoArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-func (p *VideoHandlerListVideosByIDArgs) Read(iprot thrift.TProtocol) (err error) {
+func (p *VideoHandlerListVideoArgs) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -2851,7 +2851,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_VideoHandlerListVideosByIDArgs[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_VideoHandlerListVideoArgs[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -2861,7 +2861,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *VideoHandlerListVideosByIDArgs) ReadField1(iprot thrift.TProtocol) error {
+func (p *VideoHandlerListVideoArgs) ReadField1(iprot thrift.TProtocol) error {
 	p.Req = NewListUserVideoReq()
 	if err := p.Req.Read(iprot); err != nil {
 		return err
@@ -2869,9 +2869,9 @@ func (p *VideoHandlerListVideosByIDArgs) ReadField1(iprot thrift.TProtocol) erro
 	return nil
 }
 
-func (p *VideoHandlerListVideosByIDArgs) Write(oprot thrift.TProtocol) (err error) {
+func (p *VideoHandlerListVideoArgs) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("ListVideosByID_args"); err != nil {
+	if err = oprot.WriteStructBegin("ListVideo_args"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -2897,7 +2897,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *VideoHandlerListVideosByIDArgs) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *VideoHandlerListVideoArgs) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -2914,40 +2914,40 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *VideoHandlerListVideosByIDArgs) String() string {
+func (p *VideoHandlerListVideoArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerListVideosByIDArgs(%+video)", *p)
+	return fmt.Sprintf("VideoHandlerListVideoArgs(%+v)", *p)
 
 }
 
-type VideoHandlerListVideosByIDResult struct {
+type VideoHandlerListVideoResult struct {
 	Success *ListUserVideoResp `thrift:"success,0,optional"`
 }
 
-func NewVideoHandlerListVideosByIDResult() *VideoHandlerListVideosByIDResult {
-	return &VideoHandlerListVideosByIDResult{}
+func NewVideoHandlerListVideoResult() *VideoHandlerListVideoResult {
+	return &VideoHandlerListVideoResult{}
 }
 
-var VideoHandlerListVideosByIDResult_Success_DEFAULT *ListUserVideoResp
+var VideoHandlerListVideoResult_Success_DEFAULT *ListUserVideoResp
 
-func (p *VideoHandlerListVideosByIDResult) GetSuccess() (v *ListUserVideoResp) {
+func (p *VideoHandlerListVideoResult) GetSuccess() (v *ListUserVideoResp) {
 	if !p.IsSetSuccess() {
-		return VideoHandlerListVideosByIDResult_Success_DEFAULT
+		return VideoHandlerListVideoResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-var fieldIDToName_VideoHandlerListVideosByIDResult = map[int16]string{
+var fieldIDToName_VideoHandlerListVideoResult = map[int16]string{
 	0: "success",
 }
 
-func (p *VideoHandlerListVideosByIDResult) IsSetSuccess() bool {
+func (p *VideoHandlerListVideoResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *VideoHandlerListVideosByIDResult) Read(iprot thrift.TProtocol) (err error) {
+func (p *VideoHandlerListVideoResult) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -2993,7 +2993,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_VideoHandlerListVideosByIDResult[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_VideoHandlerListVideoResult[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -3003,7 +3003,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *VideoHandlerListVideosByIDResult) ReadField0(iprot thrift.TProtocol) error {
+func (p *VideoHandlerListVideoResult) ReadField0(iprot thrift.TProtocol) error {
 	p.Success = NewListUserVideoResp()
 	if err := p.Success.Read(iprot); err != nil {
 		return err
@@ -3011,9 +3011,9 @@ func (p *VideoHandlerListVideosByIDResult) ReadField0(iprot thrift.TProtocol) er
 	return nil
 }
 
-func (p *VideoHandlerListVideosByIDResult) Write(oprot thrift.TProtocol) (err error) {
+func (p *VideoHandlerListVideoResult) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("ListVideosByID_result"); err != nil {
+	if err = oprot.WriteStructBegin("ListVideo_result"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -3039,7 +3039,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *VideoHandlerListVideosByIDResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *VideoHandlerListVideoResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
 			goto WriteFieldBeginError
@@ -3058,11 +3058,11 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
 }
 
-func (p *VideoHandlerListVideosByIDResult) String() string {
+func (p *VideoHandlerListVideoResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerListVideosByIDResult(%+video)", *p)
+	return fmt.Sprintf("VideoHandlerListVideoResult(%+v)", *p)
 
 }
 
@@ -3204,7 +3204,7 @@ func (p *VideoHandlerSearchVideoArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerSearchVideoArgs(%+video)", *p)
+	return fmt.Sprintf("VideoHandlerSearchVideoArgs(%+v)", *p)
 
 }
 
@@ -3348,7 +3348,7 @@ func (p *VideoHandlerSearchVideoResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerSearchVideoResult(%+video)", *p)
+	return fmt.Sprintf("VideoHandlerSearchVideoResult(%+v)", *p)
 
 }
 
@@ -3490,21 +3490,21 @@ func (p *VideoHandlerHotVideoArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerHotVideoArgs(%+video)", *p)
+	return fmt.Sprintf("VideoHandlerHotVideoArgs(%+v)", *p)
 
 }
 
 type VideoHandlerHotVideoResult struct {
-	Success *HotVideoReq `thrift:"success,0,optional"`
+	Success *HotVideoResp `thrift:"success,0,optional"`
 }
 
 func NewVideoHandlerHotVideoResult() *VideoHandlerHotVideoResult {
 	return &VideoHandlerHotVideoResult{}
 }
 
-var VideoHandlerHotVideoResult_Success_DEFAULT *HotVideoReq
+var VideoHandlerHotVideoResult_Success_DEFAULT *HotVideoResp
 
-func (p *VideoHandlerHotVideoResult) GetSuccess() (v *HotVideoReq) {
+func (p *VideoHandlerHotVideoResult) GetSuccess() (v *HotVideoResp) {
 	if !p.IsSetSuccess() {
 		return VideoHandlerHotVideoResult_Success_DEFAULT
 	}
@@ -3576,7 +3576,7 @@ ReadStructEndError:
 }
 
 func (p *VideoHandlerHotVideoResult) ReadField0(iprot thrift.TProtocol) error {
-	p.Success = NewHotVideoReq()
+	p.Success = NewHotVideoResp()
 	if err := p.Success.Read(iprot); err != nil {
 		return err
 	}
@@ -3634,6 +3634,6 @@ func (p *VideoHandlerHotVideoResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("VideoHandlerHotVideoResult(%+video)", *p)
+	return fmt.Sprintf("VideoHandlerHotVideoResult(%+v)", *p)
 
 }

@@ -4,6 +4,7 @@ package video
 
 import (
 	"bibi/biz/dal/db"
+	"bibi/biz/service/interaction_service"
 	"bibi/biz/service/video_service"
 	"bibi/pkg/conf"
 	"bibi/pkg/errno"
@@ -151,7 +152,18 @@ func ListVideo(ctx context.Context, c *app.RequestContext) {
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	resp.VideoList = video_service.BuildListVideoResp(videoResp)
+
+	var videoLikeList []int64
+	for _, v := range videoResp {
+		videoLikeCount, _ := interaction_service.NewInteractionService(ctx).GetVideoLikeById(v.ID)
+		videoLikeList = append(videoLikeList, videoLikeCount)
+	}
+	isLikeList := make([]int64, 0, len(videoResp))
+	for i := 0; i < len(videoResp); i++ {
+		isLikeList = append(isLikeList, -1)
+	}
+
+	resp.VideoList = video_service.BuildVideoListResp(videoResp, videoLikeList, isLikeList)
 	resp.Count = count
 	c.JSON(consts.StatusOK, resp)
 }
@@ -183,13 +195,27 @@ func SearchVideo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp.VideoList = video_service.BuildListVideoResp(videoResp)
+	var videoLikeList []int64
+	for _, v := range videoResp {
+		videoLikeCount, _ := interaction_service.NewInteractionService(ctx).GetVideoLikeById(v.ID)
+		videoLikeList = append(videoLikeList, videoLikeCount)
+	}
+	isLikeList := make([]int64, 0, len(videoResp))
+	for i := 0; i < len(videoResp); i++ {
+		isLikeList = append(isLikeList, -1)
+	}
+
+	resp.VideoList = video_service.BuildVideoListResp(videoResp, videoLikeList, isLikeList)
 	resp.Count = count
 
 	c.JSON(consts.StatusOK, resp)
 }
 
 // HotVideo .
+// @Summary HotVideo
+// @Description hot video rank
+// @Accept json/form
+// @Produce json
 // @router /bibi/video/hot [GET]
 func HotVideo(ctx context.Context, c *app.RequestContext) {
 	var err error
@@ -200,7 +226,24 @@ func HotVideo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(video.HotVideoReq)
+	resp := new(video.HotVideoResp)
 
+	videoResp, err := video_service.NewVideoService(ctx).HotVideo(&req)
+	resp.Base = pack.BuildVideoBaseResp(err)
+	if err != nil {
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+	var videoLikeList []int64
+	for _, v := range videoResp {
+		videoLikeCount, _ := interaction_service.NewInteractionService(ctx).GetVideoLikeById(v.ID)
+		videoLikeList = append(videoLikeList, videoLikeCount)
+	}
+	isLikeList := make([]int64, 0, len(videoResp))
+	for i := 0; i < len(videoResp); i++ {
+		isLikeList = append(isLikeList, -1)
+	}
+
+	resp.VideoList = video_service.BuildVideoListResp(videoResp, videoLikeList, isLikeList)
 	c.JSON(consts.StatusOK, resp)
 }

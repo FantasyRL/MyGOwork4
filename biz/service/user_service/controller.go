@@ -34,5 +34,5 @@ func (s *UserService) Info(id int64) (*db.User, error) {
 	userModel := &db.User{
 		ID: id,
 	}
-	return db.QueryUserByID(s.ctx, userModel)
+	return db.QueryUserByID(userModel)
 }

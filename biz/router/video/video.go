@@ -20,11 +20,11 @@ func Register(r *server.Hertz) {
 	{
 		_bibi := root.Group("/bibi", _bibiMw()...)
 		{
-			_v := _bibi.Group("/video", _videoMw()...)
-			_v.GET("/hot", append(_hotvideoMw(), video.HotVideo)...)
-			_v.POST("/published", append(_listvideoMw(), video.ListVideo)...)
-			_v.POST("/search", append(_searchvideoMw(), video.SearchVideo)...)
-			_v.POST("/upload", append(_putvideoMw(), video.PutVideo)...)
+			_video := _bibi.Group("/video", _videoMw()...)
+			_video.GET("/hot", append(_hotvideoMw(), video.HotVideo)...)
+			_video.POST("/published", append(_listvideoMw(), video.ListVideo)...)
+			_video.POST("/search", append(_searchvideoMw(), video.SearchVideo)...)
+			_video.POST("/upload", append(_putvideoMw(), video.PutVideo)...)
 		}
 	}
 }

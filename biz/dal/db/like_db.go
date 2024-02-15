@@ -2,7 +2,19 @@ package db
 
 import (
 	"bibi/dao"
+	"gorm.io/gorm"
+	"time"
 )
+
+type Like struct {
+	ID        int64
+	Uid       int64
+	VideoID   int64
+	Status    int64
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `sql:"index"`
+}
 
 func CheckLikeStatus(uid int64, videoId int64, status int64) error {
 	var like Like

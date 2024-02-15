@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (s *LikeService) LikeVideoList(req *interaction.LikeListReq, uid int64) ([]int64, error) {
+func (s *InteractionService) LikeVideoList(req *interaction.LikeListReq, uid int64) ([]int64, error) {
 	//缓存未过期
 	videoIdList, err := cache.GetUserLikeVideos(s.ctx, uid)
 	if err != nil {

@@ -7,7 +7,23 @@ import (
 	"bibi/pkg/errno"
 	"bibi/pkg/utils"
 	"context"
+	"gorm.io/gorm"
+	"time"
 )
+
+type User struct {
+	ID             int64
+	UserName       string
+	Password       string
+	FollowCount    int64
+	FollowerCount  int64
+	Avatar         string
+	TotalFavorited int64
+	FavoriteCount  int64
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	DeletedAt      gorm.DeletedAt `sql:"index"`
+}
 
 func Register(ctx context.Context, userModel *User) (*User, error) {
 	userResp := new(User)
@@ -36,9 +52,9 @@ func Login(ctx context.Context, userModel *User) (*User, error) {
 	return userResp, nil
 }
 
-func QueryUserByID(ctx context.Context, userModel *User) (*User, error) {
+func QueryUserByID(userModel *User) (*User, error) {
 	userResp := new(User)
-	if err := dao.DB.WithContext(ctx).Where("id = ?", userModel.ID).First(&userResp).Error; err != nil {
+	if err := dao.DB.Model(User{}).Where("id = ?", userModel.ID).First(&userResp).Error; err != nil {
 		return nil, err
 	}
 	return userResp, nil

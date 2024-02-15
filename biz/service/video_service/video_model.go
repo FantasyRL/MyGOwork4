@@ -36,14 +36,16 @@ func BuildVideoResp(v *db.Video) *video.Video {
 		PublishTime: t.Format("2006-01-02 15:01:04"),
 	}
 }
-func BuildListVideoResp(list []db.Video) (videos []*video.Video) {
-	for _, v := range list {
-		videos = append(videos, BuildVideoResp(&v))
-	}
-	return
-}
 
-func BuildVideoListResp(videos []db.Video, users []db.User, videoLikeList []int64, isLikeList []int64) []*video.Video {
+func BuildVideoListResp(videos []db.Video, videoLikeCountList []int64, isLikeList []int64) []*video.Video {
+	var authorResp []db.User
+	for _, v := range videos {
+		authorInfo, _ := db.QueryUserByID(&db.User{
+			ID: v.Uid,
+		})
+		authorResp = append(authorResp, *authorInfo)
+	}
+
 	var videoListResp []*video.Video
 	for i := 0; i < len(videos); i++ {
 		cn, _ := time.ParseDuration("8h")
@@ -51,10 +53,10 @@ func BuildVideoListResp(videos []db.Video, users []db.User, videoLikeList []int6
 		videoListResp = append(videoListResp, &video.Video{
 			ID:          videos[i].ID,
 			Title:       videos[i].Title,
-			Author:      BuildAuthorResp(users[i]),
+			Author:      BuildAuthorResp(authorResp[i]),
 			PlayURL:     videos[i].PlayUrl,
 			CoverURL:    videos[i].CoverUrl,
-			LikeCount:   videoLikeList[i],
+			LikeCount:   videoLikeCountList[i],
 			IsLike:      isLikeList[i],
 			PublishTime: t.Format("2006-01-02 15:01:04"),
 		})
@@ -63,9 +65,11 @@ func BuildVideoListResp(videos []db.Video, users []db.User, videoLikeList []int6
 }
 
 func BuildAuthorResp(author db.User) *user.User {
+	videoCount, _ := db.GetVideoCountByID(author.ID)
 	return &user.User{
-		ID:     author.ID,
-		Name:   author.UserName,
-		Avatar: author.Avatar,
+		ID:         author.ID,
+		Name:       author.UserName,
+		Avatar:     author.Avatar,
+		VideoCount: videoCount,
 	}
 }

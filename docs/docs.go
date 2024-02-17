@@ -19,16 +19,16 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/bibi/interaction/comment": {
+        "/bibi/interaction/comment/create": {
             "post": {
-                "description": "comment video or delete your comment",
+                "description": "comment video",
                 "consumes": [
                     "json/form"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "comment_action",
+                "summary": "comment_create",
                 "parameters": [
                     {
                         "type": "integer",
@@ -45,9 +45,38 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/bibi/interaction/comment/delete": {
+            "post": {
+                "description": "delete your comment",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "comment_delete",
+                "parameters": [
+                    {
                         "type": "integer",
-                        "description": "删除评论:0;评论:1",
-                        "name": "action_type",
+                        "description": "视频id",
+                        "name": "video_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "评论id",
+                        "name": "comment_id",
                         "in": "query",
                         "required": true
                     },
@@ -64,6 +93,30 @@ const docTemplate = `{
         },
         "/bibi/interaction/comment/list": {
             "post": {
+                "description": "show video's comments",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "comment_list",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "视频id",
+                        "name": "video_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页码",
+                        "name": "page_num",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {}
             }
         },

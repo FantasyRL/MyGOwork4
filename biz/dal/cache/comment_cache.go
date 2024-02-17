@@ -30,11 +30,41 @@ func AddVideoComment(ctx context.Context, comment *db.Comment) error {
 	return nil
 }
 
+func SetVideoComments(ctx context.Context, comments []db.Comment, videoId int64) error {
+	var err error
+	MalComments := make([]redis.Z, len(comments))
+	for i, comment := range comments {
+		var MalComment []byte
+		MalComment, err = (comment).MarshalMsg(nil)
+
+		MalComments[i] = redis.Z{
+			Score:  float64(comment.ID),
+			Member: MalComment,
+		}
+	}
+	if err != nil {
+		return err
+	}
+	tx := rComment.TxPipeline()
+	//MalComments...可存储整个切片
+	if err = tx.ZAdd(ctx, i64ToStr(videoId)+commentSuffix, MalComments...).Err(); err != nil {
+		return err
+	}
+	if err = tx.Expire(ctx, i64ToStr(videoId)+commentSuffix, commentExpTime).Err(); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx); err != nil {
+		return err
+	}
+	return nil
+}
+
 func DelVideoComment(ctx context.Context, comment *db.Comment) error {
 	score := strconv.FormatInt(comment.ID, 10)
 	return rComment.ZRemRangeByScore(ctx, i64ToStr(comment.VideoID)+commentSuffix, score, score).Err()
 
 }
+
 func GetVideoComments(ctx context.Context, videoId int64) (comments []db.Comment, err error) {
 	//按时间排序获取所有评论
 	malComments, err := rComment.ZRevRange(ctx, i64ToStr(videoId)+commentSuffix, 0, -1).Result()

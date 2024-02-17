@@ -135,40 +135,63 @@ func LikeList(ctx context.Context, c *app.RequestContext) {
 	c.JSON(consts.StatusOK, resp)
 }
 
-// CommentAction .
-// @Summary comment_action
-// @Description comment video or delete your comment
+// CommentCreate .
+// @Summary comment_create
+// @Description comment video
 // @Accept json/form
 // @Produce json
 // @Param video_id query int true "视频id"
 // @Param content query string true "正文"
-// @Param action_type query int true "删除评论:0;评论:1"
 // @Param Authorization header string true "token"
-// @router /bibi/interaction/comment [POST]
-func CommentAction(ctx context.Context, c *app.RequestContext) {
+// @router /bibi/interaction/comment/create [POST]
+func CommentCreate(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req interaction.CommentActionReq
+	var req interaction.CommentCreateReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp := new(interaction.CommentActionResp)
+	resp := new(interaction.CommentCreateResp)
 
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
 
-	switch req.ActionType {
-	case 1:
-		err = interaction_service.NewInteractionService(ctx).CommentCreate(&req, id)
-	case 0:
-		err = interaction_service.NewInteractionService(ctx).CommentDelete(&req, id)
-	default:
-		resp.Base = pack.BuildInteractionBaseResp(errno.ParamError)
+	commentResp, err := interaction_service.NewInteractionService(ctx).CommentCreate(&req, id)
+	resp.Base = pack.BuildInteractionBaseResp(err)
+	if err != nil {
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
+	resp.Comment = interaction_service.BuildCommentResp(commentResp)
+	c.JSON(consts.StatusOK, resp)
+}
+
+// CommentDelete .
+// @Summary comment_delete
+// @Description delete your comment
+// @Accept json/form
+// @Produce json
+// @Param video_id query int true "视频id"
+// @Param comment_id query int true "评论id"
+// @Param Authorization header string true "token"
+// @router /bibi/interaction/comment/delete [POST]
+func CommentDelete(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req interaction.CommentDeleteReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(interaction.CommentDeleteResp)
+
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+
+	err = interaction_service.NewInteractionService(ctx).CommentDelete(&req, id)
 	resp.Base = pack.BuildInteractionBaseResp(err)
 	c.JSON(consts.StatusOK, resp)
 }
@@ -192,5 +215,13 @@ func CommentList(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(interaction.CommentListResp)
 
+	commentResp, count, err := interaction_service.NewInteractionService(ctx).CommentList(&req)
+	resp.Base = pack.BuildInteractionBaseResp(err)
+	if err != nil {
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+	resp.CommentCount = count
+	resp.CommentList = interaction_service.BuildCommentsResp(commentResp)
 	c.JSON(consts.StatusOK, resp)
 }

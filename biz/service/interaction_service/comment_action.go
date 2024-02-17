@@ -9,11 +9,11 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func (s *InteractionService) CommentCreate(req *interaction.CommentActionReq, uid int64) error {
+func (s *InteractionService) CommentCreate(req *interaction.CommentCreateReq, uid int64) (*db.Comment, error) {
 	var eg errgroup.Group
 	var err error
 	var exist = false
-
+	var comment *db.Comment
 	eg.Go(func() error {
 		var commentModel = &interaction.Comment{
 			VideoID: req.VideoID,
@@ -23,7 +23,7 @@ func (s *InteractionService) CommentCreate(req *interaction.CommentActionReq, ui
 			},
 		}
 		//若内容完全重复，则删除最早发的那个(其实是懒得再开一个接口了)
-		comment, err := db.CreateComment(commentModel)
+		comment, err = db.CreateComment(commentModel)
 		if err != nil {
 			return err
 		}
@@ -42,26 +42,26 @@ func (s *InteractionService) CommentCreate(req *interaction.CommentActionReq, ui
 	})
 
 	if err = eg.Wait(); err != nil {
-		return err
+		return nil, err
 	}
 	if !exist {
 		count, err := db.GetCommentCount(req.VideoID)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		err = cache.SetVideoCommentCount(s.ctx, req.VideoID, count)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
-	return nil
+	return comment, nil
 }
 
-func (s *InteractionService) CommentDelete(req *interaction.CommentActionReq, uid int64) error {
+func (s *InteractionService) CommentDelete(req *interaction.CommentDeleteReq, uid int64) error {
 	var eg errgroup.Group
 	var commentModel = &interaction.Comment{
+		ID:      req.CommentID,
 		VideoID: req.VideoID,
-		Content: req.Content,
 		User: &user.User{
 			ID: uid,
 		},

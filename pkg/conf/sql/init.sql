@@ -1,7 +1,7 @@
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
+# SET global Time_Zone ='+8:00';
 -- BTREE的用途
 --     匹配模糊查询;全值匹配的查询(where);
 

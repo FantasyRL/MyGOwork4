@@ -9,11 +9,11 @@ info:
   title: BibiBibi
   version: "1.0"
 paths:
-  /bibi/interaction/comment:
+  /bibi/interaction/comment/create:
     post:
       consumes:
       - json/form
-      description: comment video or delete your comment
+      description: comment video
       parameters:
       - description: 视频id
         in: query
@@ -25,9 +25,29 @@ paths:
         name: content
         required: true
         type: string
-      - description: 删除评论:0;评论:1
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: comment_create
+  /bibi/interaction/comment/delete:
+    post:
+      consumes:
+      - json/form
+      description: delete your comment
+      parameters:
+      - description: 视频id
         in: query
-        name: action_type
+        name: video_id
+        required: true
+        type: integer
+      - description: 评论id
+        in: query
+        name: comment_id
         required: true
         type: integer
       - description: token
@@ -38,10 +58,27 @@ paths:
       produces:
       - application/json
       responses: {}
-      summary: comment_action
+      summary: comment_delete
   /bibi/interaction/comment/list:
     post:
+      consumes:
+      - json/form
+      description: show video's comments
+      parameters:
+      - description: 视频id
+        in: query
+        name: video_id
+        required: true
+        type: integer
+      - description: 页码
+        in: query
+        name: page_num
+        required: true
+        type: string
+      produces:
+      - application/json
       responses: {}
+      summary: comment_list
   /bibi/interaction/like/action:
     post:
       consumes:

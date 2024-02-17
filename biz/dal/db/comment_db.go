@@ -21,9 +21,9 @@ type Comment struct {
 
 func IsCommentExist(commentModel *interaction.Comment) (bool, error) {
 	var comment = &Comment{
+		ID:      commentModel.ID,
 		VideoID: commentModel.VideoID,
 		Uid:     commentModel.User.ID,
-		Content: commentModel.Content,
 	}
 	err := dao.DB.Model(Comment{}).Take(comment).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -46,9 +46,9 @@ func CreateComment(commentModel *interaction.Comment) (*Comment, error) {
 
 func DeleteComment(commentModel *interaction.Comment) (*Comment, error) {
 	var comment = &Comment{
+		ID:      commentModel.ID,
 		VideoID: commentModel.VideoID,
 		Uid:     commentModel.User.ID,
-		Content: commentModel.Content,
 	}
 	if err := dao.DB.Model(Comment{}).Take(comment).Delete(comment).Error; err != nil {
 		return nil, err
@@ -61,4 +61,13 @@ func GetCommentCount(videoId int64) (count int64, err error) {
 		return 0, err
 	}
 	return
+}
+
+func GetCommentsByVideoID(videoId int64) ([]Comment, int64, error) {
+	comments := new([]Comment)
+	var count int64
+	if err := dao.DB.Model(Comment{}).Where("video_id = ?", videoId).Count(&count).Find(comments).Error; err != nil {
+		return nil, 0, err
+	}
+	return *comments, count, nil
 }

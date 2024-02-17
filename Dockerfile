@@ -1,12 +1,17 @@
-FROM golang:latest
+FROM golang:latest AS builder
 LABEL authors="fanr"
 
-COPY . /go/src/
-
-WORKDIR "/go/src/"
+ENV TZ Asia/Shanghai
 RUN go env -w GO111MODULE=on \
   && go env -w GOPROXY=https://goproxy.cn,direct \
   && go env -w GOOS=linux \
   && go env -w GOARCH=amd64
+
+RUN mkdir -p /app
+WORKDIR /app
+
+ADD . /app
 RUN go mod tidy
+RUN make build
 RUN go build -o bibi
+

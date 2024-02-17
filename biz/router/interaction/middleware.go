@@ -48,7 +48,15 @@ func _commentMw() []app.HandlerFunc {
 	return nil
 }
 
-func _commentactionMw() []app.HandlerFunc {
+func _commentcreateMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
+	//return nil
+}
+
+func _commentdeleteMw() []app.HandlerFunc {
 	// your code...
 	return []app.HandlerFunc{
 		jwt.JwtMiddleware.MiddlewareFunc(),

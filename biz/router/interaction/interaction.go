@@ -21,9 +21,12 @@ func Register(r *server.Hertz) {
 		_bibi := root.Group("/bibi", _bibiMw()...)
 		{
 			_interaction := _bibi.Group("/interaction", _interactionMw()...)
-			_interaction.POST("/comment", append(_commentactionMw(), interaction.CommentAction)...)
-			_comment := _interaction.Group("/comment", _commentMw()...)
-			_comment.POST("/list", append(_commentlistMw(), interaction.CommentList)...)
+			{
+				_comment := _interaction.Group("/comment", _commentMw()...)
+				_comment.POST("/create", append(_commentcreateMw(), interaction.CommentCreate)...)
+				_comment.POST("/delete", append(_commentdeleteMw(), interaction.CommentDelete)...)
+				_comment.POST("/list", append(_commentlistMw(), interaction.CommentList)...)
+			}
 			{
 				_like := _interaction.Group("/like", _likeMw()...)
 				_like.POST("/action", append(_likeactionMw(), interaction.LikeAction)...)

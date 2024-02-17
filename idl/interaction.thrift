@@ -35,13 +35,22 @@ struct LikeListResp{
     3:list<video.Video> video_list,
 }
 
-struct CommentActionReq{
+struct CommentCreateReq{
     1:i64 video_id,
     2:string content,
-    3:i64 action_type,
 }
 
-struct CommentActionResp{
+struct CommentCreateResp{
+    1:BaseResp base,
+    2:Comment comment,
+}
+
+struct CommentDeleteReq{
+    1:i64 video_id,
+    2:i64 comment_id,
+}
+
+struct CommentDeleteResp{
     1:BaseResp base,
 }
 
@@ -59,6 +68,7 @@ struct CommentListResp{
 service InteractionHandler{
     LikeActionResp LikeAction(1:LikeActionReq req)(api.post="/bibi/interaction/like/action"),
     LikeListResp LikeList(1:LikeListReq req)(api.get="/bibi/interaction/like/list"),
-    CommentActionResp CommentAction(1:CommentActionReq req)(api.post="/bibi/interaction/comment"),
-    CommentListResp CommentList(1:CommentListReq req)(api.post="/bibi/interaction/comment/list")
+    CommentCreateResp CommentCreate(1:CommentCreateReq req)(api.post="/bibi/interaction/comment/create"),
+    CommentDeleteResp CommentDelete(1:CommentDeleteReq req)(api.post="/bibi/interaction/comment/delete"),
+    CommentListResp CommentList(1:CommentListReq req)(api.post="/bibi/interaction/comment/list"),
 }

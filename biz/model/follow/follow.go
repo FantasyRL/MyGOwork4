@@ -646,7 +646,8 @@ func (p *FollowingListReq) String() string {
 
 type FollowingListResp struct {
 	Base          *BaseResp    `thrift:"base,1" form:"base" json:"base" query:"base"`
-	FollowingList []*user.User `thrift:"following_list,2" form:"following_list" json:"following_list" query:"following_list"`
+	Count         int64        `thrift:"count,2" form:"count" json:"count" query:"count"`
+	FollowingList []*user.User `thrift:"following_list,3" form:"following_list" json:"following_list" query:"following_list"`
 }
 
 func NewFollowingListResp() *FollowingListResp {
@@ -662,13 +663,18 @@ func (p *FollowingListResp) GetBase() (v *BaseResp) {
 	return p.Base
 }
 
+func (p *FollowingListResp) GetCount() (v int64) {
+	return p.Count
+}
+
 func (p *FollowingListResp) GetFollowingList() (v []*user.User) {
 	return p.FollowingList
 }
 
 var fieldIDToName_FollowingListResp = map[int16]string{
 	1: "base",
-	2: "following_list",
+	2: "count",
+	3: "following_list",
 }
 
 func (p *FollowingListResp) IsSetBase() bool {
@@ -703,8 +709,16 @@ func (p *FollowingListResp) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -747,6 +761,15 @@ func (p *FollowingListResp) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *FollowingListResp) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Count = v
+	}
+	return nil
+}
+func (p *FollowingListResp) ReadField3(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -778,6 +801,10 @@ func (p *FollowingListResp) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -816,7 +843,24 @@ WriteFieldEndError:
 }
 
 func (p *FollowingListResp) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("following_list", thrift.LIST, 2); err != nil {
+	if err = oprot.WriteFieldBegin("count", thrift.I64, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Count); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *FollowingListResp) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("following_list", thrift.LIST, 3); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.FollowingList)); err != nil {
@@ -835,9 +879,9 @@ func (p *FollowingListResp) writeField2(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *FollowingListResp) String() string {
@@ -985,7 +1029,8 @@ func (p *FollowerListReq) String() string {
 
 type FollowerListResp struct {
 	Base         *BaseResp    `thrift:"base,1" form:"base" json:"base" query:"base"`
-	FollowerList []*user.User `thrift:"follower_list,2" form:"follower_list" json:"follower_list" query:"follower_list"`
+	Count        int64        `thrift:"count,2" form:"count" json:"count" query:"count"`
+	FollowerList []*user.User `thrift:"follower_list,3" form:"follower_list" json:"follower_list" query:"follower_list"`
 }
 
 func NewFollowerListResp() *FollowerListResp {
@@ -1001,13 +1046,18 @@ func (p *FollowerListResp) GetBase() (v *BaseResp) {
 	return p.Base
 }
 
+func (p *FollowerListResp) GetCount() (v int64) {
+	return p.Count
+}
+
 func (p *FollowerListResp) GetFollowerList() (v []*user.User) {
 	return p.FollowerList
 }
 
 var fieldIDToName_FollowerListResp = map[int16]string{
 	1: "base",
-	2: "follower_list",
+	2: "count",
+	3: "follower_list",
 }
 
 func (p *FollowerListResp) IsSetBase() bool {
@@ -1042,8 +1092,16 @@ func (p *FollowerListResp) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -1086,6 +1144,15 @@ func (p *FollowerListResp) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *FollowerListResp) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Count = v
+	}
+	return nil
+}
+func (p *FollowerListResp) ReadField3(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -1117,6 +1184,10 @@ func (p *FollowerListResp) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -1155,7 +1226,24 @@ WriteFieldEndError:
 }
 
 func (p *FollowerListResp) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("follower_list", thrift.LIST, 2); err != nil {
+	if err = oprot.WriteFieldBegin("count", thrift.I64, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Count); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *FollowerListResp) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("follower_list", thrift.LIST, 3); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.FollowerList)); err != nil {
@@ -1174,9 +1262,9 @@ func (p *FollowerListResp) writeField2(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *FollowerListResp) String() string {
@@ -1324,7 +1412,8 @@ func (p *FriendListReq) String() string {
 
 type FriendListResp struct {
 	Base       *BaseResp    `thrift:"base,1" form:"base" json:"base" query:"base"`
-	FriendList []*user.User `thrift:"friend_list,2" form:"friend_list" json:"friend_list" query:"friend_list"`
+	Count      int64        `thrift:"count,2" form:"count" json:"count" query:"count"`
+	FriendList []*user.User `thrift:"friend_list,3" form:"friend_list" json:"friend_list" query:"friend_list"`
 }
 
 func NewFriendListResp() *FriendListResp {
@@ -1340,13 +1429,18 @@ func (p *FriendListResp) GetBase() (v *BaseResp) {
 	return p.Base
 }
 
+func (p *FriendListResp) GetCount() (v int64) {
+	return p.Count
+}
+
 func (p *FriendListResp) GetFriendList() (v []*user.User) {
 	return p.FriendList
 }
 
 var fieldIDToName_FriendListResp = map[int16]string{
 	1: "base",
-	2: "friend_list",
+	2: "count",
+	3: "friend_list",
 }
 
 func (p *FriendListResp) IsSetBase() bool {
@@ -1381,8 +1475,16 @@ func (p *FriendListResp) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -1425,6 +1527,15 @@ func (p *FriendListResp) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *FriendListResp) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Count = v
+	}
+	return nil
+}
+func (p *FriendListResp) ReadField3(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -1456,6 +1567,10 @@ func (p *FriendListResp) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -1494,7 +1609,24 @@ WriteFieldEndError:
 }
 
 func (p *FriendListResp) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("friend_list", thrift.LIST, 2); err != nil {
+	if err = oprot.WriteFieldBegin("count", thrift.I64, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Count); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *FriendListResp) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("friend_list", thrift.LIST, 3); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.FriendList)); err != nil {
@@ -1513,9 +1645,9 @@ func (p *FriendListResp) writeField2(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *FriendListResp) String() string {

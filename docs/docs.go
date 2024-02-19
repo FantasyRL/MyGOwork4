@@ -79,6 +79,14 @@ const docTemplate = `{
         },
         "/bibi/follow/following": {
             "get": {
+                "description": "list your followed",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "following_list",
                 "parameters": [
                     {
                         "type": "string",
@@ -93,6 +101,14 @@ const docTemplate = `{
         },
         "/bibi/follow/friend": {
             "get": {
+                "description": "list your friends",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "friend_list",
                 "parameters": [
                     {
                         "type": "string",

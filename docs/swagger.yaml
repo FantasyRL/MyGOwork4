@@ -51,22 +51,34 @@ paths:
       summary: follower_list
   /bibi/follow/following:
     get:
+      consumes:
+      - json/form
+      description: list your followed
       parameters:
       - description: token
         in: header
         name: Authorization
         required: true
         type: string
+      produces:
+      - application/json
       responses: {}
+      summary: following_list
   /bibi/follow/friend:
     get:
+      consumes:
+      - json/form
+      description: list your friends
       parameters:
       - description: token
         in: header
         name: Authorization
         required: true
         type: string
+      produces:
+      - application/json
       responses: {}
+      summary: friend_list
   /bibi/interaction/comment/create:
     post:
       consumes:

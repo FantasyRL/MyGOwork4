@@ -9,8 +9,10 @@ import (
 
 const (
 	likeSuffix            = ":like"
-	countSuffix           = ":count"
+	followerCountSuffix   = ":follower_counts"
+	friendCountSuffix     = ":friend_counts"
 	commentSuffix         = ":comment"
+	followerSuffix        = ":follower"
 	videoExpTime          = time.Hour * 1 //到期自动移除k-v
 	likeExpTime           = time.Minute * 10
 	commentExpTime        = time.Minute * 10
@@ -18,6 +20,9 @@ const (
 	videoLikeZset         = "video_likes"
 	videoCommentCountZset = "video_comment_counts"
 	videoCommentZset      = "video_comments"
+	followerCountZset     = "follower_counts"
+	followingCountZset    = "following_counts"
+	FriendCountZset       = "friend_counts"
 )
 
 var (

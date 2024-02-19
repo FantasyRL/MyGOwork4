@@ -55,34 +55,41 @@ func UpdateFollowStatus(uid int64, followerId int64, status int64) error {
 		uid, followerId).Update("status", status).Error
 }
 
-func FollowerList(followed_id int64) ([]Follow, error) {
+func FollowerList(followedId int64) ([]Follow, int64, error) {
 	followerList := new([]Follow)
-	if err := DB.Model(Follow{}).Where("followed_id = ? AND status = 1", followed_id).Find(followerList).Error; err != nil {
-		return nil, err
+	var count int64
+	if err := DB.Model(Follow{}).Where("followed_id = ? AND status = 1", followedId).Find(followerList).Count(&count).Error; err != nil {
+		return nil, 0, err
 	}
-	return *followerList, nil
+	return *followerList, count, nil
 }
 
-func FollowingList(uid int64) ([]Follow, error) {
+func FollowingList(uid int64) ([]Follow, int64, error) {
 	followedList := new([]Follow)
-	if err := DB.Model(Follow{}).Where("uid = ? AND status = 1", uid).Find(followedList).Error; err != nil {
-		return nil, err
+	var count int64
+	if err := DB.Model(Follow{}).Where("uid = ? AND status = 1", uid).Count(&count).Find(followedList).Error; err != nil {
+		return nil, 0, err
 	}
-	return *followedList, nil
+	return *followedList, count, nil
 }
 
-func FriendList(uid int64) ([]Follow, error) {
-	friendList := new([]Follow)
-	if err := DB.Model(Follow{}).Where("uid = ? AND status = 1", uid).
-		Where("followed_id = ? AND status = 1", uid).Find(friendList).Error; err != nil {
-		return nil, err
+func FriendList(uid int64) ([]Follow, int64, error) {
+	friendList1 := new([]Follow)
+	friendList2 := new([]Follow)
+	var count int64
+	if err := DB.Model(Follow{}).Where("uid = ? AND status = 1", uid).Find(friendList1).Error; err != nil {
+		return nil, 0, err
 	}
-	return *friendList, nil
+	//通过model实现二次查询
+	if err := DB.Model(&friendList1).Where("followed_id = ? AND status = 1", uid).Find(friendList2).Count(&count).Error; err != nil {
+		return nil, 0, err
+	}
+	return *friendList2, count, nil
 }
 
-func IsFollow(uid int64, followed_id int64) (bool, error) {
+func IsFollow(uid int64, followedId int64) (bool, error) {
 	follow := new(Follow)
-	err := DB.Model(Follow{}).Where("uid = ? AND followed_id = ?", uid, followed_id).First(follow).Error
+	err := DB.Model(Follow{}).Where("uid = ? AND followed_id = ?", uid, followedId).First(follow).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return false, nil
 	}

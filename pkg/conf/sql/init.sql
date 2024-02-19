@@ -71,7 +71,7 @@ CREATE TABLE `comment`(
 CREATE TABLE `follow`(
     `id` bigint NOT NULL AUTO_INCREMENT ,
     `uid` bigint NOT NULL COMMENT 'user_id',
-    `followed_id` bigint NOT NULL COMMENT '被关注者',
+    `followedIdList` bigint NOT NULL COMMENT '被关注者',
     `status` bigint NOT NULL DEFAULT 1 COMMENT '1:关注;0:取消关注',
     `created_at` timestamp NOT NULL DEFAULT current_timestamp ,
     `updated_at` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
@@ -81,8 +81,8 @@ CREATE TABLE `follow`(
         FOREIGN KEY (`uid`)
             REFERENCES user (`id`)
             ON DELETE CASCADE,
-    CONSTRAINT `followed`
-        FOREIGN KEY (`followed_id`)
+    CONSTRAINT `followedId`
+        FOREIGN KEY (`followedIdList`)
             REFERENCES user (`id`)
             ON DELETE CASCADE
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='关注表';

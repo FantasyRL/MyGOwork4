@@ -16,7 +16,20 @@ func NewFollowService(ctx context.Context) *FollowService {
 	}
 }
 
-func BuildUsersResp(users []db.User) (usersResp []*user.User) {
+func BuildFollowedUsersResp(users []db.User) (usersResp []*user.User) {
+	usersResp = make([]*user.User, 0, len(users))
+	for _, u := range users {
+		usersResp = append(usersResp, &user.User{
+			ID:       u.ID,
+			Name:     u.UserName,
+			Avatar:   u.Avatar,
+			IsFollow: true,
+		})
+	}
+	return
+}
+
+func BuildFollowerUsersResp(uid int64, users []db.User) (usersResp []*user.User) {
 	usersResp = make([]*user.User, 0, len(users))
 	for _, u := range users {
 		usersResp = append(usersResp, &user.User{

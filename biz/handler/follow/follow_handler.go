@@ -75,7 +75,7 @@ func FollowerList(ctx context.Context, c *app.RequestContext) {
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
 
-	followResp, err := follow_service.NewFollowService(ctx).FollowerList(&req, id)
+	followResp, count, err := follow_service.NewFollowService(ctx).FollowerList(&req, id)
 	if err != nil {
 		resp.Base = pack.BuildFollowBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
@@ -85,17 +85,24 @@ func FollowerList(ctx context.Context, c *app.RequestContext) {
 	for _, follower := range followResp {
 		uidList = append(uidList, follower.Uid)
 	}
+
 	userResp, err := user_service.NewUserService(ctx).GetUserByIdList(uidList)
 	if err != nil {
 		resp.Base = pack.BuildFollowBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	resp.FollowerList = follow_service.BuildUsersResp(userResp)
+
+	resp.Count = count
+	resp.FollowerList = follow_service.BuildFollowerUsersResp(id, userResp)
 	c.JSON(consts.StatusOK, resp)
 }
 
 // FollowingList .
+// @Summary following_list
+// @Description list your followed
+// @Accept json/form
+// @Produce json
 // @Param Authorization header string true "token"
 // @router /bibi/follow/following [GET]
 func FollowingList(ctx context.Context, c *app.RequestContext) {
@@ -112,7 +119,7 @@ func FollowingList(ctx context.Context, c *app.RequestContext) {
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
 
-	followResp, err := follow_service.NewFollowService(ctx).FollowingList(&req, id)
+	followResp, count, err := follow_service.NewFollowService(ctx).FollowingList(&req, id)
 	if err != nil {
 		resp.Base = pack.BuildFollowBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
@@ -120,7 +127,7 @@ func FollowingList(ctx context.Context, c *app.RequestContext) {
 	}
 	uidList := make([]int64, 0, len(followResp))
 	for _, following := range followResp {
-		uidList = append(uidList, following.Uid)
+		uidList = append(uidList, following.FollowedId)
 	}
 	userResp, err := user_service.NewUserService(ctx).GetUserByIdList(uidList)
 	if err != nil {
@@ -128,11 +135,16 @@ func FollowingList(ctx context.Context, c *app.RequestContext) {
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	resp.FollowingList = follow_service.BuildUsersResp(userResp)
+	resp.Count = count
+	resp.FollowingList = follow_service.BuildFollowedUsersResp(userResp)
 	c.JSON(consts.StatusOK, resp)
 }
 
 // FriendList .
+// @Summary friend_list
+// @Description list your friends
+// @Accept json/form
+// @Produce json
 // @Param Authorization header string true "token"
 // @router /bibi/follow/friend [GET]
 func FriendList(ctx context.Context, c *app.RequestContext) {
@@ -149,7 +161,7 @@ func FriendList(ctx context.Context, c *app.RequestContext) {
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
 
-	followResp, err := follow_service.NewFollowService(ctx).FriendList(&req, id)
+	followResp, count, err := follow_service.NewFollowService(ctx).FriendList(&req, id)
 	if err != nil {
 		resp.Base = pack.BuildFollowBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
@@ -165,6 +177,7 @@ func FriendList(ctx context.Context, c *app.RequestContext) {
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	resp.FriendList = follow_service.BuildUsersResp(userResp)
+	resp.Count = count
+	resp.FriendList = follow_service.BuildFollowedUsersResp(userResp)
 	c.JSON(consts.StatusOK, resp)
 }

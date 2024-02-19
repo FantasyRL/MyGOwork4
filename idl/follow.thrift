@@ -22,7 +22,8 @@ struct FollowingListReq{
 
 struct FollowingListResp{
     1:BaseResp base,
-    2:list<user.User> following_list,
+    2:i64 count,
+    3:list<user.User> following_list,
 }
 
 struct FollowerListReq{
@@ -31,7 +32,8 @@ struct FollowerListReq{
 
 struct FollowerListResp{
     1:BaseResp base,
-    2:list<user.User> follower_list,
+    2:i64 count,
+    3:list<user.User> follower_list,
 }
 
 struct FriendListReq{
@@ -40,12 +42,13 @@ struct FriendListReq{
 
 struct FriendListResp{
     1:BaseResp base,
-    2:list<user.User> friend_list,
+    2:i64 count,
+    3:list<user.User> friend_list,
 }
 
 service FollowHandler{
     FollowActionResp FollowAction(1:FollowActionReq req)(api.post="/bibi/follow/action"),
-    FollowerListResp FollowerList(1:FollowerListReq req)(api.get="/bibi/follow/following"),
+    FollowerListResp FollowerList(1:FollowerListReq req)(api.get="/bibi/follow/follower"),
     FollowingListResp FollowingList(1:FollowingListReq req)(api.get="/bibi/follow/following"),
     FriendListResp FriendList(1:FriendListReq req)(api.get="/bibi/follow/friend"),
 }

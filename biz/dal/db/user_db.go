@@ -60,7 +60,6 @@ func QueryUserByID(userModel *User) (*User, error) {
 }
 
 func PutAvatar(ctx context.Context, userModel *User) (*User, error) {
-	//这里可能出问题，留个注释
 	userResp := new(User)
 	if err := DB.Model(User{}).Where("id = ?", userModel.ID).Update("avatar", userModel.Avatar).First(userResp).Error; err != nil {
 		return nil, err

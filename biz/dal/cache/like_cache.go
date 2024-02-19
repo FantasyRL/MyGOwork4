@@ -8,7 +8,7 @@ import (
 
 // IsUserLikeCacheExist 用户点赞是否存在于redis
 func IsUserLikeCacheExist(ctx context.Context, uid int64) (bool, error) {
-	ok, err := r.Exists(ctx, i64ToStr(uid)+likeSuffix).Result()
+	ok, err := rLike.Exists(ctx, i64ToStr(uid)+likeSuffix).Result()
 	if err != nil {
 		//错误处理返回啥都一样
 		return false, err
@@ -22,12 +22,12 @@ func IsUserLikeCacheExist(ctx context.Context, uid int64) (bool, error) {
 
 // IsVideoLikeExist 用户是否点赞了该视频
 func IsVideoLikeExist(ctx context.Context, videoId int64, uid int64) (bool, error) {
-	return r.SIsMember(ctx, i64ToStr(uid)+likeSuffix, i64ToStr(videoId)).Result()
+	return rLike.SIsMember(ctx, i64ToStr(uid)+likeSuffix, i64ToStr(videoId)).Result()
 }
 
 // AddUserLikeVideo 仅添加用户点赞
 func AddUserLikeVideo(ctx context.Context, videoId int64, uid int64) error {
-	tx := r.TxPipeline()
+	tx := rLike.TxPipeline()
 	if err := tx.SAdd(ctx, i64ToStr(uid)+likeSuffix, i64ToStr(videoId)).Err(); err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func AddUserLikeVideo(ctx context.Context, videoId int64, uid int64) error {
 // AddVideoLikeCount 添加用户点赞、增加视频点赞量
 func AddVideoLikeCount(ctx context.Context, videoId int64, uid int64) error {
 	//管线很快，但组装命令过多会导致网络阻塞
-	tx := r.TxPipeline()
+	tx := rLike.TxPipeline()
 	if err := tx.SAdd(ctx, i64ToStr(uid)+likeSuffix, i64ToStr(videoId)).Err(); err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func AddVideoLikeCount(ctx context.Context, videoId int64, uid int64) error {
 // GetVideoLikeCount 获取视频点赞量
 func GetVideoLikeCount(ctx context.Context, videoId int64) (bool, int64, error) {
 	//获取元素的score
-	v, err := r.ZScore(ctx, videoLikeZset, i64ToStr(videoId)).Result()
+	v, err := rLike.ZScore(ctx, videoLikeZset, i64ToStr(videoId)).Result()
 	if err == redis.Nil { //已过期
 		return false, 0, nil
 	}
@@ -80,7 +80,7 @@ func GetVideoLikeCount(ctx context.Context, videoId int64) (bool, int64, error) 
 
 // DelVideoLikeCount 删除用户点赞、减少视频点赞量
 func DelVideoLikeCount(ctx context.Context, videoId int64, uid int64) error {
-	tx := r.TxPipeline()
+	tx := rLike.TxPipeline()
 	if err := tx.SRem(ctx, i64ToStr(uid)+likeSuffix, i64ToStr(videoId)).Err(); err != nil {
 		return err
 	}
@@ -102,7 +102,7 @@ func DelVideoLikeCount(ctx context.Context, videoId int64, uid int64) error {
 // GetUserLikeVideos 获取用户点赞过的视频ID
 func GetUserLikeVideos(ctx context.Context, uid int64) ([]int64, error) {
 	//SMembers获取所有成员
-	vals, err := r.SMembers(ctx, i64ToStr(uid)+likeSuffix).Result()
+	vals, err := rLike.SMembers(ctx, i64ToStr(uid)+likeSuffix).Result()
 	if err != nil {
 		return nil, err
 	}
@@ -119,32 +119,32 @@ func GetUserLikeVideos(ctx context.Context, uid int64) ([]int64, error) {
 func AddLikeVideoList(ctx context.Context, videoIdList []int64, uid int64) error {
 	var err error
 	for _, videoId := range videoIdList {
-		err = r.SAdd(ctx, i64ToStr(uid)+likeSuffix, i64ToStr(videoId)).Err()
+		err = rLike.SAdd(ctx, i64ToStr(uid)+likeSuffix, i64ToStr(videoId)).Err()
 	}
 	if err != nil {
 		return err
 	}
-	err = r.Expire(ctx, i64ToStr(uid), likeExpTime).Err()
+	err = rLike.Expire(ctx, i64ToStr(uid), likeExpTime).Err()
 	return err
 }
 
 // SetVideoLikeCounts 将视频点赞量写入redis
 func SetVideoLikeCounts(ctx context.Context, videoId int64, likeCount int64) error {
-	err := r.ZAdd(ctx, videoLikeZset, redis.Z{
+	err := rLike.ZAdd(ctx, videoLikeZset, redis.Z{
 		Score:  float64(likeCount),
 		Member: i64ToStr(videoId),
 	}).Err()
 	if err != nil {
 		return err
 	}
-	err = r.Expire(ctx, videoLikeZset, videoExpTime).Err()
+	err = rLike.Expire(ctx, videoLikeZset, videoExpTime).Err()
 	return err
 }
 
 // ListHotVideo 通过Zset列出点赞最多的视频
 func ListHotVideo(ctx context.Context) ([]int64, error) {
 	//降序选择前4位点赞最高返回
-	res, err := r.ZRevRange(ctx, videoLikeZset, 0, 4).Result()
+	res, err := rLike.ZRevRange(ctx, videoLikeZset, 0, 4).Result()
 	if err != nil {
 		return nil, err
 	}

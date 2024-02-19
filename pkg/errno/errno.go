@@ -19,6 +19,9 @@ const (
 	LikeNotExistErrCode
 	VideoNotExistErrCode
 	CommentIsNotExistErrCode
+	FollowExistErrCode
+	FollowNotExistErrCode
+	FollowMyselfErrCode
 )
 
 const (
@@ -34,6 +37,9 @@ const (
 	LikeExistErrMsg          = "You have liked this video"
 	LikeNotExistErrMsg       = "You don't like this video"
 	LikeActionErrMsg         = "favorite add failed"
+	FollowExistErrMsg        = "you have followed"
+	FollowNotExistErrMsg     = "you haven't followed"
+	FollowMyselfErrMsg       = "you can't follow yourself"
 
 	MessageAddFailedErrMsg    = "message add failed"
 	FriendListNoPermissionMsg = "You can't query his friend list"
@@ -77,6 +83,9 @@ var (
 	LikeNotExistError      = NewErrNo(LikeNotExistErrCode, LikeNotExistErrMsg)
 	VideoNotExistError     = NewErrNo(VideoNotExistErrCode, VideoNotExistErrMsg)
 	CommentIsNotExistError = NewErrNo(CommentIsNotExistErrCode, CommentIsNotExistErrMsg)
+	FollowExistError       = NewErrNo(FollowExistErrCode, FollowExistErrMsg)
+	FollowNotExistError    = NewErrNo(FollowNotExistErrCode, FollowNotExistErrMsg)
+	FollowMyselfError      = NewErrNo(FollowMyselfErrCode, FollowMyselfErrMsg)
 )
 
 // ConvertErr convert error to ErrNo

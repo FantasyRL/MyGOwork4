@@ -9,6 +9,64 @@ info:
   title: BibiBibi
   version: "1.0"
 paths:
+  /bibi/follow/action:
+    post:
+      consumes:
+      - json/form
+      description: follow action
+      parameters:
+      - description: 操作对象id
+        in: query
+        name: object_uid
+        required: true
+        type: integer
+      - description: 0：取消关注;1：关注
+        in: query
+        name: action_type
+        required: true
+        type: integer
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: follow_action
+  /bibi/follow/follower:
+    get:
+      consumes:
+      - json/form
+      description: list your followers
+      parameters:
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: follower_list
+  /bibi/follow/following:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses: {}
+  /bibi/follow/friend:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses: {}
   /bibi/interaction/comment/create:
     post:
       consumes:

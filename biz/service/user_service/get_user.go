@@ -10,6 +10,6 @@ func (s *UserService) GetUserByVideo(video db.Video) (*db.User, error) {
 	}
 	return db.QueryUserByID(userModel)
 }
-func (s *UserService) GetUserById() {
-
+func (s *UserService) GetUserByIdList(uidList []int64) ([]db.User, error) {
+	return db.QueryUserByIDList(uidList)
 }

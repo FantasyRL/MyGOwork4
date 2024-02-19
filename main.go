@@ -4,6 +4,7 @@ package main
 
 import (
 	"bibi/biz/dal/cache"
+	"bibi/biz/dal/db"
 	"bibi/biz/mw/jwt"
 	"bibi/pkg/conf"
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -21,7 +22,7 @@ import (
 // @BasePath  /bibi
 func main() {
 
-	conf.Init()
+	db.Init(conf.Init()) //非常丑的方式避免了循环引用，但真的很丑...
 	jwt.Init()
 	cache.Init()
 

@@ -1,7 +1,6 @@
 package db
 
 import (
-	"bibi/dao"
 	"gorm.io/gorm"
 	"time"
 )
@@ -18,18 +17,18 @@ type Like struct {
 
 func CheckLikeStatus(uid int64, videoId int64, status int64) error {
 	var like Like
-	return dao.DB.Model(Like{}).Where("uid = ? AND video_id = ? AND status = ?", uid, videoId, status).
+	return DB.Model(Like{}).Where("uid = ? AND video_id = ? AND status = ?", uid, videoId, status).
 		First(&like).Error
 }
 
 func IsLikeExist(uid int64, videoId int64) error {
 	var like Like
-	return dao.DB.Model(Like{}).Where("uid = ? AND video_id = ? ", uid, videoId).
+	return DB.Model(Like{}).Where("uid = ? AND video_id = ? ", uid, videoId).
 		First(&like).Error
 }
 
 func LikeStatusUpdate(uid int64, videoId int64, status int64) error {
-	return dao.DB.Model(Like{}).Where("uid = ? AND video_id = ? ", uid, videoId).
+	return DB.Model(Like{}).Where("uid = ? AND video_id = ? ", uid, videoId).
 		Update("status", status).Error
 }
 
@@ -39,12 +38,12 @@ func LikeCreate(uid int64, videoId int64, status int64) error {
 		VideoID: videoId,
 		Status:  status,
 	}
-	return dao.DB.Model(Like{}).Create(like).Error
+	return DB.Model(Like{}).Create(like).Error
 }
 
 func GetVideoByUid(uid int64) ([]int64, error) {
 	likes := new([]Like)
-	if err := dao.DB.Model(Like{}).Where("uid = ? AND status = ?", uid, 1).Find(likes).Error; err != nil {
+	if err := DB.Model(Like{}).Where("uid = ? AND status = ?", uid, 1).Find(likes).Error; err != nil {
 		return nil, err
 	}
 	var videoIdList []int64
@@ -55,7 +54,7 @@ func GetVideoByUid(uid int64) ([]int64, error) {
 }
 
 func GetVideoLikeCount(videoId int64) (count int64, err error) {
-	if err = dao.DB.Model(Like{}).Where("video_id = ?", videoId).Count(&count).Error; err != nil {
+	if err = DB.Model(Like{}).Where("video_id = ?", videoId).Count(&count).Error; err != nil {
 		return 0, err
 	}
 	return count, nil

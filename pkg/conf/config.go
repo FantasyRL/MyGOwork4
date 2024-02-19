@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"bibi/dao"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
@@ -38,7 +37,7 @@ var (
 	ServerAddr string
 )
 
-func Init() {
+func Init() string {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./pkg/conf")
@@ -56,7 +55,7 @@ func Init() {
 
 	sql := LoadMysql(viper.GetStringMapString("mysql"))
 	path := strings.Join([]string{sql.user, ":", sql.password, "@tcp(", sql.host, ":", sql.port, ")/", sql.dbname, "?charset=utf8mb4&parseTime=True"}, "")
-	dao.Init(path)
+	return path
 }
 
 func LoadMysql(myConf map[string]string) Mysql {

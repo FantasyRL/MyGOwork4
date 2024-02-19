@@ -84,7 +84,7 @@ func GetVideoComments(ctx context.Context, videoId int64) (comments []db.Comment
 }
 
 func GetVideoCommentCount(ctx context.Context, videoId int64) (bool, int64, error) {
-	v, err := r.ZScore(ctx, videoCommentCountZset, i64ToStr(videoId)).Result()
+	v, err := rComment.ZScore(ctx, videoCommentCountZset, i64ToStr(videoId)).Result()
 	if err == redis.Nil { //已过期
 		return false, 0, nil
 	}
@@ -96,7 +96,7 @@ func GetVideoCommentCount(ctx context.Context, videoId int64) (bool, int64, erro
 }
 
 func IncrVideoCommentCount(ctx context.Context, videoId int64) error {
-	tx := r.TxPipeline()
+	tx := rComment.TxPipeline()
 	if err := tx.ZIncrBy(ctx, videoCommentCountZset, 1, i64ToStr(videoId)).Err(); err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func IncrVideoCommentCount(ctx context.Context, videoId int64) error {
 }
 
 func DecrVideoCommentCount(ctx context.Context, videoId int64) error {
-	tx := r.TxPipeline()
+	tx := rComment.TxPipeline()
 	if err := tx.ZIncrBy(ctx, videoCommentCountZset, -1, i64ToStr(videoId)).Err(); err != nil {
 		return err
 	}
@@ -124,7 +124,7 @@ func DecrVideoCommentCount(ctx context.Context, videoId int64) error {
 }
 
 func SetVideoCommentCount(ctx context.Context, videoId int64, count int64) error {
-	tx := r.TxPipeline()
+	tx := rComment.TxPipeline()
 	if err := tx.ZAdd(ctx, videoCommentCountZset, redis.Z{
 		Score:  float64(count),
 		Member: i64ToStr(videoId),

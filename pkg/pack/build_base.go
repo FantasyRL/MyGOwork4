@@ -1,6 +1,7 @@
 package pack
 
 import (
+	"bibi/biz/model/follow"
 	"bibi/biz/model/interaction"
 	"bibi/biz/model/user"
 	"bibi/biz/model/video"
@@ -60,6 +61,25 @@ func BuildInteractionBaseResp(err error) *interaction.BaseResp {
 
 func ErrToInteractionResp(err errno.ErrNo) *interaction.BaseResp {
 	return &interaction.BaseResp{
+		Code: err.ErrorCode,
+		Msg:  err.ErrorMsg,
+	}
+}
+
+func BuildFollowBaseResp(err error) *follow.BaseResp {
+	if err == nil {
+		return ErrToFollowResp(errno.Success)
+	}
+	e := errno.ErrNo{}
+	if errors.As(err, &e) {
+		return ErrToFollowResp(e)
+	}
+	_e := errno.ServiceError.WithMessage(err.Error())
+	return ErrToFollowResp(_e)
+}
+
+func ErrToFollowResp(err errno.ErrNo) *follow.BaseResp {
+	return &follow.BaseResp{
 		Code: err.ErrorCode,
 		Msg:  err.ErrorMsg,
 	}

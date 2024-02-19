@@ -14,29 +14,34 @@ const (
 	videoExpTime          = time.Hour * 1 //到期自动移除k-v
 	likeExpTime           = time.Minute * 10
 	commentExpTime        = time.Minute * 10
+	followExpTime         = time.Minute
 	videoLikeZset         = "video_likes"
 	videoCommentCountZset = "video_comment_counts"
 	videoCommentZset      = "video_comments"
 )
 
 var (
-	r        *redis.Client
+	rLike    *redis.Client
 	rComment *redis.Client
+	rFollow  *redis.Client
 )
 
 func Init() {
-	r = redis.NewClient(&redis.Options{
-		Addr: conf.RedisAddr,
-		DB:   0,
+	rLike = redis.NewClient(&redis.Options{
+		Addr:       conf.RedisAddr,
+		ClientName: "Like",
+		DB:         0,
 	})
 	rComment = redis.NewClient(&redis.Options{
-		Addr: conf.RedisAddr,
-		DB:   1,
+		Addr:       conf.RedisAddr,
+		ClientName: "Comment",
+		DB:         1,
 	})
-	//rVideo = redis.NewClient(&redis.Options{
-	//	Addr: conf.RedisAddr,
-	//	DB:   2,
-	//})
+	rFollow = redis.NewClient(&redis.Options{
+		Addr:       conf.RedisAddr,
+		ClientName: "Follow",
+		DB:         2,
+	})
 }
 func i64ToStr(i64 int64) string {
 	return strconv.FormatInt(i64, 10)

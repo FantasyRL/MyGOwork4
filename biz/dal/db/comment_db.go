@@ -2,7 +2,6 @@ package db
 
 import (
 	"bibi/biz/model/interaction"
-	"bibi/dao"
 	"errors"
 	"gorm.io/gorm"
 	"time"
@@ -25,7 +24,7 @@ func IsCommentExist(commentModel *interaction.Comment) (bool, error) {
 		VideoID: commentModel.VideoID,
 		Uid:     commentModel.User.ID,
 	}
-	err := dao.DB.Model(Comment{}).Take(comment).Error
+	err := DB.Model(Comment{}).Take(comment).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return false, nil
 	}
@@ -38,7 +37,7 @@ func CreateComment(commentModel *interaction.Comment) (*Comment, error) {
 		Uid:     commentModel.User.ID,
 		Content: commentModel.Content,
 	}
-	if err := dao.DB.Model(Comment{}).Create(comment).Error; err != nil {
+	if err := DB.Model(Comment{}).Create(comment).Error; err != nil {
 		return &Comment{}, err
 	}
 	return comment, nil
@@ -50,14 +49,14 @@ func DeleteComment(commentModel *interaction.Comment) (*Comment, error) {
 		VideoID: commentModel.VideoID,
 		Uid:     commentModel.User.ID,
 	}
-	if err := dao.DB.Model(Comment{}).Take(comment).Delete(comment).Error; err != nil {
+	if err := DB.Model(Comment{}).Take(comment).Delete(comment).Error; err != nil {
 		return nil, err
 	}
 	return comment, nil
 }
 
 func GetCommentCount(videoId int64) (count int64, err error) {
-	if err = dao.DB.Model(Comment{}).Where("video_id = ?", videoId).Count(&count).Error; err != nil {
+	if err = DB.Model(Comment{}).Where("video_id = ?", videoId).Count(&count).Error; err != nil {
 		return 0, err
 	}
 	return
@@ -66,7 +65,7 @@ func GetCommentCount(videoId int64) (count int64, err error) {
 func GetCommentsByVideoID(videoId int64) ([]Comment, int64, error) {
 	comments := new([]Comment)
 	var count int64
-	if err := dao.DB.Model(Comment{}).Where("video_id = ?", videoId).Count(&count).Find(comments).Error; err != nil {
+	if err := DB.Model(Comment{}).Where("video_id = ?", videoId).Count(&count).Find(comments).Error; err != nil {
 		return nil, 0, err
 	}
 	return *comments, count, nil

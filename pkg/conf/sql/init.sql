@@ -5,7 +5,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- BTREE的用途
 --     匹配模糊查询;全值匹配的查询(where);
 
--- DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户ID',
     `user_name` varchar(255) NOT NULL COMMENT '用户名',
@@ -18,7 +17,6 @@ CREATE TABLE `user` (
     KEY `user_name_password_idx` (`user_name`,`password`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
--- DROP TABLE IF EXISTS `video`;
 CREATE TABLE video (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '视频ID',
     `uid` bigint NOT NULL COMMENT '用户ID',
@@ -33,7 +31,6 @@ CREATE TABLE video (
     KEY `author` (`uid`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='视频表';
 
--- DROP TABLE IF EXISTS `like`;
 CREATE TABLE `like` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增主键',
     `uid` bigint NOT NULL COMMENT '点赞用户id',
@@ -48,25 +45,44 @@ CREATE TABLE `like` (
             references `user` (`id`)
             on delete cascade,
     constraint `favorite_video`
-        foreign key (video_id)
+        foreign key (`video_id`)
             references video (`id`)
             on delete cascade,
-    KEY `userIdtoVideoIdIdx` (`uid`,video_id) USING BTREE,
+    KEY `userIdtoVideoIdIdx` (`uid`,`video_id`) USING BTREE,
     KEY `uid_idx` (`uid`) USING BTREE,
-    KEY `video_idx` (video_id) USING BTREE
+    KEY `video_idx` (`video_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='点赞表';
 
 CREATE TABLE `comment`(
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '评论id' ,
     `video_id` bigint NOT NULL COMMENT '被评论视频id',
     `uid` bigint NOT NULL COMMENT '评论用户',
-    `content` varchar(255) NOT NULL COMMENT '评论内容',
+    `content` varchar(2048) NOT NULL COMMENT '评论内容',
     `created_at` timestamp NOT NULL DEFAULT current_timestamp COMMENT '评论时间',
     `updated_at` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
     `deleted_at` timestamp NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
     constraint `video_comment`
-        foreign key (video_id)
+        foreign key (`video_id`)
             references video (`id`)
             on delete cascade
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='评论表';
+
+CREATE TABLE `follow`(
+    `id` bigint NOT NULL AUTO_INCREMENT ,
+    `uid` bigint NOT NULL COMMENT 'user_id',
+    `followed_id` bigint NOT NULL COMMENT '被关注者',
+    `status` bigint NOT NULL DEFAULT 1 COMMENT '1:关注;0:取消关注',
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp ,
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
+    `deleted_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `user`
+        FOREIGN KEY (`uid`)
+            REFERENCES user (`id`)
+            ON DELETE CASCADE,
+    CONSTRAINT `followed`
+        FOREIGN KEY (`followed_id`)
+            REFERENCES user (`id`)
+            ON DELETE CASCADE
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='关注表';

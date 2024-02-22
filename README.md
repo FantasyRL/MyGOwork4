@@ -14,3 +14,6 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 
 使用：将docs/swagger.* 丢到apifox/postman，然后就能用了(**Header:Authorization格式**:Bearer {token})
 
+本项目的构建历程：抄项目架构、抄结构体、看demo遇到不会的学一下然后继续抄...
+
+真是一场酣畅淋漓的ctrl+c.jpg

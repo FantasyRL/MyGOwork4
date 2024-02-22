@@ -194,6 +194,39 @@ paths:
       - application/json
       responses: {}
       summary: like_list
+  /bibi/message/action/:
+    post:
+      consumes:
+      - json/form
+      description: send message to user or group
+      parameters:
+      - description: 目标id
+        in: query
+        name: target_id
+        required: true
+        type: integer
+      - description: 信息
+        in: query
+        name: content
+        required: true
+        type: string
+      - description: 暂时只有单聊所以填啥都行
+        in: query
+        name: action_type
+        required: true
+        type: integer
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: message_action
+  /bibi/message/chat/:
+    get:
+      responses: {}
   /bibi/user:
     get:
       consumes:

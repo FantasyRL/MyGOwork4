@@ -8,7 +8,7 @@ import (
 )
 
 func SetMessage(ctx context.Context, message *db.Message) error {
-	tx := rComment.TxPipeline()
+	tx := rMessage.TxPipeline()
 	marshalMsg, err := (*message).MarshalMsg(nil)
 	if err != nil {
 		return err
@@ -29,7 +29,7 @@ func SetMessage(ctx context.Context, message *db.Message) error {
 }
 
 func GetMessages(ctx context.Context, uid int64) (messages []db.Message, err error) {
-	marshalMsgs, err := rComment.ZRevRange(ctx, i64ToStr(uid)+receiveSuffix, 0, -1).Result()
+	marshalMsgs, err := rMessage.ZRevRange(ctx, i64ToStr(uid)+receiveSuffix, 0, -1).Result()
 	if errors.Is(err, redis.Nil) {
 		return nil, nil
 	}

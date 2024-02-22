@@ -33,6 +33,7 @@ var (
 	rLike    *redis.Client
 	rComment *redis.Client
 	rFollow  *redis.Client
+	rMessage *redis.Client
 )
 
 func Init() {
@@ -50,6 +51,11 @@ func Init() {
 		Addr:       conf.RedisAddr,
 		ClientName: "Follow",
 		DB:         2,
+	})
+	rMessage = redis.NewClient(&redis.Options{
+		Addr:       conf.RedisAddr,
+		ClientName: "Message",
+		DB:         3,
 	})
 }
 func i64ToStr(i64 int64) string {

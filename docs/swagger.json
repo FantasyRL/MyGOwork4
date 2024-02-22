@@ -281,6 +281,54 @@
                 "responses": {}
             }
         },
+        "/bibi/message/action/": {
+            "post": {
+                "description": "send message to user or group",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "message_action",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "目标id",
+                        "name": "target_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "信息",
+                        "name": "content",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "暂时只有单聊所以填啥都行",
+                        "name": "action_type",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/bibi/message/chat/": {
+            "get": {
+                "responses": {}
+            }
+        },
         "/bibi/user": {
             "get": {
                 "description": "show user's info",

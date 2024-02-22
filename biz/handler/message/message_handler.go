@@ -28,6 +28,14 @@ func MessageChat(ctx context.Context, c *app.RequestContext) {
 }
 
 // MessageAction .
+// @Summary message_action
+// @Description send message to user or group
+// @Accept json/form
+// @Produce json
+// @Param target_id query int true "目标id"
+// @Param content query string true "信息"
+// @Param action_type query int true "暂时只有单聊所以填啥都行"
+// @Param Authorization header string true "token"
 // @router /bibi/message/action/ [POST]
 func MessageAction(ctx context.Context, c *app.RequestContext) {
 	var err error

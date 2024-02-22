@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/streadway/amqp"
 	"log"
+	"strings"
 )
 
 type ChatMQ struct {
@@ -22,6 +23,7 @@ var (
 )
 
 func Init() {
+	ChatMQCli = new(ChatMQ)
 	ChatMQCli.MqUrl = GenRabbitMQAddr(conf.MQ)
 	conn, err := amqp.Dial(ChatMQCli.MqUrl)
 	if err != nil {
@@ -40,9 +42,10 @@ func Init() {
 
 	ChatMQCli.queueName = "chatQueue"
 
-	go fmt.Println("RabbitMQ connect access")
+	go ChatMQCli.Consumer()
+	fmt.Println("RabbitMQ connect access")
 }
 
 func GenRabbitMQAddr(mq *conf.RabbitMQ) string {
-	return fmt.Sprintf("amqp://%s:%s@localhost:%s/", mq.Username, mq.Password, mq.Port)
+	return strings.Join([]string{"amqp://", mq.Username, ":", mq.Password, "@localhost:", mq.Port, "/"}, "")
 }

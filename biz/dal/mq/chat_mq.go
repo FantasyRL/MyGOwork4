@@ -98,7 +98,12 @@ func (m *ChatMQ) DeliverMessageToUser(msgs <-chan amqp.Delivery) {
 			continue
 		}
 
-		message, err := db.CreateMessage(&midMessage)
+		message, err := db.CreateMessage(&db.Message{
+			Uid:       midMessage.Uid,
+			TargetId:  midMessage.TargetId,
+			Content:   midMessage.Content,
+			CreatedAt: midMessage.CreatedAt,
+		})
 		if err != nil {
 			log.Printf("database error:%v", err)
 			continue

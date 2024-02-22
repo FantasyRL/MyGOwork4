@@ -3,6 +3,7 @@
 package message
 
 import (
+	"bibi/biz/mw/jwt"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -28,7 +29,10 @@ func _actionMw() []app.HandlerFunc {
 
 func _messageactionMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
+	//return nil
 }
 
 func _chatMw() []app.HandlerFunc {
@@ -38,5 +42,8 @@ func _chatMw() []app.HandlerFunc {
 
 func _messagechatMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
+	//return nil
 }

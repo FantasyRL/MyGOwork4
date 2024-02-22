@@ -17,7 +17,7 @@ func (s *MessageService) SendMessage(req *message.MessageActionReq, uid int64) e
 		Content:   req.Content,
 		CreatedAt: time.Now(),
 	}
-	marshalMsg, err := msg.MarshalMsg(nil)
+	marshalMsg, err := (*msg).MarshalMsg(nil)
 	if err != nil {
 		return err
 	}

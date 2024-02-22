@@ -1,7 +1,9 @@
 package mq
 
 import (
+	"bibi/biz/dal/cache"
 	"bibi/biz/dal/db"
+	"context"
 	"github.com/streadway/amqp"
 	"log"
 	"time"
@@ -102,5 +104,11 @@ func (m *ChatMQ) DeliverMessageToUser(msgs <-chan amqp.Delivery) {
 			continue
 		}
 
+		//context.TODO():when it's unclear which Context to use or it is not
+		err = cache.SetMessage(context.TODO(), message)
+		if err != nil {
+			log.Printf("database error:%v", err)
+			continue
+		}
 	}
 }

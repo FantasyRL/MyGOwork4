@@ -8,21 +8,25 @@ import (
 )
 
 const (
-	likeSuffix            = ":like"
-	followerCountSuffix   = ":follower_counts"
-	friendCountSuffix     = ":friend_counts"
-	commentSuffix         = ":comment"
-	followerSuffix        = ":follower"
-	videoExpTime          = time.Hour * 1 //到期自动移除k-v
-	likeExpTime           = time.Minute * 10
-	commentExpTime        = time.Minute * 10
-	followExpTime         = time.Minute
+	likeSuffix          = ":like"
+	followerCountSuffix = ":follower_counts"
+	friendCountSuffix   = ":friend_counts"
+	commentSuffix       = ":comment"
+	followerSuffix      = ":follower"
+	receiveSuffix       = ":receive"
+
+	videoExpTime   = time.Hour * 1 //到期自动移除k-v
+	likeExpTime    = time.Minute * 10
+	commentExpTime = time.Minute * 10
+	followExpTime  = time.Minute
+	messageExpTime = time.Hour * 24 * 7 ////7天漫游(?
+
 	videoLikeZset         = "video_likes"
 	videoCommentCountZset = "video_comment_counts"
 	videoCommentZset      = "video_comments"
 	followerCountZset     = "follower_counts"
 	followingCountZset    = "following_counts"
-	FriendCountZset       = "friend_counts"
+	friendCountZset       = "friend_counts"
 )
 
 var (

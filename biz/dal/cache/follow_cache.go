@@ -99,14 +99,14 @@ func SetFollowingCount(ctx context.Context, uid int64, count int64) (err error) 
 }
 
 func SetFriendCount(ctx context.Context, uid int64, count int64) (err error) {
-	err = rFollow.ZAdd(ctx, FriendCountZset, redis.Z{
+	err = rFollow.ZAdd(ctx, friendCountZset, redis.Z{
 		Score:  float64(count),
 		Member: i64ToStr(uid),
 	}).Err()
 	if err != nil {
 		return err
 	}
-	err = rFollow.Expire(ctx, FriendCountZset, followExpTime).Err()
+	err = rFollow.Expire(ctx, friendCountZset, followExpTime).Err()
 	return
 }
 

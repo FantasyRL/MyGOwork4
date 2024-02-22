@@ -15,14 +15,14 @@ type Mysql struct {
 	password string
 	dbname   string
 }
-type Redis struct {
+type redis struct {
 	RedisAddr string
 }
-type Service struct {
+type service struct {
 	AppMode  string
 	HttpPort string
 }
-type OSS struct {
+type Oss struct {
 	EndPoint        string
 	AccessKeyId     string
 	AccessKeySecret string
@@ -30,11 +30,19 @@ type OSS struct {
 	MainDirectory   string
 }
 
+type RabbitMQ struct {
+	Port     string
+	Username string
+	Password string
+}
+
 var (
-	OSSConf    OSS
+	OSS        *Oss
+	sql        *Mysql
 	PageSize   int
 	RedisAddr  string
 	ServerAddr string
+	MQ         *RabbitMQ
 )
 
 func Init() string {
@@ -48,18 +56,23 @@ func Init() string {
 			fmt.Println("config file was found but another error was produced")
 		}
 	}
-	OSSConf = LoadOSS(viper.GetStringMapString("oss"))
+	OSS = LoadOSS(viper.GetStringMapString("oss"))
+
 	PageSize, _ = strconv.Atoi(viper.GetStringMapString("page")["page-size"])
+
 	RedisAddr = viper.GetStringMapString("redis")["addr"]
+
 	ServerAddr = viper.GetStringMapString("server")["addr"]
 
-	sql := LoadMysql(viper.GetStringMapString("mysql"))
+	MQ = LoadRabbitMQ(viper.GetStringMapString("rabbitmq"))
+
+	sql = LoadMysql(viper.GetStringMapString("mysql"))
 	path := strings.Join([]string{sql.user, ":", sql.password, "@tcp(", sql.host, ":", sql.port, ")/", sql.dbname, "?charset=utf8mb4&parseTime=True"}, "")
 	return path
 }
 
-func LoadMysql(myConf map[string]string) Mysql {
-	return Mysql{
+func LoadMysql(myConf map[string]string) *Mysql {
+	return &Mysql{
 		host:     myConf["host"],
 		port:     myConf["port"],
 		user:     myConf["user"],
@@ -67,12 +80,20 @@ func LoadMysql(myConf map[string]string) Mysql {
 		dbname:   myConf["dbname"],
 	}
 }
-func LoadOSS(myConf map[string]string) OSS {
-	return OSS{
+func LoadOSS(myConf map[string]string) *Oss {
+	return &Oss{
 		EndPoint:        myConf["endpoint"],
 		AccessKeyId:     myConf["accesskeyid"],
 		AccessKeySecret: myConf["accesskeysecret"],
 		BucketName:      myConf["bucketname"],
 		MainDirectory:   myConf["main-directory"],
+	}
+}
+
+func LoadRabbitMQ(myConf map[string]string) *RabbitMQ {
+	return &RabbitMQ{
+		Port:     myConf["port"],
+		Username: myConf["name"],
+		Password: myConf["password"],
 	}
 }

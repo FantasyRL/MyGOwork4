@@ -29,13 +29,14 @@ func BuildFollowedUsersResp(users []db.User) (usersResp []*user.User) {
 	return
 }
 
-func BuildFollowerUsersResp(uid int64, users []db.User) (usersResp []*user.User) {
+func BuildFollowerUsersResp(uid int64, users []db.User, isFollowList []bool) (usersResp []*user.User) {
 	usersResp = make([]*user.User, 0, len(users))
-	for _, u := range users {
+	for i, u := range users {
 		usersResp = append(usersResp, &user.User{
-			ID:     u.ID,
-			Name:   u.UserName,
-			Avatar: u.Avatar,
+			ID:       u.ID,
+			Name:     u.UserName,
+			Avatar:   u.Avatar,
+			IsFollow: isFollowList[i],
 		})
 	}
 	return

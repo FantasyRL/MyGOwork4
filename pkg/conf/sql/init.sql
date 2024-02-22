@@ -71,18 +71,33 @@ CREATE TABLE `comment`(
 CREATE TABLE `follow`(
     `id` bigint NOT NULL AUTO_INCREMENT ,
     `uid` bigint NOT NULL COMMENT 'user_id',
-    `followedIdList` bigint NOT NULL COMMENT '被关注者',
+    `followed_id` bigint NOT NULL COMMENT '被关注者',
     `status` bigint NOT NULL DEFAULT 1 COMMENT '1:关注;0:取消关注',
     `created_at` timestamp NOT NULL DEFAULT current_timestamp ,
     `updated_at` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
     `deleted_at` timestamp NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `user`
+    CONSTRAINT `follower_user`
         FOREIGN KEY (`uid`)
             REFERENCES user (`id`)
             ON DELETE CASCADE,
-    CONSTRAINT `followedId`
-        FOREIGN KEY (`followedIdList`)
+    CONSTRAINT `followed_user`
+        FOREIGN KEY (`followed_id`)
+            REFERENCES user (`id`)
+            ON DELETE CASCADE
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='关注表';
+
+CREATE TABLE `message`(
+    `id` bigint NOT NULL AUTO_INCREMENT ,
+    `uid` bigint NOT NULL COMMENT 'user_id',
+    `target_id` bigint NOT NULL COMMENT '发送对象id',
+    `content` varchar(2048) NOT NULL COMMENT '信息',
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp ,
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
+    `deleted_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `message_user`
+        FOREIGN KEY (`uid`)
             REFERENCES user (`id`)
             ON DELETE CASCADE
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='关注表';

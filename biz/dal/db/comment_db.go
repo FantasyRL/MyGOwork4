@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-//go:generate msgp -tests=false
+//go:generate msgp -tests=false -o=comment_msgp.go -io=false
 type Comment struct {
 	ID        int64          `msg:"id"`
 	VideoID   int64          `msg:"video_id"`

@@ -19,3 +19,7 @@ oss:
   main-directory:
 page:
   page-size: 15
+rabbitmq:
+  port: 5672
+  name: guest
+  password: guest

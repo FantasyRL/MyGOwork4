@@ -5,6 +5,7 @@ package main
 import (
 	"bibi/biz/dal/cache"
 	"bibi/biz/dal/db"
+	"bibi/biz/dal/mq"
 	"bibi/biz/mw/jwt"
 	"bibi/pkg/conf"
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -25,6 +26,7 @@ func main() {
 	db.Init(conf.Init()) //非常丑的方式避免了循环引用，但真的很丑...
 	jwt.Init()
 	cache.Init()
+	mq.Init()
 
 	h := server.New(
 		server.WithHostPorts(conf.ServerAddr),

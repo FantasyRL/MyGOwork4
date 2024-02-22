@@ -75,15 +75,29 @@ func FollowerList(ctx context.Context, c *app.RequestContext) {
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
 
-	followResp, count, err := follow_service.NewFollowService(ctx).FollowerList(&req, id)
+	followerResp, friendResp, count, err := follow_service.NewFollowService(ctx).FollowerList(&req, id)
 	if err != nil {
 		resp.Base = pack.BuildFollowBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
-	uidList := make([]int64, 0, len(followResp))
-	for _, follower := range followResp {
+	uidList := make([]int64, 0, len(followerResp))
+	for _, follower := range followerResp {
 		uidList = append(uidList, follower.Uid)
+	}
+
+	isLikeList := make([]bool, 0, len(followerResp))
+	for j, i := 0, 0; i < len(followerResp); i++ {
+		if j >= len(friendResp) {
+			isLikeList = append(isLikeList, false)
+			continue
+		}
+		if followerResp[i].Uid == friendResp[j].FollowedId {
+			j++
+			isLikeList = append(isLikeList, true)
+		} else {
+			isLikeList = append(isLikeList, false)
+		}
 	}
 
 	userResp, err := user_service.NewUserService(ctx).GetUserByIdList(uidList)
@@ -94,7 +108,7 @@ func FollowerList(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp.Count = count
-	resp.FollowerList = follow_service.BuildFollowerUsersResp(id, userResp)
+	resp.FollowerList = follow_service.BuildFollowerUsersResp(id, userResp, isLikeList)
 	c.JSON(consts.StatusOK, resp)
 }
 

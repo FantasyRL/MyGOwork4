@@ -6,10 +6,10 @@ import (
 )
 
 func OSSBucketCreate() (*oss.Bucket, error) {
-	endpoint := conf.OSSConf.EndPoint
-	accessKeyId := conf.OSSConf.AccessKeyId
-	accessKeySecret := conf.OSSConf.AccessKeySecret
-	bucketName := conf.OSSConf.BucketName
+	endpoint := conf.OSS.EndPoint
+	accessKeyId := conf.OSS.AccessKeyId
+	accessKeySecret := conf.OSS.AccessKeySecret
+	bucketName := conf.OSS.BucketName
 	client, err := oss.New(endpoint, accessKeyId, accessKeySecret)
 	if err != nil {
 		return nil, err

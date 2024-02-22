@@ -11,7 +11,7 @@ import (
 
 func (s *AvatarService) UploadAvatar(req *user.AvatarReq, id int64) error {
 	avatarReader := bytes.NewReader(req.AvatarFile)
-	err := s.bucket.PutObject(conf.OSSConf.MainDirectory+"/"+strconv.FormatInt(id, 10)+".jpg", avatarReader)
+	err := s.bucket.PutObject(conf.OSS.MainDirectory+"/"+strconv.FormatInt(id, 10)+".jpg", avatarReader)
 	if err != nil {
 		log.Fatalf("upload file error:%video\n", err)
 	}

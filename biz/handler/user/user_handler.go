@@ -162,7 +162,7 @@ func Avatar(ctx context.Context, c *app.RequestContext) {
 	//上传url至数据库
 	UserResp := new(db.User)
 	eg.Go(func() error { //Add(1)
-		avatarUrl := fmt.Sprintf("%s/%s/%d", conf.OSSConf.EndPoint, conf.OSSConf.MainDirectory, id)
+		avatarUrl := fmt.Sprintf("%s/%s/%d", conf.OSS.EndPoint, conf.OSS.MainDirectory, id)
 		UserResp, err = user_service.NewAvatarService(ctx).PutAvatar(id, avatarUrl)
 		if err != nil {
 			return err

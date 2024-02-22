@@ -101,8 +101,8 @@ func PutVideo(ctx context.Context, c *app.RequestContext) {
 	})
 	VideoReq := new(db.Video)
 	eg.Go(func() error {
-		videoUrl := fmt.Sprintf("%s/%s/video/%s", conf.OSSConf.EndPoint, conf.OSSConf.MainDirectory, videoName)
-		coverUrl := fmt.Sprintf("%s/%s/video/%s", conf.OSSConf.EndPoint, conf.OSSConf.MainDirectory, coverName)
+		videoUrl := fmt.Sprintf("%s/%s/video/%s", conf.OSS.EndPoint, conf.OSS.MainDirectory, videoName)
+		coverUrl := fmt.Sprintf("%s/%s/video/%s", conf.OSS.EndPoint, conf.OSS.MainDirectory, coverName)
 		VideoReq = &db.Video{
 			Uid:      id,
 			Title:    req.Title,

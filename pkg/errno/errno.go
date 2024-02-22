@@ -9,6 +9,7 @@ const (
 	SuccessCode    = 10000
 	ServiceErrCode = iota + 10000 //未知服务错误
 	ParamErrCode                  //参数错误
+	CharacterBeyondLimitErrCode
 
 	ExistUserErrCode
 	NotExistUserErrCode
@@ -25,21 +26,22 @@ const (
 )
 
 const (
-	SuccessMsg               = "Success"
-	ServerErrMsg             = "Service is unable to start successfully"
-	ParamErrMsg              = "Wrong Parameter has been given"
-	UserAlreadyExistErrMsg   = "User existed"
-	UserIsNotExistErrMsg     = "User is not exist"
-	PasswordIsNotVerifiedMsg = "Username or password not verified"
-	AuthErrMsg               = "It is not your account"
-	ReadFileErrMsg           = "Error when read file"
-	UploadFileErrMsg         = "Upload file error"
-	LikeExistErrMsg          = "You have liked this video"
-	LikeNotExistErrMsg       = "You don't like this video"
-	LikeActionErrMsg         = "favorite add failed"
-	FollowExistErrMsg        = "you have followed"
-	FollowNotExistErrMsg     = "you haven't followed"
-	FollowMyselfErrMsg       = "you can't follow yourself"
+	SuccessMsg                 = "Success"
+	ServerErrMsg               = "Service is unable to start successfully"
+	ParamErrMsg                = "Wrong Parameter has been given"
+	CharacterBeyondLimitErrMsg = "the number of character beyond the limit"
+	UserAlreadyExistErrMsg     = "User existed"
+	UserIsNotExistErrMsg       = "User is not exist"
+	PasswordIsNotVerifiedMsg   = "Username or password not verified"
+	AuthErrMsg                 = "It is not your account"
+	ReadFileErrMsg             = "Error when read file"
+	UploadFileErrMsg           = "Upload file error"
+	LikeExistErrMsg            = "You have liked this video"
+	LikeNotExistErrMsg         = "You don't like this video"
+	LikeActionErrMsg           = "favorite add failed"
+	FollowExistErrMsg          = "you have followed"
+	FollowNotExistErrMsg       = "you haven't followed"
+	FollowMyselfErrMsg         = "you can't follow yourself"
 
 	MessageAddFailedErrMsg    = "message add failed"
 	FriendListNoPermissionMsg = "You can't query his friend list"
@@ -69,9 +71,10 @@ func (e ErrNo) WithMessage(msg string) ErrNo { //出现不被定义的错误时
 }
 
 var (
-	Success      = NewErrNo(SuccessCode, SuccessMsg)
-	ServiceError = NewErrNo(ServiceErrCode, ServerErrMsg)
-	ParamError   = NewErrNo(ParamErrCode, ParamErrMsg)
+	Success                   = NewErrNo(SuccessCode, SuccessMsg)
+	ServiceError              = NewErrNo(ServiceErrCode, ServerErrMsg)
+	ParamError                = NewErrNo(ParamErrCode, ParamErrMsg)
+	CharacterBeyondLimitError = NewErrNo(CharacterBeyondLimitErrCode, CharacterBeyondLimitErrMsg)
 
 	ExistUserError         = NewErrNo(ExistUserErrCode, UserAlreadyExistErrMsg)
 	NotExistUserError      = NewErrNo(NotExistUserErrCode, UserIsNotExistErrMsg)

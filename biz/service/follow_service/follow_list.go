@@ -6,35 +6,35 @@ import (
 	"bibi/biz/model/follow"
 )
 
-func (s *FollowService) FollowerList(req *follow.FollowerListReq, uid int64) ([]db.Follow, int64, error) {
-	//redis
-	followerList, err := cache.GetFollower(s.ctx, uid)
-	if err != nil {
-		return nil, 0, err
-	}
-	e1, count, err := cache.GetFollowerCount(s.ctx, uid)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	if len(followerList) != 0 && e1 {
-		return followerList, count, nil
-	}
+func (s *FollowService) FollowerList(req *follow.FollowerListReq, uid int64) ([]db.Follow, []db.Follow, int64, error) {
+	////redis
+	//followerList, err := cache.GetFollower(s.ctx, uid)
+	//if err != nil {
+	//	return nil,nil, 0, err
+	//}
+	//e1, count, err := cache.GetFollowerCount(s.ctx, uid)
+	//if err != nil {
+	//	return nil, nil,0, err
+	//}
+	//
+	//if len(followerList) != 0 && e1 {
+	//	return followerList, nil,count, nil
+	//}//todo:redis
 
 	//mysql
-	followerList, count, err = db.FollowerList(uid)
+	followerList, friendList, count, err := db.FollowerList(uid)
 	if err != nil {
-		return nil, 0, err
+		return nil, nil, 0, err
 	}
-	if err = cache.SetFollowerList(s.ctx, uid, followerList); err != nil {
-		return nil, 0, err
-	}
+	//if err = cache.SetFollowerList(s.ctx, uid, followerList); err != nil {
+	//	return nil, nil,0, err
+	//}
+	//
+	//if err = cache.SetFollowerCount(s.ctx, uid, count); err != nil {
+	//	return nil, nil,0, err
+	//}
 
-	if err = cache.SetFollowerCount(s.ctx, uid, count); err != nil {
-		return nil, 0, err
-	}
-
-	return followerList, count, nil
+	return followerList, friendList, count, nil
 
 }
 

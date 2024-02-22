@@ -55,13 +55,17 @@ func UpdateFollowStatus(uid int64, followerId int64, status int64) error {
 		uid, followerId).Update("status", status).Error
 }
 
-func FollowerList(followedId int64) ([]Follow, int64, error) {
+func FollowerList(followedId int64) ([]Follow, []Follow, int64, error) {
 	followerList := new([]Follow)
+	friendList := new([]Follow)
 	var count int64
 	if err := DB.Model(Follow{}).Where("followed_id = ? AND status = 1", followedId).Find(followerList).Count(&count).Error; err != nil {
-		return nil, 0, err
+		return nil, nil, 0, err
 	}
-	return *followerList, count, nil
+	if err := DB.Model(followerList).Where("uid = ? ", followedId).Find(friendList).Error; err != nil {
+		return nil, nil, 0, err
+	}
+	return *followerList, *friendList, count, nil
 }
 
 func FollowingList(uid int64) ([]Follow, int64, error) {

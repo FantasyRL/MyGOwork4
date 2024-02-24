@@ -1,6 +1,6 @@
 # MyGOwork4
 
-**bibi-demo** is a small video website backend using hertz(Thrift)+gorm(mysql)+redis(+msgp)+oss(aliyun)+gorilla
+**bibi-demo** is a small video website backend using hertz(hz-gen、jwt、websocket)+gorm(mysql)+redis(+msgp)+oss(aliyun)+
 
 ## deploy by docker(net=host)
 `bash`

@@ -115,5 +115,7 @@ func (m *ChatMQ) DeliverMessageToUser(msgs <-chan amqp.Delivery) {
 			log.Printf("database error:%v", err)
 			continue
 		}
+
+		//发出去
 	}
 }

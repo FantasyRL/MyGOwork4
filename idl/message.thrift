@@ -19,7 +19,7 @@ struct MessageChatReq{
 
 struct MessageChatResp{
     1:BaseResp base,
-    2:list<Message> message_list,
+//    2:list<Message> message_list,
 }
 
 struct MessageActionReq{
@@ -32,9 +32,17 @@ struct MessageActionResp{
     1:BaseResp base,
 }
 
+struct WsReq{
+    1:i64 target_id,
+}
+struct WsResp{
+    1:BaseResp base,
+}
+
 service MessageHandler{
-    MessageChatResp MessageChat(1: MessageChatReq req) (api.get="/bibi/message/chat/"),
-//    Get the chat message records
-    MessageActionResp MessageAction(1: MessageActionReq req) (api.post="/bibi/message/action/"),
+//websocket
+    MessageChatResp Chat(1: MessageChatReq req) (api.get="/bibi/message/ws"),
 //    Send Message
+    MessageActionResp MessageAction(1: MessageActionReq req) (api.get="/bibi/message/action"),
+
 }

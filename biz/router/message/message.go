@@ -21,14 +21,8 @@ func Register(r *server.Hertz) {
 		_bibi := root.Group("/bibi", _bibiMw()...)
 		{
 			_message := _bibi.Group("/message", _messageMw()...)
-			{
-				_action := _message.Group("/action", _actionMw()...)
-				_action.POST("/", append(_messageactionMw(), message.MessageAction)...)
-			}
-			{
-				_chat := _message.Group("/chat", _chatMw()...)
-				_chat.GET("/", append(_messagechatMw(), message.MessageChat)...)
-			}
+			_message.GET("/action", append(_messageactionMw(), message.MessageAction)...)
+			_message.GET("/ws", append(_chatMw(), message.Chat)...)
 		}
 	}
 }

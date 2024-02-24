@@ -29,18 +29,13 @@ func _actionMw() []app.HandlerFunc {
 
 func _messageactionMw() []app.HandlerFunc {
 	// your code...
-	return []app.HandlerFunc{
-		jwt.JwtMiddleware.MiddlewareFunc(),
-	}
-	//return nil
-}
-
-func _chatMw() []app.HandlerFunc {
-	// your code...
+	//return []app.HandlerFunc{
+	//	jwt.JwtMiddleware.MiddlewareFunc(),
+	//}
 	return nil
 }
 
-func _messagechatMw() []app.HandlerFunc {
+func _chatMw() []app.HandlerFunc {
 	// your code...
 	return []app.HandlerFunc{
 		jwt.JwtMiddleware.MiddlewareFunc(),

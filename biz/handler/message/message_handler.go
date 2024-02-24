@@ -5,15 +5,18 @@ package message
 import (
 	message "bibi/biz/model/message"
 	"bibi/biz/service/message_service"
+	"bibi/pkg/errno"
 	"bibi/pkg/pack"
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/hertz-contrib/websocket"
+	"log"
 )
 
-// MessageChat .
-// @router /bibi/message/chat/ [GET]
-func MessageChat(ctx context.Context, c *app.RequestContext) {
+// Chat .
+// @router /bibi/message/ws [GET]
+func Chat(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req message.MessageChatReq
 	err = c.BindAndValidate(&req)
@@ -24,7 +27,48 @@ func MessageChat(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(message.MessageChatResp)
 
-	c.JSON(consts.StatusOK, resp)
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+
+	if id == req.TargetID {
+		resp.Base = pack.BuildMessageBaseResp(errno.ParamError)
+		c.JSON(consts.StatusOK, resp)
+		return
+	}
+
+	var upGrader = websocket.HertzUpgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+		CheckOrigin: func(c *app.RequestContext) bool {
+			return true
+		},
+	}
+	//hertz wcnm
+	//HertzHandler receives a websocket connection after the handshake has been completed.
+	//在匿名函数里面开启send和recv
+	client := new(message_service.Client)
+
+	err = upGrader.Upgrade(c, func(conn *websocket.Conn) {
+		client = &message_service.Client{
+			ID:           id,
+			TargetId:     req.TargetID,
+			Socket:       conn,
+			MessageQueue: make(chan []byte),
+		}
+		//将用户注册到用户管理上
+		message_service.Manager.Register <- client
+		go client.Read()
+		go client.Write()
+		for {
+		} //后面改个ch出来...
+	})
+	if err != nil {
+		log.Print("upgrade:", err)
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	//c.JSON(consts.StatusOK, resp)
 }
 
 // MessageAction .
@@ -36,7 +80,7 @@ func MessageChat(ctx context.Context, c *app.RequestContext) {
 // @Param content query string true "信息"
 // @Param action_type query int true "暂时只有单聊所以填啥都行"
 // @Param Authorization header string true "token"
-// @router /bibi/message/action/ [POST]
+// @router /bibi/message/action [GET]
 func MessageAction(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req message.MessageActionReq

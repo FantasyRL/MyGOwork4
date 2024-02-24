@@ -7,6 +7,7 @@ import (
 	"bibi/biz/dal/db"
 	"bibi/biz/dal/mq"
 	"bibi/biz/mw/jwt"
+	"bibi/biz/service/message_service"
 	"bibi/pkg/conf"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/hertz-contrib/logger/accesslog"
@@ -34,8 +35,13 @@ func main() {
 		server.WithMaxRequestBodySize(16*1024*1024), //最大字节数
 	)
 
+	//websocket
+	//NoHijackConnPool 将控制是否使用缓存池来获取/释放劫持连接。
+	//如果使用池，将提升内存资源分配的性能，但无法避免二次关闭连接导致的异常。
+	h.NoHijackConnPool = true
+	go message_service.Manager.Start()
 	h.Use(accesslog.New()) //todo:log
-	register(h)
 
+	register(h)
 	h.Spin()
 }

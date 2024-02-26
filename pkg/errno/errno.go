@@ -6,6 +6,11 @@ import (
 )
 
 const (
+	WebSocketSuccessCode    = 1000
+	WebSocketConnectErrCode = iota + 1000
+	WebSocketTargetOfflineErrCode
+	WebSocketErrCode
+
 	SuccessCode    = 10000
 	ServiceErrCode = iota + 10000 //未知服务错误
 	ParamErrCode                  //参数错误
@@ -38,15 +43,19 @@ const (
 	UploadFileErrMsg           = "Upload file error"
 	LikeExistErrMsg            = "You have liked this video"
 	LikeNotExistErrMsg         = "You don't like this video"
-	LikeActionErrMsg           = "favorite add failed"
-	FollowExistErrMsg          = "you have followed"
-	FollowNotExistErrMsg       = "you haven't followed"
-	FollowMyselfErrMsg         = "you can't follow yourself"
+	LikeActionErrMsg           = "Favorite add failed"
+	FollowExistErrMsg          = "You have followed"
+	FollowNotExistErrMsg       = "You haven't followed"
+	FollowMyselfErrMsg         = "You can't follow yourself"
+	MessageAddFailedErrMsg     = "message add failed"
+	FriendListNoPermissionMsg  = "You can't query his friend list"
+	VideoNotExistErrMsg        = "Video is not exist"
+	CommentIsNotExistErrMsg    = "Comment is not exist"
 
-	MessageAddFailedErrMsg    = "message add failed"
-	FriendListNoPermissionMsg = "You can't query his friend list"
-	VideoNotExistErrMsg       = "video is not exist"
-	CommentIsNotExistErrMsg   = "comment is not exist"
+	WebSocketSuccessMsg          = "Connect to server success"
+	WebSocketConnectErrMsg       = "Connect or upgrade error"
+	WebSocketTargetOfflineErrMsg = "Target user is offline"
+	WebSocketErrMsg              = "Websocket error"
 )
 
 type ErrNo struct {
@@ -89,6 +98,11 @@ var (
 	FollowExistError       = NewErrNo(FollowExistErrCode, FollowExistErrMsg)
 	FollowNotExistError    = NewErrNo(FollowNotExistErrCode, FollowNotExistErrMsg)
 	FollowMyselfError      = NewErrNo(FollowMyselfErrCode, FollowMyselfErrMsg)
+
+	WebSocketSuccess            = NewErrNo(WebSocketSuccessCode, WebSocketSuccessMsg)
+	WebSocketConnectError       = NewErrNo(WebSocketConnectErrCode, WebSocketConnectErrMsg)
+	WebSocketTargetOfflineError = NewErrNo(WebSocketTargetOfflineErrCode, WebSocketTargetOfflineErrMsg)
+	WebSocketError              = NewErrNo(WebSocketErrCode, WebSocketErrMsg)
 )
 
 // ConvertErr convert error to ErrNo

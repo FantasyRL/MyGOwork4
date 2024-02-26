@@ -1,6 +1,6 @@
 # MyGOwork4
 
-**bibi-demo** is a small video website backend using hertz(hz-gen、jwt、websocket)+gorm(mysql)+redis(+msgp)+oss(aliyun)+
+**bibi-demo** is a small video website backend using hertz(hz-gen、jwt、websocket)+gorm(mysql)+redis(+msgp)+oss(aliyun)
 
 ## deploy by docker(net=host)
 `bash`
@@ -17,3 +17,14 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 本项目的构建历程：抄项目架构、抄结构体、看demo遇到不会的学一下然后继续抄...
 
 真是一场酣畅淋漓的ctrl+c.jpg
+
+## 完成情况：
+分页管理：做了一部分，后面社交之类懒得做了
+
+未遵循接口文档：hertz-jwt默认是header:Authorization，当我发现修改方法时项目已经基本完成了，肥肠爆芡
+
+Bonus:
+    
+对点赞引入redis缓存(评论也引入了，社交写一半懒了)
+
+实现WebSocket(WebSocket接口好像没办法用swagger自动生成，所以接口文档里没有...)

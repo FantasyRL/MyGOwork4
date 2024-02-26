@@ -12,27 +12,27 @@ type MessageService struct {
 func NewMessageService(ctx context.Context) *MessageService { return &MessageService{ctx: ctx} }
 
 type SendMsg struct {
-	Type    int    `json:"type"`
+	Type    int64  `json:"type"`
 	Content string `json:"content"`
 }
 
 type ReplyMsg struct {
-	From    string `json:"from"`
-	Code    int    `json:"code"`
+	Code    int64  `json:"code"`
+	From    int64  `json:"from"`
 	Content string `json:"content"`
 }
 
 type Client struct {
-	ID           int64
-	TargetId     int64
-	Socket       *websocket.Conn
-	MessageQueue chan []byte
+	ID       int64
+	TargetId int64
+	Socket   *websocket.Conn
+	Message  chan []byte
 }
 
 type Broadcast struct {
 	Client  *Client
 	Message []byte
-	Type    int
+	Type    int64
 }
 
 // ClientManager Manager client user

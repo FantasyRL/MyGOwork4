@@ -50,10 +50,10 @@ func Chat(ctx context.Context, c *app.RequestContext) {
 
 	err = upGrader.Upgrade(c, func(conn *websocket.Conn) {
 		client = &message_service.Client{
-			ID:           id,
-			TargetId:     req.TargetID,
-			Socket:       conn,
-			MessageQueue: make(chan []byte),
+			ID:       id,
+			TargetId: req.TargetID,
+			Socket:   conn,
+			Message:  make(chan []byte),
 		}
 		//将用户注册到用户管理上
 		message_service.Manager.Register <- client

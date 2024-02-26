@@ -2,6 +2,7 @@ package message_service
 
 import (
 	"bibi/pkg/errno"
+	"bibi/pkg/pack"
 	"encoding/json"
 	"github.com/hertz-contrib/websocket"
 	"log"
@@ -10,64 +11,64 @@ import (
 func (manager *ClientManager) Start() {
 	for {
 		log.Println("监听管道通信")
+
 		select {
-		case conn := <-Manager.Register:
-			log.Printf("有新连接 %v\n", conn.ID)
-			Manager.Clients[conn.ID] = conn //把连接放到用户管理上
-			replymsg := ReplyMsg{
-				Code:    errno.SuccessCode,
-				Content: "连接到服务器",
+
+		case client := <-Manager.Register:
+			log.Printf("%v:online\n", client.ID)
+			Manager.Clients[client.ID] = client //把连接放到用户管理上
+
+			baseResp := pack.BuildMessageBaseResp(errno.WebSocketSuccess)
+			resp, _ := json.Marshal(baseResp)
+			_ = client.Socket.WriteMessage(websocket.TextMessage, resp)
+
+		case client := <-Manager.Unregister:
+			log.Printf("%v:offline\n", client.ID)
+
+			if _, ok := Manager.Clients[client.ID]; ok { //一般应该不会有不ok的情况吧...
+				baseResp := pack.BuildMessageBaseResp(errno.WebSocketError)
+				resp, _ := json.Marshal(baseResp)
+				_ = client.Socket.WriteMessage(websocket.TextMessage, resp)
+				close(client.Message)              //close chan
+				delete(Manager.Clients, client.ID) //delete map
 			}
-			msg, _ := json.Marshal(replymsg)
-			_ = conn.Socket.WriteMessage(websocket.TextMessage, msg)
-		case conn := <-Manager.Unregister:
-			log.Printf("断开连接 %v\n", conn.ID)
-			if _, ok := Manager.Clients[conn.ID]; ok {
-				replymsg := &ReplyMsg{
-					Code:    errno.ParamErrCode,
-					Content: "连接中断",
-				}
-				msg, _ := json.Marshal(replymsg)
-				_ = conn.Socket.WriteMessage(websocket.TextMessage, msg)
-				close(conn.MessageQueue)
-				delete(Manager.Clients, conn.ID)
-			}
+
 		case broadcast := <-Manager.Broadcast:
 			if broadcast.Type == 1 {
 				message := broadcast.Message
 				targetId := broadcast.Client.TargetId
+
 				flag := false
-				for id, conn := range Manager.Clients {
+				for id, client := range Manager.Clients {
 					if id != targetId {
 						continue
 					}
 					select {
-					case conn.MessageQueue <- message:
+					case client.Message <- message:
 						flag = true
 					default:
-						close(conn.MessageQueue)
-						delete(Manager.Clients, conn.ID)
+						close(client.Message)
+						delete(Manager.Clients, client.ID)
 					}
 				}
+
 				if flag {
-					replymsg := &ReplyMsg{
+					replyMsg := &ReplyMsg{
 						Code:    errno.SuccessCode,
-						Content: "对方在线应答",
+						From:    broadcast.Client.TargetId,
+						Content: "对方在线",
 					}
-					msg, _ := json.Marshal(replymsg)
-					_ = broadcast.Client.Socket.WriteMessage(websocket.TextMessage, msg)
+					resp, _ := json.Marshal(replyMsg)
+					_ = broadcast.Client.Socket.WriteMessage(websocket.TextMessage, resp)
 					//err := InsertMsg(conf.MongoDBName, broadcast.Client.ID, string(message), 1, int64(3*month))
 					//if err != nil {
 					//	fmt.Println("插入消息失败", err)
 					//}
-				} else {
+				} else { //flag==false对方不在线
 					log.Println("对方不在线")
-					replyMsg := ReplyMsg{
-						Code:    errno.ParamErrCode,
-						Content: "对方不在线应答",
-					}
-					msg, _ := json.Marshal(replyMsg)
-					_ = broadcast.Client.Socket.WriteMessage(websocket.TextMessage, msg)
+					baseResp := pack.BuildMessageBaseResp(errno.WebSocketTargetOfflineError)
+					resp, _ := json.Marshal(baseResp)
+					_ = broadcast.Client.Socket.WriteMessage(websocket.TextMessage, resp)
 					//err := InsertMsg(conf.MongoDBName, broadcast.Client.ID, string(message), 0, int64(3*month))
 					//if err != nil {
 					//	fmt.Println("插入消息失败", err)

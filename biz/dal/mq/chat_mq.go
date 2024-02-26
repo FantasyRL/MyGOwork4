@@ -109,7 +109,7 @@ func (m *ChatMQ) DeliverMessageToUser(msgs <-chan amqp.Delivery) {
 			continue
 		}
 
-		//context.TODO():when it's unclear which Context to use or it is not
+		//context.TO.DO():when it's unclear which Context to use or not
 		err = cache.SetMessage(context.TODO(), message)
 		if err != nil {
 			log.Printf("database error:%v", err)

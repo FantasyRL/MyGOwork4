@@ -1,4 +1,4 @@
-package message_service
+package chat_service
 
 import (
 	"bibi/pkg/errno"
@@ -30,7 +30,7 @@ func (c *Client) Read() {
 			r1 := "2" //test
 			r2 := ""
 			if r1 > "3" && r2 == "" { //1给2 发了三条 2没有回复，就停止1发送
-				baseResp := pack.BuildMessageBaseResp(errno.WebSocketTargetOfflineError)
+				baseResp := pack.BuildChatBaseResp(errno.WebSocketTargetOfflineError)
 				msg, _ := json.Marshal(baseResp)
 				_ = c.Socket.WriteMessage(websocket.TextMessage, msg)
 				continue
@@ -55,7 +55,7 @@ func (c *Client) Write() {
 	}()
 	for {
 		select {
-		case message, ok := <-c.Message:
+		case message, ok := <-c.Send:
 			if !ok {
 				_ = c.Socket.WriteMessage(websocket.CloseMessage, []byte{})
 				return

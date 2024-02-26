@@ -1,4 +1,4 @@
-namespace go message
+namespace go chat
 
 struct BaseResp {
     1: i64 code,
@@ -32,14 +32,8 @@ struct MessageActionResp{
     1:BaseResp base,
 }
 
-struct WsReq{
-    1:i64 target_id,
-}
-struct WsResp{
-    1:BaseResp base,
-}
 
-service MessageHandler{
+service ChatHandler{
 //websocket
     MessageChatResp Chat(1: MessageChatReq req) (api.get="/bibi/message/ws"),
 //    Send Message

@@ -1,4 +1,4 @@
-package message_service
+package chat_service
 
 import (
 	"context"
@@ -26,7 +26,7 @@ type Client struct {
 	ID       int64
 	TargetId int64
 	Socket   *websocket.Conn
-	Message  chan []byte
+	Send     chan []byte
 }
 
 type Broadcast struct {

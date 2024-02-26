@@ -1,13 +1,13 @@
-package message_service
+package chat_service
 
 import (
 	"bibi/biz/dal/mq"
-	"bibi/biz/model/message"
+	"bibi/biz/model/chat"
 	"bibi/pkg/errno"
 	"time"
 )
 
-func (s *MessageService) SendMessage(req *message.MessageActionReq, uid int64) error {
+func (s *MessageService) SendMessage(req *chat.MessageActionReq, uid int64) error {
 	if len(req.Content) == 0 || len(req.Content) > 2000 {
 		return errno.CharacterBeyondLimitError
 	}

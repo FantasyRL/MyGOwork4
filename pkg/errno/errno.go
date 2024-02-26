@@ -6,10 +6,12 @@ import (
 )
 
 const (
-	WebSocketSuccessCode    = 1000
-	WebSocketConnectErrCode = iota + 1000
-	WebSocketTargetOfflineErrCode
+	WebSocketSuccessCode       = 1000
+	WebSocketLogoutSuccessCode = iota + 1000
+	WebSocketTargetOnlineSuccessCode
 	WebSocketErrCode
+	WebSocketConnectErrCode
+	WebSocketTargetOfflineErrCode
 
 	SuccessCode    = 10000
 	ServiceErrCode = iota + 10000 //未知服务错误
@@ -52,10 +54,12 @@ const (
 	VideoNotExistErrMsg        = "Video is not exist"
 	CommentIsNotExistErrMsg    = "Comment is not exist"
 
-	WebSocketSuccessMsg          = "Connect to server success"
-	WebSocketConnectErrMsg       = "Connect or upgrade error"
-	WebSocketTargetOfflineErrMsg = "Target user is offline"
-	WebSocketErrMsg              = "Websocket error"
+	WebSocketSuccessMsg             = "Connect to server success"
+	WebSocketLogoutSuccessMsg       = "logout success"
+	WebSocketTargetOnlineSuccessMsg = "target user is online"
+	WebSocketConnectErrMsg          = "Connect or upgrade error"
+	WebSocketTargetOfflineErrMsg    = "Target user is offline"
+	WebSocketErrMsg                 = "Websocket error"
 )
 
 type ErrNo struct {
@@ -99,10 +103,12 @@ var (
 	FollowNotExistError    = NewErrNo(FollowNotExistErrCode, FollowNotExistErrMsg)
 	FollowMyselfError      = NewErrNo(FollowMyselfErrCode, FollowMyselfErrMsg)
 
-	WebSocketSuccess            = NewErrNo(WebSocketSuccessCode, WebSocketSuccessMsg)
-	WebSocketConnectError       = NewErrNo(WebSocketConnectErrCode, WebSocketConnectErrMsg)
-	WebSocketTargetOfflineError = NewErrNo(WebSocketTargetOfflineErrCode, WebSocketTargetOfflineErrMsg)
-	WebSocketError              = NewErrNo(WebSocketErrCode, WebSocketErrMsg)
+	WebSocketSuccess             = NewErrNo(WebSocketSuccessCode, WebSocketSuccessMsg)
+	WebSocketLogoutSuccess       = NewErrNo(WebSocketLogoutSuccessCode, WebSocketLogoutSuccessMsg)
+	WebSocketTargetOnlineSuccess = NewErrNo(WebSocketTargetOnlineSuccessCode, WebSocketTargetOnlineSuccessMsg)
+	WebSocketConnectError        = NewErrNo(WebSocketConnectErrCode, WebSocketConnectErrMsg)
+	WebSocketTargetOfflineError  = NewErrNo(WebSocketTargetOfflineErrCode, WebSocketTargetOfflineErrMsg)
+	WebSocketError               = NewErrNo(WebSocketErrCode, WebSocketErrMsg)
 )
 
 // ConvertErr convert error to ErrNo

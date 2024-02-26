@@ -1,9 +1,9 @@
 package pack
 
 import (
+	"bibi/biz/model/chat"
 	"bibi/biz/model/follow"
 	"bibi/biz/model/interaction"
-	"bibi/biz/model/message"
 	"bibi/biz/model/user"
 	"bibi/biz/model/video"
 	"bibi/pkg/errno"
@@ -86,20 +86,20 @@ func ErrToFollowResp(err errno.ErrNo) *follow.BaseResp {
 	}
 }
 
-func BuildMessageBaseResp(err error) *message.BaseResp {
+func BuildChatBaseResp(err error) *chat.BaseResp {
 	if err == nil {
-		return ErrToMessageResp(errno.Success)
+		return ErrToChatResp(errno.Success)
 	}
 	e := errno.ErrNo{}
 	if errors.As(err, &e) {
-		return ErrToMessageResp(e)
+		return ErrToChatResp(e)
 	}
 	_e := errno.ServiceError.WithMessage(err.Error())
-	return ErrToMessageResp(_e)
+	return ErrToChatResp(_e)
 }
 
-func ErrToMessageResp(err errno.ErrNo) *message.BaseResp {
-	return &message.BaseResp{
+func ErrToChatResp(err errno.ErrNo) *chat.BaseResp {
+	return &chat.BaseResp{
 		Code: err.ErrorCode,
 		Msg:  err.ErrorMsg,
 	}

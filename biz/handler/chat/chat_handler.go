@@ -3,7 +3,7 @@
 package chat
 
 import (
-	"bibi/biz/service/chat_service"
+	"bibi/biz/service/chat_service/monitor"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
 	"context"
@@ -53,24 +53,29 @@ func Chat(ctx context.Context, c *app.RequestContext) {
 	//hertz wcnm
 	//HertzHandler receives a websocket connection after the handshake has been completed.
 	//在匿名函数里面开启send和recv
-	client := new(chat_service.Client)
+	client := new(monitor.Client)
 
 	err = upGrader.Upgrade(c, func(conn *websocket.Conn) {
-		client = &chat_service.Client{
+		client = &monitor.Client{
 			ID:       id,
 			TargetId: req.TargetID,
 			Socket:   conn,
 			Send:     make(chan []byte),
 		}
 		//将用户注册到用户管理上
-		chat_service.Manager.Register <- client
+		monitor.Manager.Register <- client
+		err = client.IfNotReadMessage(id)
+		if err != nil {
+			log.Println(err)
+			return
+		}
 		go client.Read()
 		go client.Write()
-		for {
-		} //直到conn被关闭才会退出
+		forever := make(chan bool)
+		<-forever //直到conn被关闭才会退出
 	})
 	if err != nil {
-		log.Print("upgrade:", err)
+		log.Println("upgrade:", err)
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
@@ -97,10 +102,8 @@ func MessageAction(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(chat.MessageActionResp)
 
-	v, _ := c.Get("current_user_id")
-	id := v.(int64)
-
-	err = chat_service.NewMessageService(ctx).SendMessage(&req, id)
+	//v, _ := c.Get("current_user_id")
+	//id := v.(int64)
 
 	resp.Base = pack.BuildChatBaseResp(err)
 	c.JSON(consts.StatusOK, resp)

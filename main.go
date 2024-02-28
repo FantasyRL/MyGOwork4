@@ -5,9 +5,8 @@ package main
 import (
 	"bibi/biz/dal/cache"
 	"bibi/biz/dal/db"
-	"bibi/biz/dal/mq"
 	"bibi/biz/mw/jwt"
-	"bibi/biz/service/chat_service"
+	"bibi/biz/service/chat_service/monitor"
 	"bibi/pkg/conf"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/hertz-contrib/logger/accesslog"
@@ -27,7 +26,7 @@ func main() {
 	db.Init(conf.Init()) //非常丑的方式避免了循环引用，但真的很丑...
 	jwt.Init()
 	cache.Init()
-	mq.Init()
+	//mq.Init() 完全错误的东西，请不要点进去，请假装没看到
 
 	h := server.New(
 		server.WithHostPorts(conf.ServerAddr),
@@ -39,7 +38,7 @@ func main() {
 	//NoHijackConnPool 将控制是否使用缓存池来获取/释放劫持连接。
 	//如果使用池，将提升内存资源分配的性能，但无法避免二次关闭连接导致的异常。
 	h.NoHijackConnPool = true
-	go chat_service.Manager.Start()
+	go monitor.Manager.Listen()
 	h.Use(accesslog.New()) //todo:log
 
 	register(h)

@@ -19,7 +19,7 @@ const (
 	likeExpTime    = time.Minute * 10
 	commentExpTime = time.Minute * 10
 	followExpTime  = time.Minute
-	messageExpTime = time.Hour * 24 * 7 ////7天漫游(?
+	messageExpTime = time.Hour * 24 * 7
 
 	videoLikeZset         = "video_likes"
 	videoCommentCountZset = "video_comment_counts"

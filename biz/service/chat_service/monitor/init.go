@@ -1,14 +1,18 @@
-package chat_service
+package monitor
 
 import (
+	"bibi/biz/dal/cache"
+	"bibi/biz/dal/db"
+	"bibi/biz/service/chat_service"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
+	"context"
 	"encoding/json"
 	"github.com/hertz-contrib/websocket"
 	"log"
 )
 
-func (manager *ClientManager) Start() {
+func (manager *ClientManager) Listen() {
 	for {
 		log.Println("监听管道通信")
 
@@ -32,7 +36,7 @@ func (manager *ClientManager) Start() {
 
 		case broadcast := <-Manager.Broadcast:
 			if broadcast.Type == 1 {
-				message := broadcast.Message
+				marshalMsg := broadcast.Message
 				targetId := broadcast.Client.TargetId
 
 				flag := false
@@ -41,30 +45,55 @@ func (manager *ClientManager) Start() {
 						continue
 					}
 					select {
-					case client.Send <- message: //Write()
+					case client.Send <- marshalMsg: //Write()
 						flag = true
 					default:
 						close(client.Send)
 						delete(Manager.Clients, client.ID)
 					}
 				}
+				var replyMsg chat_service.ReplyMsg
+				_, _ = replyMsg.UnmarshalMsg(marshalMsg)
 
 				if flag {
 					baseResp := pack.BuildChatBaseResp(errno.WebSocketTargetOnlineSuccess)
 					resp, _ := json.Marshal(baseResp)
 					_ = broadcast.Client.Socket.WriteMessage(websocket.TextMessage, resp)
-					//err := InsertMsg(conf.MongoDBName, broadcast.Client.ID, string(message), 1, int64(3*month))
-					//if err != nil {
-					//	fmt.Println("插入消息失败", err)
-					//}
+
+					if _, err := db.CreateMessage(&db.Message{
+						Uid:      replyMsg.From,
+						TargetId: targetId,
+						Content:  replyMsg.Content,
+					}); err != nil {
+						log.Println("database error")
+						baseResp = pack.BuildChatBaseResp(errno.ServiceError)
+						resp, _ = json.Marshal(baseResp)
+						_ = broadcast.Client.Socket.WriteMessage(websocket.CloseMessage, resp)
+					}
+
 				} else { //flag==false对方不在线
 					baseResp := pack.BuildChatBaseResp(errno.WebSocketTargetOfflineError)
 					resp, _ := json.Marshal(baseResp)
 					_ = broadcast.Client.Socket.WriteMessage(websocket.TextMessage, resp)
-					//err := InsertMsg(conf.MongoDBName, broadcast.Client.ID, string(message), 0, int64(3*month))
-					//if err != nil {
-					//	fmt.Println("插入消息失败", err)
-					//}
+
+					_, err := db.CreateMessage(&db.Message{
+						Uid:      replyMsg.From,
+						TargetId: targetId,
+						Content:  replyMsg.Content,
+					})
+					if err != nil {
+						log.Println("database error")
+						baseResp = pack.BuildChatBaseResp(errno.ServiceError)
+						resp, _ = json.Marshal(baseResp)
+						_ = broadcast.Client.Socket.WriteMessage(websocket.CloseMessage, resp)
+					}
+
+					if err = cache.SetMessage(context.TODO(), targetId, marshalMsg); err != nil {
+						log.Println(err)
+						baseResp = pack.BuildChatBaseResp(errno.ServiceError)
+						resp, _ = json.Marshal(baseResp)
+						_ = broadcast.Client.Socket.WriteMessage(websocket.CloseMessage, resp)
+					}
 				}
 			}
 		}

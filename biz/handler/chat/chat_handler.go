@@ -3,16 +3,16 @@
 package chat
 
 import (
+	chat "bibi/biz/model/chat"
+	"bibi/biz/service/chat_service"
 	"bibi/biz/service/chat_service/monitor"
 	"bibi/pkg/errno"
 	"bibi/pkg/pack"
 	"context"
-	"github.com/hertz-contrib/websocket"
-	"log"
-
-	chat "bibi/biz/model/chat"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/hertz-contrib/websocket"
+	"log"
 )
 
 // Chat .
@@ -81,30 +81,44 @@ func Chat(ctx context.Context, c *app.RequestContext) {
 	}
 }
 
-// MessageAction .
-// @Summary message_action
-// @Description send message to user or group
+// MessageRecord .
+// @Summary message_record
+// @Description get message record
 // @Accept json/form
 // @Produce json
 // @Param target_id query int true "目标id"
-// @Param content query string true "信息"
-// @Param action_type query int true "暂时只有单聊所以填啥都行"
+// @Param from_time query string true "2024-02-29"
+// @Param to_time query string true "2024-03-01"
 // @Param Authorization header string true "token"
-// @router /bibi/message/action [GET]
-func MessageAction(ctx context.Context, c *app.RequestContext) {
+// @Param action_type query int true "1"
+// @router /bibi/message/record [GET]
+func MessageRecord(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req chat.MessageActionReq
+	var req chat.MessageRecordReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp := new(chat.MessageActionResp)
+	resp := new(chat.MessageRecordResp)
 
-	//v, _ := c.Get("current_user_id")
-	//id := v.(int64)
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
 
-	resp.Base = pack.BuildChatBaseResp(err)
+	switch req.ActionType {
+	case 1:
+		msgList, count, err := chat_service.NewMessageService(ctx).MessageRecord(&req, id)
+		if err != nil {
+			resp.Base = pack.BuildChatBaseResp(err)
+			break
+		}
+		resp.Base = pack.BuildChatBaseResp(nil)
+		resp.MessageCount = count
+		resp.Record = chat_service.BuildMessageResp(msgList)
+	default:
+		resp.Base = pack.BuildChatBaseResp(errno.ParamError)
+	}
+
 	c.JSON(consts.StatusOK, resp)
 }

@@ -10,7 +10,7 @@ struct Message{
     2:i64 target_id,
     3:i64 from_id,
     4:string content,
-    5:i64 create_time,
+    5:string create_time,
 }
 
 struct MessageChatReq{
@@ -19,24 +19,24 @@ struct MessageChatReq{
 
 struct MessageChatResp{
     1:BaseResp base,
-//    2:list<Message> message_list,
 }
 
-struct MessageActionReq{
+struct MessageRecordReq{
     1:i64 target_id,
-    2:string content,
-    3:i64 action_type,//todo:群聊
+    2:string from_time,
+    3:string to_time,
+    4:i64 action_type,//todo:群聊
 }
 
-struct MessageActionResp{
+struct MessageRecordResp{
     1:BaseResp base,
+    2:i64 message_count,
+    3:list<Message> record,
 }
 
 
 service ChatHandler{
-//websocket
     MessageChatResp Chat(1: MessageChatReq req) (api.get="/bibi/message/ws"),
-//    Send Message
-    MessageActionResp MessageAction(1: MessageActionReq req) (api.get="/bibi/message/action"),
+    MessageRecordResp MessageRecord(1: MessageRecordReq req) (api.get="/bibi/message/record"),
 
 }

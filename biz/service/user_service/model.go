@@ -3,7 +3,7 @@ package user_service
 import (
 	"bibi/biz/dal/db"
 	"bibi/biz/model/user"
-	aliyunoss "bibi/oss"
+	"bibi/pkg/utils/oss"
 	"context"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"log"

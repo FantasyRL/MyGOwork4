@@ -101,8 +101,8 @@ func FollowerList(ctx context.Context, c *app.RequestContext) {
 	}
 
 	userResp, err := user_service.NewUserService(ctx).GetUserByIdList(uidList)
+	resp.Base = pack.BuildFollowBaseResp(err)
 	if err != nil {
-		resp.Base = pack.BuildFollowBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
@@ -144,8 +144,8 @@ func FollowingList(ctx context.Context, c *app.RequestContext) {
 		uidList = append(uidList, following.FollowedId)
 	}
 	userResp, err := user_service.NewUserService(ctx).GetUserByIdList(uidList)
+	resp.Base = pack.BuildFollowBaseResp(err)
 	if err != nil {
-		resp.Base = pack.BuildFollowBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}
@@ -186,8 +186,8 @@ func FriendList(ctx context.Context, c *app.RequestContext) {
 		uidList = append(uidList, friend.Uid)
 	}
 	userResp, err := user_service.NewUserService(ctx).GetUserByIdList(uidList)
+	resp.Base = pack.BuildFollowBaseResp(err)
 	if err != nil {
-		resp.Base = pack.BuildFollowBaseResp(err)
 		c.JSON(consts.StatusOK, resp)
 		return
 	}

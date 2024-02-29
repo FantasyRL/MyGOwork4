@@ -10,11 +10,11 @@ import (
 
 func SetMessage(ctx context.Context, targetId int64, marshalMsg []byte) error {
 	tx := rMessage.TxPipeline()
-	var mar = map[string][]byte{
+	var m = map[string][]byte{
 		"marshalMsg": marshalMsg,
 		"timestamp":  []byte(time.Now().String()),
 	}
-	marshalRdsMsg, _ := sonic.Marshal(&mar)
+	marshalRdsMsg, _ := sonic.Marshal(&m)
 	if err := tx.ZAdd(ctx, i64ToStr(targetId)+receiveSuffix, redis.Z{
 		Score:  float64(time.Now().Unix()),
 		Member: marshalRdsMsg,

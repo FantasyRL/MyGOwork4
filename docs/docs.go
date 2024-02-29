@@ -287,16 +287,16 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/bibi/message/action/": {
-            "post": {
-                "description": "send message to user or group",
+        "/bibi/message/record": {
+            "get": {
+                "description": "get message record",
                 "consumes": [
                     "json/form"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "message_action",
+                "summary": "message_record",
                 "parameters": [
                     {
                         "type": "integer",
@@ -307,15 +307,51 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "信息",
-                        "name": "content",
+                        "description": "2024-02-29",
+                        "name": "from_time",
                         "in": "query",
                         "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "2024-03-01",
+                        "name": "to_time",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
-                        "description": "暂时只有单聊所以填啥都行",
+                        "description": "1",
                         "name": "action_type",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/bibi/message/ws": {
+            "get": {
+                "description": "chat online",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "chat(websocket)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "目标id",
+                        "name": "target_id",
                         "in": "query",
                         "required": true
                     },
@@ -327,11 +363,6 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
-                "responses": {}
-            }
-        },
-        "/bibi/message/chat/": {
-            "get": {
                 "responses": {}
             }
         },

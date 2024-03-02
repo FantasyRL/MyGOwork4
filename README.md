@@ -20,6 +20,8 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 
 对于结构体加密存储redis使用了msgp(就一个地方偷懒直接用了JSON) 
 
+(commit 都是瞎写的不要在意...)
+
 ## 完成情况：
 分页管理：做了一部分，后面社交之类懒得做了
 

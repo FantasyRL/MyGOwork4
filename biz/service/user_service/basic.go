@@ -6,7 +6,7 @@ import (
 	"bibi/biz/dal/db"
 	"bibi/biz/model/user"
 	"bibi/pkg/errno"
-	"bibi/pkg/utils"
+	"bibi/pkg/utils/pwd"
 )
 
 func (s *UserService) Register(req *user.RegisterReq) (*db.User, error) {
@@ -14,9 +14,10 @@ func (s *UserService) Register(req *user.RegisterReq) (*db.User, error) {
 		return nil, errno.ParamError
 	}
 
-	PwdDigest := utils.SetPassword(req.Password)
+	PwdDigest := pwd.SetPassword(req.Password)
 	userModel := &db.User{
 		UserName: req.Username,
+		Email:    req.Email,
 		Password: PwdDigest,
 	}
 	return db.Register(s.ctx, userModel)

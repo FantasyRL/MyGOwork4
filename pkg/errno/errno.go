@@ -30,6 +30,9 @@ const (
 	FollowExistErrCode
 	FollowNotExistErrCode
 	FollowMyselfErrCode
+	Enable2FAErrCode
+	Unable2FAErrCode
+	Verify2FAErrCode
 )
 
 const (
@@ -53,6 +56,9 @@ const (
 	FriendListNoPermissionMsg  = "You can't query his friend list"
 	VideoNotExistErrMsg        = "Video is not exist"
 	CommentIsNotExistErrMsg    = "Comment is not exist"
+	Enable2FAErrMsg            = "2fa verification have opened"
+	Unable2FAErrMsg            = "2fa verification have closed"
+	Verify2FAErrMsg            = "incorrect otp"
 
 	WebSocketSuccessMsg             = "Connect to server success"
 	WebSocketLogoutSuccessMsg       = "logout success"
@@ -102,6 +108,9 @@ var (
 	FollowExistError       = NewErrNo(FollowExistErrCode, FollowExistErrMsg)
 	FollowNotExistError    = NewErrNo(FollowNotExistErrCode, FollowNotExistErrMsg)
 	FollowMyselfError      = NewErrNo(FollowMyselfErrCode, FollowMyselfErrMsg)
+	Enable2FAError         = NewErrNo(Enable2FAErrCode, Enable2FAErrMsg)
+	Unable2FAError         = NewErrNo(Unable2FAErrCode, Unable2FAErrMsg)
+	Verify2FAError         = NewErrNo(Verify2FAErrCode, Verify2FAErrMsg)
 
 	WebSocketSuccess             = NewErrNo(WebSocketSuccessCode, WebSocketSuccessMsg)
 	WebSocketLogoutSuccess       = NewErrNo(WebSocketLogoutSuccessCode, WebSocketLogoutSuccessMsg)

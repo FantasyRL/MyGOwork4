@@ -315,6 +315,11 @@ paths:
         name: username
         required: true
         type: string
+      - description: 邮箱
+        in: query
+        name: email
+        required: true
+        type: string
       - description: 密码
         in: query
         name: password
@@ -324,6 +329,30 @@ paths:
       - application/json
       responses: {}
       summary: Register
+  /bibi/user/switch2fa:
+    get:
+      consumes:
+      - json/form
+      description: switch on/off 2fa mode
+      parameters:
+      - description: 关闭:0;开启:1
+        in: query
+        name: action_type
+        required: true
+        type: integer
+      - description: otp
+        in: query
+        name: otp
+        type: string
+      - description: token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: switch_2fa
   /bibi/video/hot:
     get:
       consumes:

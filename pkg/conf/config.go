@@ -36,6 +36,15 @@ type RabbitMQ struct {
 	Password string
 }
 
+type EmailSender struct {
+	Host     string
+	Port     string
+	Sender   string
+	Password string
+	From     string
+	Subject  string
+}
+
 var (
 	OSS        *Oss
 	sql        *Mysql
@@ -43,6 +52,7 @@ var (
 	RedisAddr  string
 	ServerAddr string
 	MQ         *RabbitMQ
+	Sender     *EmailSender
 )
 
 func Init() string {
@@ -67,6 +77,9 @@ func Init() string {
 	MQ = LoadRabbitMQ(viper.GetStringMapString("rabbitmq"))
 
 	sql = LoadMysql(viper.GetStringMapString("mysql"))
+
+	Sender = LoadEmailSender(viper.GetStringMapString("email"))
+
 	path := strings.Join([]string{sql.user, ":", sql.password, "@tcp(", sql.host, ":", sql.port, ")/", sql.dbname, "?charset=utf8mb4&parseTime=True"}, "")
 	return path
 }
@@ -95,5 +108,16 @@ func LoadRabbitMQ(myConf map[string]string) *RabbitMQ {
 		Port:     myConf["port"],
 		Username: myConf["name"],
 		Password: myConf["password"],
+	}
+}
+
+func LoadEmailSender(myConf map[string]string) *EmailSender {
+	return &EmailSender{
+		Host:     myConf["host"],
+		Port:     myConf["port"],
+		Sender:   myConf["sender"],
+		Password: myConf["password"],
+		From:     myConf["from"],
+		Subject:  myConf["subject"],
 	}
 }

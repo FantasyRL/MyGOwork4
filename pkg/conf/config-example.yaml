@@ -23,3 +23,8 @@ rabbitmq:
   port: 5672
   name: guest
   password: guest
+email:
+  sender:
+  password:
+  from: bibi-demo<sender email>
+  subject: your OTP

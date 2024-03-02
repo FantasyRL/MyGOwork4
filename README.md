@@ -3,9 +3,12 @@
 **bibi-demo** is a small video website backend using hertz(hz-gen、jwt、websocket)+gorm(mysql)+redis+oss(aliyun)
 
 ## deploy by docker(net=host)
+
+(使用前请先关闭本机的mysql与redis服务)
+
 `快速启动`
 ```bash
-#oss的配置是什么都没有的(上次传github上瞬间就被警告了)
+#oss与email的配置需自行填写
 mv pkg/conf/config-example.yaml pkg/conf/config.yaml
 docker-compose up -d # 启动相关容器
 docker build -t bibi-demo . # 构建镜像

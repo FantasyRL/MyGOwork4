@@ -8,8 +8,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE `user` (
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '用户ID',
     `user_name` varchar(255) NOT NULL COMMENT '用户名',
+    `email` varchar(255) NOT NULL COMMENT '邮箱',
     `password` varchar(255) NOT NULL COMMENT '密码',
     `avatar` varchar(255) NOT NULL COMMENT '头像',
+    `otp` varchar(255) DEFAULT NULL COMMENT 'OTP',
+    `type2fa` varchar(255) NOT NULL DEFAULT 0 COMMENT '关闭:0;开启:1',
     `created_at` timestamp NOT NULL DEFAULT current_timestamp COMMENT '创建时间',
     `updated_at` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE current_timestamp,
     `deleted_at` timestamp NULL DEFAULT NULL,

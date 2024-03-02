@@ -37,6 +37,7 @@ func BuildUserResp(_user interface{}) *user.User {
 	return &user.User{
 		ID:         p.ID,
 		Name:       p.UserName,
+		Email:      &p.Email,
 		Avatar:     p.Avatar,
 		VideoCount: videoCount,
 	}

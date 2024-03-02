@@ -22,6 +22,7 @@ func Register(r *server.Hertz) {
 		{
 			_user := _bibi.Group("/user", _userMw()...)
 			_user.GET("/", append(_infoMw(), user.Info)...)
+			_user.GET("/switch2fa", append(_switch2faMw(), user.Switch2FA)...)
 			{
 				_avatar := _user.Group("/avatar", _avatarMw()...)
 				_avatar.PUT("/upload", append(_avatar0Mw(), user.Avatar)...)

@@ -24,6 +24,7 @@ import (
 // @Accept json/form
 // @Produce json
 // @Param username query string true "用户名"
+// @Param email query string true "邮箱"
 // @Param password query string true "密码"
 // @router /bibi/user/register [POST]
 func Register(ctx context.Context, c *app.RequestContext) {
@@ -44,6 +45,40 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	resp.UserID = userResp.ID
+	c.JSON(consts.StatusOK, resp)
+}
+
+// Switch2FA .
+// @Summary switch_2fa
+// @Description switch on/off 2fa mode
+// @Accept json/form
+// @Produce json
+// @Param action_type query int true "关闭:0;开启:1"
+// @Param totp query string false "totp"
+// @Param Authorization header string true "token"
+// @router /bibi/user/switch2fa [GET]
+func Switch2FA(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.Switch2FAReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(user.Switch2FAResp)
+
+	v, _ := c.Get("current_user_id")
+	id := v.(int64)
+
+	switch req.ActionType {
+	case 0, 1:
+		err = user_service.NewUserService(ctx).Switch2faType(&req, id)
+		resp.Base = pack.BuildUserBaseResp(err)
+	default:
+		resp.Base = pack.BuildUserBaseResp(errno.ParamError)
+	}
+
 	c.JSON(consts.StatusOK, resp)
 }
 

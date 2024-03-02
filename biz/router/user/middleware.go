@@ -73,3 +73,10 @@ func _avatar0Mw() []app.HandlerFunc {
 		jwt.JwtMiddleware.MiddlewareFunc(),
 	}
 }
+
+func _switch2faMw() []app.HandlerFunc {
+	// your code...
+	return []app.HandlerFunc{
+		jwt.JwtMiddleware.MiddlewareFunc(),
+	}
+}

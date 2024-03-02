@@ -466,9 +466,51 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "description": "邮箱",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "密码",
                         "name": "password",
                         "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/bibi/user/switch2fa": {
+            "get": {
+                "description": "switch on/off 2fa mode",
+                "consumes": [
+                    "json/form"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "switch_2fa",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "关闭:0;开启:1",
+                        "name": "action_type",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "otp",
+                        "name": "otp",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],

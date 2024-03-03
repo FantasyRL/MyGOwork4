@@ -84,11 +84,12 @@ func Switch2FA(ctx context.Context, c *app.RequestContext) {
 
 // Login .
 // @Summary Login
-// @Description userLogin
+// @Description login to get your auth token
 // @Accept json/form
 // @Produce json
 // @Param username query string true "用户名"
 // @Param password query string true "密码"
+// @Param otp query string false "otp"
 // @router /bibi/user/login [POST]
 func Login(ctx context.Context, c *app.RequestContext) {
 	resp := new(user.LoginResp)

@@ -58,7 +58,7 @@ const (
 	CommentIsNotExistErrMsg    = "Comment is not exist"
 	Enable2FAErrMsg            = "2fa verification have opened"
 	Unable2FAErrMsg            = "2fa verification have closed"
-	Verify2FAErrMsg            = "incorrect otp"
+	Verify2FAErrMsg            = "incorrect otp password"
 
 	WebSocketSuccessMsg             = "Connect to server success"
 	WebSocketLogoutSuccessMsg       = "logout success"

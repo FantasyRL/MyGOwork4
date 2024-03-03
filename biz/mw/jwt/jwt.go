@@ -61,11 +61,11 @@ func Init() {
 		},
 		// build login response if verify password successfully
 		LoginResponse: func(ctx context.Context, c *app.RequestContext, code int, token string, expire time.Time) {
-			hlog.CtxInfof(ctx, "Login success ，token is issued clientIP: "+c.ClientIP()) //这是什么，看一下，似了
+			hlog.CtxInfof(ctx, "Login success ，token is issued clientIP: "+c.ClientIP()) //log
 			c.Set("token", token)
 		},
 		// Verify token and get the id of logged-in user
-		//验证用户是否有访问权限
+		//验证用户是否有访问权限，中间件注入返回的就是这个
 		Authorizator: func(data interface{}, ctx context.Context, c *app.RequestContext) bool {
 			if v, ok := data.(float64); ok {
 				current_user_id := int64(v)
@@ -78,7 +78,7 @@ func Init() {
 		// Validation failed, build the message
 		Unauthorized: func(ctx context.Context, c *app.RequestContext, code int, message string) {
 			resp := new(user.LoginResp)
-			resp.Base = pack.BuildUserBaseResp(errno.PwdError)
+			resp.Base = pack.BuildUserBaseResp(errno.NewErrNo(int64(code), message))
 			c.JSON(consts.StatusOK, resp.Base)
 		},
 		HTTPStatusMessageFunc: func(e error, ctx context.Context, c *app.RequestContext) string {

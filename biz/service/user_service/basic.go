@@ -6,6 +6,7 @@ import (
 	"bibi/biz/dal/db"
 	"bibi/biz/model/user"
 	"bibi/pkg/errno"
+	"bibi/pkg/utils/otp2fa"
 	"bibi/pkg/utils/pwd"
 )
 
@@ -28,7 +29,14 @@ func (s *UserService) Login(req *user.LoginReq) (*db.User, error) {
 		UserName: req.Username,
 		Password: req.Password,
 	}
-	return db.Login(s.ctx, userModel)
+	userResp, err := db.Login(s.ctx, userModel)
+	if err != nil {
+		return nil, err
+	}
+	if userResp.Type2fa == 1 && !otp2fa.CheckTotp(*req.Otp, userResp.Otp) {
+		return nil, errno.Verify2FAError
+	}
+	return userResp, nil
 }
 
 func (s *UserService) Info(id int64) (*db.User, error) {

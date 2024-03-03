@@ -180,11 +180,11 @@ func BuildSendMessage(name string, base64png []byte) []byte {
 	return bytes.Join([][]byte{[]byte(msg1), []byte(name), []byte(msg2), removeNullValue(base64png), []byte(msg3)}, []byte(""))
 }
 
-// 我操你妈的傻逼空值
+// removeNullValue 傻逼空值
 func removeNullValue(slice []byte) []byte {
 	var output []byte
 	for _, element := range slice {
-		if element != '\000' { //if condition satisfies add the elements in new slice
+		if element != '\000' {
 			output = append(output, element)
 		}
 	}

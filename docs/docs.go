@@ -419,7 +419,7 @@ const docTemplate = `{
         },
         "/bibi/user/login": {
             "post": {
-                "description": "userLogin",
+                "description": "login to get your auth token",
                 "consumes": [
                     "json/form"
                 ],
@@ -441,6 +441,12 @@ const docTemplate = `{
                         "name": "password",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "otp",
+                        "name": "otp",
+                        "in": "query"
                     }
                 ],
                 "responses": {}
@@ -502,8 +508,8 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "otp",
-                        "name": "otp",
+                        "description": "totp",
+                        "name": "totp",
                         "in": "query"
                     },
                     {

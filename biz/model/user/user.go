@@ -1390,9 +1390,9 @@ func (p *Switch2FAResp) String() string {
 }
 
 type LoginReq struct {
-	Username string `thrift:"username,1" form:"username" json:"username" query:"username"`
-	Password string `thrift:"password,2" form:"password" json:"password" query:"password"`
-	Otp      string `thrift:"otp,3" form:"otp" json:"otp" query:"otp"`
+	Username string  `thrift:"username,1" form:"username" json:"username" query:"username"`
+	Password string  `thrift:"password,2" form:"password" json:"password" query:"password"`
+	Otp      *string `thrift:"otp,3,optional" form:"otp" json:"otp,omitempty" query:"otp"`
 }
 
 func NewLoginReq() *LoginReq {
@@ -1407,14 +1407,23 @@ func (p *LoginReq) GetPassword() (v string) {
 	return p.Password
 }
 
+var LoginReq_Otp_DEFAULT string
+
 func (p *LoginReq) GetOtp() (v string) {
-	return p.Otp
+	if !p.IsSetOtp() {
+		return LoginReq_Otp_DEFAULT
+	}
+	return *p.Otp
 }
 
 var fieldIDToName_LoginReq = map[int16]string{
 	1: "username",
 	2: "password",
 	3: "otp",
+}
+
+func (p *LoginReq) IsSetOtp() bool {
+	return p.Otp != nil
 }
 
 func (p *LoginReq) Read(iprot thrift.TProtocol) (err error) {
@@ -1512,7 +1521,7 @@ func (p *LoginReq) ReadField3(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.Otp = v
+		p.Otp = &v
 	}
 	return nil
 }
@@ -1588,14 +1597,16 @@ WriteFieldEndError:
 }
 
 func (p *LoginReq) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("otp", thrift.STRING, 3); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Otp); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetOtp() {
+		if err = oprot.WriteFieldBegin("otp", thrift.STRING, 3); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Otp); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:

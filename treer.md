@@ -1,22 +1,28 @@
 BibiBibi
 ├─.hz
-├─README.md
 ├─Dockerfile
-├─docker-compose.yml
+├─README.md
 ├─bibi
 ├─build.sh
+├─docker-compose.yml
 ├─go.mod
 ├─go.sum
 ├─main.go
 ├─router.go
 ├─router_gen.go
+├─treer.md
 ├─script
 |   └bootstrap.sh
 ├─pkg
 |  ├─utils
-|  |  ├─oss
-|  |  |  └oss.go
-|  |  └pwd.go
+|  |   ├─sender
+|  |   |   └send.go
+|  |   ├─pwd
+|  |   |  └pwd.go
+|  |   ├─otp2fa
+|  |   |   └totp.go
+|  |   ├─oss
+|  |   |  └oss.go
 |  ├─pack
 |  |  ├─build_base.go
 |  |  └pack.go
@@ -48,8 +54,9 @@ BibiBibi
 |  |    |       ├─search_video.go
 |  |    |       └upload_video.go
 |  |    ├─user_service
-|  |    |      ├─avatar_controller.go
-|  |    |      ├─controller.go
+|  |    |      ├─2fa.go
+|  |    |      ├─avatar.go
+|  |    |      ├─basic.go
 |  |    |      ├─get_user.go
 |  |    |      └model.go
 |  |    ├─interaction_service
@@ -117,9 +124,6 @@ BibiBibi
 |  |    ├─chat
 |  |    |  └chat_handler.go
 |  ├─dal
-|  |  ├─mq
-|  |  | ├─chat_mq.go
-|  |  | └init.go
 |  |  ├─db
 |  |  | ├─chat_db.go
 |  |  | ├─chat_msgp.go

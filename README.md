@@ -55,7 +55,9 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 ├─pkg           #放了一些utils、错误处理和config
 ```
 
-Bonus:
+## Bonus:
+
+使用了pquerna/totp进行login时的2FA认证,搭配Google Authenticator扫码食用,同时还对邮件引入了静态html页([sender](./pkg/utils/sender/send.go)里有深夜3点因base64包空值破防时刻)
     
 对点赞引入redis缓存(评论也引入了，社交写一半懒了)
 

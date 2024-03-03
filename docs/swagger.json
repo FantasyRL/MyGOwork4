@@ -413,7 +413,7 @@
         },
         "/bibi/user/login": {
             "post": {
-                "description": "userLogin",
+                "description": "login to get your auth token",
                 "consumes": [
                     "json/form"
                 ],
@@ -435,6 +435,12 @@
                         "name": "password",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "otp",
+                        "name": "otp",
+                        "in": "query"
                     }
                 ],
                 "responses": {}
@@ -496,8 +502,8 @@
                     },
                     {
                         "type": "string",
-                        "description": "otp",
-                        "name": "otp",
+                        "description": "totp",
+                        "name": "totp",
                         "in": "query"
                     },
                     {

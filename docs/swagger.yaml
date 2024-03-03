@@ -288,7 +288,7 @@ paths:
     post:
       consumes:
       - json/form
-      description: userLogin
+      description: login to get your auth token
       parameters:
       - description: 用户名
         in: query
@@ -299,6 +299,10 @@ paths:
         in: query
         name: password
         required: true
+        type: string
+      - description: otp
+        in: query
+        name: otp
         type: string
       produces:
       - application/json
@@ -340,9 +344,9 @@ paths:
         name: action_type
         required: true
         type: integer
-      - description: otp
+      - description: totp
         in: query
-        name: otp
+        name: totp
         type: string
       - description: token
         in: header

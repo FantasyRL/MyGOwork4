@@ -17,7 +17,7 @@ struct Comment {
 }
 
 struct LikeActionReq{
-    1:i64 videoID,
+    1:i64 video_id,
     2:i64 action_type,
 }
 

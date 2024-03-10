@@ -508,7 +508,7 @@ func (p *Comment) String() string {
 }
 
 type LikeActionReq struct {
-	VideoID    int64 `thrift:"videoID,1" form:"videoID" json:"videoID" query:"videoID"`
+	VideoID    int64 `thrift:"video_id,1" form:"video_id" json:"video_id" query:"video_id"`
 	ActionType int64 `thrift:"action_type,2" form:"action_type" json:"action_type" query:"action_type"`
 }
 
@@ -525,7 +525,7 @@ func (p *LikeActionReq) GetActionType() (v int64) {
 }
 
 var fieldIDToName_LikeActionReq = map[int16]string{
-	1: "videoID",
+	1: "video_id",
 	2: "action_type",
 }
 
@@ -645,7 +645,7 @@ WriteStructEndError:
 }
 
 func (p *LikeActionReq) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("videoID", thrift.I64, 1); err != nil {
+	if err = oprot.WriteFieldBegin("video_id", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI64(p.VideoID); err != nil {

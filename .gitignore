@@ -36,3 +36,4 @@ _testmain.go
 dumped_hertz_remote_config.json
 pkg/conf/config.yaml
 biz/dal/mq
+pkg/data

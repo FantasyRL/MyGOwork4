@@ -55,7 +55,7 @@ func (z *Comment) UnmarshalMsg(bts []byte) (o []byte, err error) {
 		case "video_id":
 			z.VideoID, bts, err = msgp.ReadInt64Bytes(bts)
 			if err != nil {
-				err = msgp.WrapError(err, "VideoID")
+				err = msgp.WrapError(err, "VideoId")
 				return
 			}
 		case "uid":

@@ -29,11 +29,11 @@ func (s *InteractionService) Like(req *interaction.LikeActionReq, uid int64) err
 	}
 
 	//该点赞是否存在
-	exist2, err := cache.IsVideoLikeExist(s.ctx, req.VideoID, uid)
+	exist1, err := cache.IsVideoLikeExist(s.ctx, req.VideoID, uid)
 	if err != nil {
 		return err
 	}
-	if exist2 {
+	if exist1 {
 		return errno.LikeExistError
 	}
 

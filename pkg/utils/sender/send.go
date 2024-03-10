@@ -180,7 +180,7 @@ func BuildSendMessage(name string, base64png []byte) []byte {
 	return bytes.Join([][]byte{[]byte(msg1), []byte(name), []byte(msg2), removeNullValue(base64png), []byte(msg3)}, []byte(""))
 }
 
-// removeNullValue 傻逼空值
+// removeNullValue 被空值气晕了
 func removeNullValue(slice []byte) []byte {
 	var output []byte
 	for _, element := range slice {

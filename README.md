@@ -55,6 +55,27 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 ├─pkg           #放了一些utils、错误处理和config
 ```
 
+`pkg`
+```
+├─pkg
+|  ├─utils
+|  |   ├─sender         #发邮件
+|  |   ├─pwd            #pwd verify
+|  |   ├─otp2fa         #totp
+|  |   ├─oss            #store videos in aliyun
+|  ├─pack
+|  |  ├─build_base.go   #这是一个没有在thrift使用通用base的遗留问题，后续重构时会修改
+|  |  └pack.go          #乱放东西，应该都是属于video模块里的
+|  ├─errno
+|  |   └errno.go        #bytedance提供的errno
+|  ├─conf
+|  |  ├─config-example.yaml
+|  |  ├─config.go       #conf配置，并没有const.go因为我又忘了
+|  |  ├─config.yaml     #未传入github
+|  |  ├─sql
+|  |  |  └init.sql      #docker-compose sql初始化
+```
+
 ## Bonus:
 
 使用了pquerna/totp进行login时的2FA认证,搭配Google Authenticator扫码食用,同时还对邮件引入了静态html页([sender](./pkg/utils/sender/send.go)里有深夜3点因base64包空值破防时刻)

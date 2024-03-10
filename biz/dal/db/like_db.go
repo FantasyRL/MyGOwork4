@@ -8,7 +8,7 @@ import (
 type Like struct {
 	ID        int64
 	Uid       int64
-	VideoID   int64
+	VideoId   int64
 	Status    int64
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -35,9 +35,10 @@ func LikeStatusUpdate(uid int64, videoId int64, status int64) error {
 func LikeCreate(uid int64, videoId int64, status int64) error {
 	var like = &Like{
 		Uid:     uid,
-		VideoID: videoId,
+		VideoId: videoId,
 		Status:  status,
 	}
+
 	return DB.Model(Like{}).Create(like).Error
 }
 
@@ -48,7 +49,7 @@ func GetVideoByUid(uid int64) ([]int64, error) {
 	}
 	var videoIdList []int64
 	for _, id := range *likes {
-		videoIdList = append(videoIdList, id.VideoID)
+		videoIdList = append(videoIdList, id.VideoId)
 	}
 	return videoIdList, nil
 }

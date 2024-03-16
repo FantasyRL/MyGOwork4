@@ -83,3 +83,15 @@ docker run -d --net=host bibi-demo go run bibi # 运行程序
 对点赞引入redis缓存(评论也引入了，社交写一半懒了)
 
 实现了WebSocket实时聊天(WebSocket接口好像没办法用swagger自动生成，所以接口文档里没有...)
+
+## Future...
+
+在idl中添加optional以优化response
+
+将会改进comment缓存的逻辑
+
+将会进行重构rpc以改进混沌的handler层
+
+将会更加贴合接口文档需求
+
+将会添加双token(为什么还不添加，是不想吗)

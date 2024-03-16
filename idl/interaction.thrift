@@ -11,9 +11,10 @@ struct BaseResp {
 struct Comment {
     1: i64 id,
     2: i64 video_id,
-    3: user.User user,
-    4: string content,
-    5: string publish_time,
+    3: optional i64 parent_id,
+    4: user.User user,
+    5: string content,
+    6: string publish_time,
 }
 
 struct LikeActionReq{
@@ -36,8 +37,9 @@ struct LikeListResp{
 }
 
 struct CommentCreateReq{
-    1:i64 video_id,
-    2:string content,
+    1:required i64 video_id,
+    2:optional i64 parent_id,
+    3:string content,
 }
 
 struct CommentCreateResp{
@@ -61,8 +63,8 @@ struct CommentListReq{
 
 struct CommentListResp{
     1:BaseResp base,
-    2:i64 comment_count,
-    3:list<Comment> comment_list,
+    2:i64 comment_count,//optional
+    3:list<Comment> comment_list,//optional
 }
 
 service InteractionHandler{

@@ -9,21 +9,24 @@ import (
 // MarshalMsg implements msgp.Marshaler
 func (z *Comment) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 5
-	// string "id"
-	o = append(o, 0x85, 0xa2, 0x69, 0x64)
+	// map header, size 6
+	// string "i"
+	o = append(o, 0x86, 0xa1, 0x69)
 	o = msgp.AppendInt64(o, z.ID)
-	// string "video_id"
-	o = append(o, 0xa8, 0x76, 0x69, 0x64, 0x65, 0x6f, 0x5f, 0x69, 0x64)
+	// string "v"
+	o = append(o, 0xa1, 0x76)
 	o = msgp.AppendInt64(o, z.VideoID)
-	// string "uid"
-	o = append(o, 0xa3, 0x75, 0x69, 0x64)
+	// string "p"
+	o = append(o, 0xa1, 0x70)
+	o = msgp.AppendInt64(o, z.ParentID)
+	// string "u"
+	o = append(o, 0xa1, 0x75)
 	o = msgp.AppendInt64(o, z.Uid)
-	// string "content"
-	o = append(o, 0xa7, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74)
+	// string "c"
+	o = append(o, 0xa1, 0x63)
 	o = msgp.AppendString(o, z.Content)
-	// string "publish_time"
-	o = append(o, 0xac, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x73, 0x68, 0x5f, 0x74, 0x69, 0x6d, 0x65)
+	// string "pu"
+	o = append(o, 0xa2, 0x70, 0x75)
 	o = msgp.AppendTime(o, z.CreatedAt)
 	return
 }
@@ -46,31 +49,37 @@ func (z *Comment) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			return
 		}
 		switch msgp.UnsafeString(field) {
-		case "id":
+		case "i":
 			z.ID, bts, err = msgp.ReadInt64Bytes(bts)
 			if err != nil {
 				err = msgp.WrapError(err, "ID")
 				return
 			}
-		case "video_id":
+		case "v":
 			z.VideoID, bts, err = msgp.ReadInt64Bytes(bts)
 			if err != nil {
-				err = msgp.WrapError(err, "VideoId")
+				err = msgp.WrapError(err, "VideoID")
 				return
 			}
-		case "uid":
+		case "p":
+			z.ParentID, bts, err = msgp.ReadInt64Bytes(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "ParentID")
+				return
+			}
+		case "u":
 			z.Uid, bts, err = msgp.ReadInt64Bytes(bts)
 			if err != nil {
 				err = msgp.WrapError(err, "Uid")
 				return
 			}
-		case "content":
+		case "c":
 			z.Content, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
 				err = msgp.WrapError(err, "Content")
 				return
 			}
-		case "publish_time":
+		case "pu":
 			z.CreatedAt, bts, err = msgp.ReadTimeBytes(bts)
 			if err != nil {
 				err = msgp.WrapError(err, "CreatedAt")
@@ -90,6 +99,6 @@ func (z *Comment) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Comment) Msgsize() (s int) {
-	s = 1 + 3 + msgp.Int64Size + 9 + msgp.Int64Size + 4 + msgp.Int64Size + 8 + msgp.StringPrefixSize + len(z.Content) + 13 + msgp.TimeSize
+	s = 1 + 2 + msgp.Int64Size + 2 + msgp.Int64Size + 2 + msgp.Int64Size + 2 + msgp.Int64Size + 2 + msgp.StringPrefixSize + len(z.Content) + 3 + msgp.TimeSize
 	return
 }

@@ -20,6 +20,7 @@ func BuildCommentResp(comment *db.Comment) *interaction.Comment {
 	return &interaction.Comment{
 		ID:          comment.ID,
 		VideoID:     comment.VideoID,
+		ParentID:    &comment.ParentID,
 		User:        BuildUserResp(commenter),
 		Content:     comment.Content,
 		PublishTime: comment.CreatedAt.Format("2006-01-02 15:01:04"),

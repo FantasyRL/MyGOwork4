@@ -13,15 +13,25 @@ func (s *InteractionService) CommentCreate(req *interaction.CommentCreateReq, ui
 	var eg errgroup.Group
 	var err error
 	var exist = false
-	var comment *db.Comment
-	eg.Go(func() error {
-		var commentModel = &interaction.Comment{
-			VideoID: req.VideoID,
-			Content: req.Content,
-			User: &user.User{
-				ID: uid,
-			},
+	comment := new(db.Comment)
+	commentModel := new(interaction.Comment)
+	commentModel = &interaction.Comment{
+		VideoID:  req.VideoID,
+		ParentID: req.ParentID,
+		Content:  req.Content,
+		User: &user.User{
+			ID: uid,
+		},
+	}
+
+	if req.ParentID != nil {
+		ok, _ := db.IsParentExist(commentModel)
+		if !ok {
+			return nil, errno.ParentCommentIsNotExistError
 		}
+	}
+
+	eg.Go(func() error {
 		//若内容完全重复，则删除最早发的那个(其实是懒得再开一个接口了)
 		comment, err = db.CreateComment(commentModel)
 		if err != nil {

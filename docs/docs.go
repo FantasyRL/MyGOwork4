@@ -140,6 +140,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "integer",
+                        "description": "父评论id",
+                        "name": "parent_id",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "正文",
                         "name": "content",

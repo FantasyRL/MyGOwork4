@@ -141,6 +141,7 @@ func LikeList(ctx context.Context, c *app.RequestContext) {
 // @Accept json/form
 // @Produce json
 // @Param video_id query int true "视频id"
+// @Param parent_id query int false "父评论id"
 // @Param content query string true "正文"
 // @Param Authorization header string true "token"
 // @router /bibi/interaction/comment/create [POST]
@@ -155,10 +156,19 @@ func CommentCreate(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(interaction.CommentCreateResp)
 
+	//if req.ParentID != nil && req.VideoID != nil {
+	//	resp.Base = pack.BuildInteractionBaseResp(errno.ParamError)
+	//	c.JSON(consts.StatusOK, resp)
+	//	return
+	//} //不能啥都有
+
 	v, _ := c.Get("current_user_id")
 	id := v.(int64)
 
-	commentResp, err := interaction_service.NewInteractionService(ctx).CommentCreate(&req, id)
+	commentResp := new(db.Comment)
+
+	commentResp, err = interaction_service.NewInteractionService(ctx).CommentCreate(&req, id)
+
 	resp.Base = pack.BuildInteractionBaseResp(err)
 	if err != nil {
 		c.JSON(consts.StatusOK, resp)

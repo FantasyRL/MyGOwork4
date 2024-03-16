@@ -3,6 +3,7 @@ package cache
 import (
 	"bibi/biz/dal/db"
 	"context"
+	"errors"
 	"github.com/redis/go-redis/v9"
 	"strconv"
 )
@@ -85,7 +86,7 @@ func GetVideoComments(ctx context.Context, videoId int64) (comments []db.Comment
 
 func GetVideoCommentCount(ctx context.Context, videoId int64) (bool, int64, error) {
 	v, err := rComment.ZScore(ctx, videoCommentCountZset, i64ToStr(videoId)).Result()
-	if err == redis.Nil { //已过期
+	if errors.Is(err, redis.Nil) { //已过期
 		return false, 0, nil
 	}
 	if err != nil {

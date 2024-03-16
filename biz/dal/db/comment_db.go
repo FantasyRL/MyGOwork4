@@ -9,13 +9,26 @@ import (
 
 //go:generate msgp -tests=false -o=comment_msgp.go -io=false
 type Comment struct {
-	ID        int64          `msg:"id"`
-	VideoID   int64          `msg:"video_id"`
-	Uid       int64          `msg:"uid"`
-	Content   string         `msg:"content"`
-	CreatedAt time.Time      `msg:"publish_time"`
+	ID        int64          `msg:"i"`
+	VideoID   int64          `msg:"v"`
+	ParentID  int64          `msg:"p"`
+	Uid       int64          `msg:"u"`
+	Content   string         `msg:"c"`
+	CreatedAt time.Time      `msg:"pu"`
 	UpdatedAt time.Time      `msg:"-"`             //ignore
 	DeletedAt gorm.DeletedAt `sql:"index" msg:"-"` //ignore
+}
+
+func IsParentExist(commentModel *interaction.Comment) (bool, error) {
+	var comment = &Comment{
+		ID:      *commentModel.ParentID,
+		VideoID: commentModel.VideoID,
+	}
+	err := DB.Model(Comment{}).Take(comment).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, nil
+	}
+	return true, err
 }
 
 func IsCommentExist(commentModel *interaction.Comment) (bool, error) {
@@ -37,6 +50,10 @@ func CreateComment(commentModel *interaction.Comment) (*Comment, error) {
 		Uid:     commentModel.User.ID,
 		Content: commentModel.Content,
 	}
+	if commentModel.ParentID != nil {
+		comment.ParentID = *commentModel.ParentID
+	}
+
 	if err := DB.Model(Comment{}).Create(comment).Error; err != nil {
 		return &Comment{}, err
 	}

@@ -59,6 +59,7 @@ CREATE TABLE `like` (
 CREATE TABLE `comment`(
     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '评论id' ,
     `video_id` bigint NOT NULL COMMENT '被评论视频id',
+    `parent_id` bigint NULL DEFAULT NULL COMMENT '父评论id' ,
     `uid` bigint NOT NULL COMMENT '评论用户',
     `content` varchar(2048) NOT NULL COMMENT '评论内容',
     `created_at` timestamp NOT NULL DEFAULT current_timestamp COMMENT '评论时间',
